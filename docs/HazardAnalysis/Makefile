@@ -2,7 +2,7 @@
 # From https://danielkaes.wordpress.com/2009/03/14/compiling-latex-documents-using-makefiles/
 
 PROJECT=HazardAnalysis
-TEX=pdflatex
+TEX=pdflatex -quiet
 BIBTEX=bibtex
 BUILDTEX=$(TEX) $(PROJECT).tex
 
