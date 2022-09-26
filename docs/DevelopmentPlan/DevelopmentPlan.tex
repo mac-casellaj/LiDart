@@ -42,6 +42,7 @@ API & \textbf{A}pplication \textbf{P}rogramming \textbf{I}nterface \\
 CAD & \textbf{C}omputer \textbf{A}ided \textbf{D}esign\\
 CI & \textbf{C}ontinuous \textbf{I}ntegration\\
 LiDAR & \textbf{Li}ght \textbf{D}etection \textbf{A}nd \textbf{R}anging\\
+POC & \textbf{P}roof \textbf{o}f \textbf{C}oncept\\ony
 PR & \textbf{P}ull \textbf{R}equest\\
 UI & \textbf{U}ser \textbf{I}nterface\\
 UX & \textbf{U}ser \textbf{E}xperience\\
@@ -115,7 +116,7 @@ Development will take place on a development (dev) branch. Feature branches will
 \begin{figure} [H]
 \begin{center}
 	\includegraphics [width=0.8\textwidth] {Figures/GitHub Branches.pdf}
-	\caption{Simple Branching Structure}
+	\caption{Sample Branching Structure}
 	\label{fig:Branches}
 	\end{center}
 \end{figure}
@@ -136,12 +137,11 @@ A GitHub project board will be used to track and organize issues. Issues will be
 \section{Proof of Concept Demonstration Plan}
 
 \subsection{Inaccurate Localization}
-Indoor robot localization is a complex and challenging problem.
-The robot must be able to determine its position using image based camera localization. Challenges associated with this include probabilistic sensor data, sensor aliasing, noise in image, and geometric characteristics of surrounding environment. The machine vision algorithms will be developed and tested using images taken from a phone camera. The localization algorithm will determine the position of the phone from the images taken.
+Indoor robot localization is a complex and challenging problem. The robot must be able to determine its position using image-based camera localization. Challenges associated with this include probabilistic sensor data, sensor aliasing, noise in images, and unfavorable geometric characteristics of the surrounding environment. To mitigate this risk, a localization algorithm will be developed and tested using images taken from a phone camera. If adequate results are not obtained during POC testing, sensor fusion will be used on the final design to reduce uncertainty.
 
 \subsection{Low Accuracy of LiDAR Scans}
 
-The LiDAR sensor that will be used on the robot will be procured and tested. The LiDAR sensor will be used to scan a known object. The data obtained will be run through a program that displays the scanning data. This data will be compared to the known object to determine the accuracy of the sensor.
+The LiDAR sensor that will be used on the robot will be procured and tested by scanning a known object. The data obtained will be run through a program that displays the scanning data. This data will be compared to the known object to determine the accuracy of the sensor. If the data obtained from the LiDAR sensor is not accurate enough, filtering algorithms will be developed to improve the quality of the scanning data.
 
 \subsection{Robot Mechanical and Electrical Design}
 
@@ -168,10 +168,12 @@ The \textit{Rust Style Guide} will be used as a coding standard.
 
 \section{Project Scheduling}
 
+A Gantt chart will be used for scheduling. Additional tasks will be added as the project progresses.
+
 \begin{figure} [H]
 \begin{center}
 	\includegraphics [width=1\textwidth] {Figures/Gantt.pdf}
-	\caption{Gantt Chart}
+	\caption{Project Schedule}
 	\label{fig:Gantt}
 	\end{center}
 \end{figure}
