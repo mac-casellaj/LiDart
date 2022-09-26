@@ -42,7 +42,7 @@ API & \textbf{A}pplication \textbf{P}rogramming \textbf{I}nterface \\
 CAD & \textbf{C}omputer \textbf{A}ided \textbf{D}esign\\
 CI & \textbf{C}ontinuous \textbf{I}ntegration\\
 LiDAR & \textbf{Li}ght \textbf{D}etection \textbf{A}nd \textbf{R}anging\\
-POC & \textbf{P}roof \textbf{o}f \textbf{C}oncept\\ony
+POC & \textbf{P}roof \textbf{o}f \textbf{C}oncept\\
 PR & \textbf{P}ull \textbf{R}equest\\
 UI & \textbf{U}ser \textbf{I}nterface\\
 UX & \textbf{U}ser \textbf{E}xperience\\
@@ -70,7 +70,7 @@ The team will use instant messaging for items that require and urgent response. 
 \begin{itemize}
 \item Development and implementation of computer vision algorithms
 \item Development and implementation of localization algorithms
-\item Creation of a user application that displays the scanning data
+\item Creation of a user application that displays scanning results
 \end{itemize}
 
 \subsection{Kareem Elmokattaf}
@@ -78,7 +78,7 @@ The team will use instant messaging for items that require and urgent response. 
 \item Development of the controls software for the robot
 \item Development and implementation of localization algorithms
 \item Interfacing of hardware and software systems
-\item UI/UX design of a user application that displays the scanning data
+\item UI/UX design of a user application that displays scanning results
 \end{itemize}
 
 \subsection{Michaela Schnull}
@@ -123,7 +123,7 @@ Development will take place on a development (dev) branch. Feature branches will
 
 \subsection{Issue Tracking}
 
-GitHub issues will be used to plan and track tasks. All team members can create new issues and assign them to team members. The following guidelines will be followed when working with issues:
+GitHub issues will be used to plan and track tasks. All team members can create new issues and assign them to other members. The following guidelines will be followed when working with issues:
 
 \begin{itemize}
 \item Issue templates will be used for bug reports and new feature requests
@@ -137,15 +137,15 @@ A GitHub project board will be used to track and organize issues. Issues will be
 \section{Proof of Concept Demonstration Plan}
 
 \subsection{Inaccurate Localization}
-Indoor robot localization is a complex and challenging problem. The robot must be able to determine its position using image-based camera localization. Challenges associated with this include probabilistic sensor data, sensor aliasing, noise in images, and unfavorable geometric characteristics of the surrounding environment. To mitigate this risk, a localization algorithm will be developed and tested using images taken from a phone camera. If adequate results are not obtained during POC testing, sensor fusion will be used on the final design to reduce uncertainty.
+Indoor robot localization is a complex and challenging problem. The robot must be able to determine its position using image-based camera localization. Challenges associated with this include probabilistic sensor data, sensor aliasing, noise in images, and unfavorable geometric characteristics of the surrounding environment. To mitigate this risk, a localization algorithm will be developed and tested using images taken from a phone camera. If adequate results are not obtained during POC testing, sensor fusion will be used in the final design to reduce uncertainty.
 
 \subsection{Low Accuracy of LiDAR Scans}
 
-The LiDAR sensor that will be used on the robot will be procured and tested by scanning a known object. The data obtained will be run through a program that displays the scanning data. This data will be compared to the known object to determine the accuracy of the sensor. If the data obtained from the LiDAR sensor is not accurate enough, filtering algorithms will be developed to improve the quality of the scanning data.
+The LiDAR sensor that will be used on the robot will be procured and tested by scanning a known object. The data obtained will be run through a program that displays the scanning results. This data will be compared to the known object to determine the accuracy of the sensor. If the data obtained from the LiDAR sensor is not accurate enough, filtering algorithms will be developed to improve the quality of the scanning results.
 
 \subsection{Robot Mechanical and Electrical Design}
 
-The robot must be able to move around and position itself. A prototype of the robot will be created to prove the electrical and mechanical design concepts. The robot should be able to follow simple movement commands.
+The robot must be able to move and position itself. A prototype of the robot will be created to prove the electrical and mechanical design concepts. It should be able to execute simple movement commands during POC testing.
 
 \section{Technology}
 
