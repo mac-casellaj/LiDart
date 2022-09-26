@@ -22,35 +22,115 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
+26/Sep/2022 & Jonathan Casella & Initial Release\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \section{Problem Statement}
 
-\wss{You should check your problem statement with the
-\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}.}
-\wss{You can change the section headings, as long as you include the required information.}
+3D scanning should be a low cost and user friendly technology, so that it can be used by the widest audience.
+It should not require expensive or specialized hardware, nor should it require that the user have any domain specific knowledge.
 
-\subsection{Problem}
+\subsection{Proposed Solution}
 
-\subsection{Inputs and Outputs}
+LiDart aims to build a low cost, simple to use, WiFi connected 3D scanning robot.
+LiDart plans to do this by using easily available, low cost LiDAR sensors and consumer
+grade webcams alongside inexpensive location markers.
+The user will interface with the robot through a desktop application that will
+allow them to remotely drive the robot and perform 3D scans.
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
+\subsection{Desktop Application Inputs and Outputs}
+
+The desktop application will connect to the robot over WiFi.
+While connected the user will be able to drive the robot using the keyboard,
+the user will also be able to see the video from the webcam(s) aboard the
+robot and a visualization of the LiDAR data. 
+
+While driving the robot, the user will be able to perform 3D scans.
+The output of these scans can then be exported from the
+desktop application and saved as a Wavefront OBJ file.
+
+\subsection{Robot Inputs and Outputs}
+
+Aboard the robot will be one or more consumer webcams,
+a low cost LiDAR module and other miscellaneous sensors
+for the various moving mechanisms. Data from all of these inputs
+will be both relayed to the desktop application and used by the
+software onboard the robot for tasks like localization. The robot will also receive commands over WiFi from the desktop application
+that will be used to remotely drive the robot and perform 3D scans.
+
+The video feed from the webcam(s) will be used to detect inexpensive location markers that
+will be scattered around the robot's environment. 
 
 \subsection{Stakeholders}
+Stakeholders in the project include all parties that would benefit from
+low cost, easily accessable 3D scanning. Examples of groups that fit this
+criteria include small visual effects studios, independent mechanical
+designers, and manufacturing firms.
+
+All of the afformentioned groups lack domain specific knowledge related to 
+robotics and 3D scanning, as such a focus for this project will be to make the
+3D scanning process as user friendly as possible. 
 
 \subsection{Environment}
+The robot is expected to operate indoors on flat surfaces.
+The robot's environment is also expected to have been pre-populated with
+inexpensive location markers.
 
-\wss{Hardware and software}
+The desktop application will be designed to run on a computer
+running a desktop operating system with WiFi connectivity and
+sufficiently powerful hardware. The robot software will run aboard the robot
+on an embedded computer.
 
 \section{Goals}
+\subsection{Accurate 3D Scanning}
+
+The produced 3D scans should be accurate within a given threshold.
+This threshold may not be as small as commercial solutions, but should
+be small enough that the results can be used for most tasks.
+
+For example, the scans produced by LiDart's robot may not be accurate enough
+for use by an engineer designing mission critical components, but should
+be accurate enough for rapid prototyping.
+
+\subsection{Low Cost Hardware}
+
+The hardware used to build the robot should be low cost and easily accessable.
+It should also be able to swap components with equivalent alternatives
+without any major effort.
+
+For example, it should be easy to replace our choice of consumer webcam with another
+choice that meets similar specifications.
+
+\subsection{Ease of Use}
+
+Producing 3D using the LiDart robot should only require the user to drive
+around their object of interest and instruct the robot to perform a scan.
+A user with no knowledge of the inner workings of the system should be able
+to operate it with only a brief explanation. 
+
+The ease of use could be measured using a group of test subjects with no
+prior knowledge of the system.
 
 \section{Stretch Goals}
+\subsection{Autonomous Scanning}
+
+The operation of the robot as specified above involves the user remotely
+piloting the robot. As this could be time consuming for the user, an additional
+feature LiDart could implement is autonomous scanning.
+
+While autonomously scanning, the robot would explore its environment without
+any user intervention, scanning while it goes. The user could then export this
+scan and import it to their software package of choice to select the part of
+the environment that they wish to keep.
+
+\subsection{Camera Based Scanning}
+
+As specified above, the robot will have both a LiDAR module and one
+or more consumer grade webcams. It is possible to remove the LiDAR module
+and instead use only consumer grade webcams for both localization and 3D scanning.
+This would allow LiDart to reduce cost by removing the LiDAR.
+
 
 \end{document}
