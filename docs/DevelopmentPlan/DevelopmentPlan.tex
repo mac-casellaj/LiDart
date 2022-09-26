@@ -1,7 +1,10 @@
-\documentclass{article}
+\documentclass[titlepage]{article}
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry}
+\usepackage{float}
 
 \title{Development Plan\\\progname}
 
@@ -14,64 +17,165 @@
 
 \begin{document}
 
+\maketitle
+
+\newpage
+
 \begin{table}[hp]
 \caption{Revision History} \label{TblRevisionHistory}
 \begin{tabularx}{\textwidth}{llX}
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
+26/Sep/2022 & Michaela Schnull & Initial Release\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[hp]
+\caption{Acronyms} \label{Acronyms}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Acronym} & \textbf{Description} \\
+\midrule
+API & \textbf{A}pplication \textbf{P}rogramming \textbf{I}nterface \\
+CAD & \textbf{C}omputer \textbf{A}ided \textbf{D}esign\\
+CI & \textbf{C}ontinuous \textbf{I}ntegration\\
+LiDAR & \textbf{Li}ght \textbf{D}etection \textbf{A}nd \textbf{R}anging\\
+POC & \textbf{P}roof \textbf{o}f \textbf{C}oncept\\ony
+PR & \textbf{P}ull \textbf{R}equest\\
+UI & \textbf{U}ser \textbf{I}nterface\\
+UX & \textbf{U}ser \textbf{E}xperience\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \newpage
 
-\maketitle
+\section{Introduction}
 
-\wss{Put your introductory blurb here.}
+3D scanning is a versatile technology that is used across many industries, but its uses are often limited by high cost and complexity. LiDart aims to build a low cost, simple to use 3D scanning robot. A software suite will process data obtained from the robot and provide a user interface. LiDart's end product will be a wheel based mobile robot with all required sensors on-board that can be connected to over WiFi.
 
 \section{Team Meeting Plan}
 
+Weekly meetings will take place in H.G. Thode Library of Science and Engineering. During in-person meetings, our group will review issues tracked on the GitHub project board and identify actions to be taken. The frequency of meetings is subject to change depending the needs of the project. 
+
 \section{Team Communication Plan}
 
-\section{Team Member Roles}
+The team will use instant messaging for items that require and urgent response. Communication will also occur through GitHub using issues. Users will be tagged in issues that require their attention. All team members members may schedule  meetings to address specific issues. 
+
+\section{Team Member Roles and Responsibilities}
+
+\subsection{Jonathan Casella}
+\begin{itemize}
+\item Development and implementation of computer vision algorithms
+\item Development and implementation of localization algorithms
+\item Creation of a user application that displays the scanning data
+\end{itemize}
+
+\subsection{Kareem Elmokattaf}
+\begin{itemize}
+\item Development of the controls software for the robot
+\item Development and implementation of localization algorithms
+\item Interfacing of hardware and software systems
+\item UI/UX design of a user application that displays the scanning data
+\end{itemize}
+
+\subsection{Michaela Schnull}
+\begin{itemize}
+\item Electrical design of the robot, including the creation of electrical schematics to document electrical design
+\item Interfacing of hardware and software systems
+\item Project management activities, including maintenance of the project board on GitHub, budgeting, scheduling, and acting as the team liaison
+\end{itemize}
+
+\subsection{Neeraj Ahluwalia}
+\begin{itemize}
+\item Mechanical design of the robot, including the creation of CAD models
+\item Interfacing of electrical components in the mechanical design
+\item Marketing activities, including logo design and video presentations
+\end{itemize}
 
 \section{Workflow Plan}
 
+\subsection{GitHub Development Workflow}
+
+The workflow depicted in Figure~\ref{fig:Workflow} will be followed throughout the development process. This workflow supports CI and issue tracking trough GitHub. Commits should be frequent and have descriptive messages.
+
+\begin{figure} [H]
+\begin{center}
+	\includegraphics [width=0.8\textwidth] {Figures/GitHub Workflow.pdf}
+	\caption{GitHub Development Workflow}
+	\label{fig:Workflow}
+	\end{center}
+\end{figure}
+
+\subsection{Branches}
+
+Development will take place on a development (dev) branch. Feature branches will be used to fix bugs and add new features. They will be deleted after merging into the dev branch.  Changes from the dev branch will be merged to the main branch after they have been reviewed and integration testing has been performed. Figure~\ref{fig:Branches} depicts a sample branching structure.
+
+\begin{figure} [H]
+\begin{center}
+	\includegraphics [width=0.8\textwidth] {Figures/GitHub Branches.pdf}
+	\caption{Sample Branching Structure}
+	\label{fig:Branches}
+	\end{center}
+\end{figure}
+
+\subsection{Issue Tracking}
+
+GitHub issues will be used to plan and track tasks. All team members can create new issues and assign them to team members. The following guidelines will be followed when working with issues:
+
 \begin{itemize}
-	\item How will you be using git, including branches, pull request, etc.?
-	\item How will you be managing issues, including template issues, issue
-	classificaiton, etc.?
+\item Issue templates will be used for bug reports and new feature requests
+\item Issues that require multiple steps should include task lists
+\item Default labels provided by GitHub will be used to classify the type of issue
+\item Issues should be linked to associated branches
 \end{itemize}
+
+A GitHub project board will be used to track and organize issues. Issues will be sorted into \textit{Todo}, \textit{In Progress}, and \textit{Done} columns in a tabular view. Furthermore, issues will be assigned fields to categorize them based on priority and discipline. The priority field will classify issues as \textit{High}, \textit{Medium}, or \textit{Low} priority. The discipline field will classify issues as \textit{Mechanical}, \textit{Electrical}, or \textit{Software}.
 
 \section{Proof of Concept Demonstration Plan}
 
-What is the main risk, or risks, for the success of your project?  What will you
-demonstrate during your proof of concept demonstration to convince yourself that
-you will be able to overcome this risk?
+\subsection{Inaccurate Localization}
+Indoor robot localization is a complex and challenging problem. The robot must be able to determine its position using image-based camera localization. Challenges associated with this include probabilistic sensor data, sensor aliasing, noise in images, and unfavorable geometric characteristics of the surrounding environment. To mitigate this risk, a localization algorithm will be developed and tested using images taken from a phone camera. If adequate results are not obtained during POC testing, sensor fusion will be used on the final design to reduce uncertainty.
+
+\subsection{Low Accuracy of LiDAR Scans}
+
+The LiDAR sensor that will be used on the robot will be procured and tested by scanning a known object. The data obtained will be run through a program that displays the scanning data. This data will be compared to the known object to determine the accuracy of the sensor. If the data obtained from the LiDAR sensor is not accurate enough, filtering algorithms will be developed to improve the quality of the scanning data.
+
+\subsection{Robot Mechanical and Electrical Design}
+
+The robot must be able to move around and position itself. A prototype of the robot will be created to prove the electrical and mechanical design concepts. The robot should be able to follow simple movement commands.
 
 \section{Technology}
 
 \begin{itemize}
-\item Specific programming language
-\item Specific linter tool (if appropriate)
-\item Specific unit testing framework
-\item Investigation of code coverage measuring tools
-\item Specific plans for Continuous Integration (CI), or an explanation that CI
-  is not being done
-\item Specific performance measuring tools (like Valgrind), if
-  appropriate
-\item Libraries you will likely be using?
-\item Tools you will likely be using?
+\item Autodesk Inventor: CAD tool used to develop and model the mechanical design of the robot
+\item AutoCAD Electrical: CAD tool used to create electrical schematics
+\item Autodesk EAGLE: CAD tool used to design printed circuit boards
+\item Rust: High performance, low-level programming language ideal for embedded systems with built-in unit-testing
+\item Rustfmt: Lint tool designed for the Rust programming language
+\item OpenGL: API used to render scanning data
+\item OpenCV: Real-time computer vision library 
+\item AprilTags: Visual marker system designed for use in robotics and camera calibration
+\item GitHub: Version control software with tools for CI and project management
+
 \end{itemize}
 
 \section{Coding Standard}
 
+The \textit{Rust Style Guide} will be used as a coding standard.
+
 \section{Project Scheduling}
 
-\wss{How will the project be scheduled?}
+A Gantt chart will be used for scheduling. Additional tasks will be added as the project progresses.
+
+\begin{figure} [H]
+\begin{center}
+	\includegraphics [width=1\textwidth] {Figures/Gantt.pdf}
+	\caption{Project Schedule}
+	\label{fig:Gantt}
+	\end{center}
+\end{figure}
 
 \end{document}
