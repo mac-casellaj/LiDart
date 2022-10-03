@@ -1116,6 +1116,9 @@ qualities that the software is expected to exhibit.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
     for the inputs that are supplied by the user.  This information has to be
     explicit.}
+    - Given User inputs from keyboard, robot will move position
+    - User will be able to deactivate robot with a physical kill-switch, mounted on the robot
+    - upon spacebar press, robot will begin scanning sequence
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
     always required, but often echoing the inputs as part of the output is a
@@ -1123,12 +1126,20 @@ qualities that the software is expected to exhibit.
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
     related requirements.}
+    - robot will calculate position based on distance from landmarks
+    - robot will calculate distance and rotation between each landmark
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
   \plt{Verification related requirements.}
+  - 3D scan of reference models should be within SCANTOLERANCE
+  - robot will verify closed-loop calculation and alert user of errors
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
     requirements.}
+    - computer attached to machine will output 3D model file
+    - computer display will show robot's location in reference to room
+    - computer display will show LiDAR visualization
+    - computer display will show video feed from webcams
 
 \end{itemize}
 
