@@ -1116,13 +1116,16 @@ qualities that the software is expected to exhibit.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
     for the inputs that are supplied by the user.  This information has to be
     explicit.}
-    - Given User inputs from keyboard, robot will move position
+    - Robot shall take input from user through a keyboard
     - User will be able to deactivate robot with a physical kill-switch, mounted on the robot
     - upon spacebar press, robot will begin scanning sequence
-
+    - Robot shall move in all four directions
+    - Robot shall be able to stop moving
+    
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
     always required, but often echoing the inputs as part of the output is a
     good idea.}
+    - Robot shall be able to verify the inputs before processing the output
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
     related requirements.}
@@ -1132,7 +1135,7 @@ qualities that the software is expected to exhibit.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
   \plt{Verification related requirements.}
   - 3D scan of reference models should be within SCANTOLERANCE
-  - robot will verify closed-loop calculation and alert user of errors
+  - Robot will verify closed-loop calculation and alert user of errors
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
     requirements.}
@@ -1174,6 +1177,7 @@ be covered in the Verification and Validation document.}
     application$>$.  The level of accuracy achieved by \progname{} shall be
     described following the procedure given in Section~X of the Verification and
     Validation Plan.''  A link to the VnV plan would be a nice extra.}
+    - Robot shall scan within given SCANTOLERANCE
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
   \plt{Characterize the usability by giving the context/use for the software.
@@ -1181,12 +1185,14 @@ be covered in the Verification and Validation document.}
     usability achieved by the software shall be described following the
     procedure given in Section~X of the Verification and Validation Plan.  A
     link to the VnV plan would be a nice extra.}
+    - Robot shall be easy to operate with very little knowledge
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
   \textbf{Maintainability} \plt{The effort required to make any of the likely
     changes listed for \progname{} should be less than FRACTION of the original
     development time.  FRACTION is then a symbolic constant that can be defined
     at the end of the report.}
+    - Robot parts shall be replacable within an hour
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
   \textbf{Portability} \plt{This NFR is easier to write than the others.  The
@@ -1195,6 +1201,8 @@ be covered in the Verification and Validation document.}
     given.  To make the NFR verifiable a statement could be made that the tests
     from a given section of the VnV plan can be successfully run on all of the
     possible operating environments.}
+    - Robot shall be easy to move around
+    - Robot shall move with smooth motion
 
 \item Other NFRs that might be discussed include verifiability,
   understandability and reusability.
