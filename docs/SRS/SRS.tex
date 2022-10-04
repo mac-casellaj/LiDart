@@ -233,7 +233,9 @@ which heat is transferred in
   CMM & Coordinate Measuring Machine\\
   DD & Data Definition\\
   GD & General Definition\\
+  FSM & Finite State Machine\\
   GS & Goal Statement\\
+  GUI & Graphical User Interface\\
   IM & Instance Model\\
   LiDAR & Light Imaging, Detection, and Ranging\\
   LC & Likely Change\\
@@ -396,8 +398,8 @@ Readers of this document should be knowledgeable in the following areas:
 \begin{itemize}
 \item The principles of 3D scanning technologies including LiDAR and photogrammetry
 \item Signal filtering
-\item Basic kinematics and dynamics concepts, including speed and forces
-\item Basic electrical concepts, such as power, voltage, and current
+\item Secondary school level kinematics and dynamics concepts, including speed and forces
+\item Secondary school level electrical concepts, such as power, voltage, and current
 \end{itemize}
 
 \subsection{Organization of Document}
@@ -408,7 +410,7 @@ Readers of this document should be knowledgeable in the following areas:
   be similar between project.}
 The rest of this document provides detailed specifications and requirements for the \progname\ 3D scanning system. The document is organized as follows:  
   
-\begin{itemize}
+\noindent \begin{description}
 \item Section~\ref{sec_GeneralDesc}: General System Description 
 \newline
 A general overview of the system is provided using a system context diagram. The interactions between the system, the environment,and its users are identified.
@@ -433,7 +435,7 @@ A plan outlining the steps that will be taken to create the \progname\ system is
 \item Section~\ref{sec_ac}: Values of Auxiliary Constants 
 \newline
 This section provides values for symbolic parameters used in this document.
-\end{itemize}
+\end{description}
 
 \section{General System Description} 
 \label{sec_GeneralDesc}
@@ -552,6 +554,7 @@ The \progname\ 3D scanning system does not require any domain specific knowledge
 \begin{itemize}
 \item An understanding of how to install applications on personal computers.
 \item An understanding of 3D data file types and CAD programs.
+\item Basic computer skills, such as how to navigate through application menus
 \end{itemize}
 
 \subsection{System Constraints}
@@ -1113,37 +1116,39 @@ qualities that the software is expected to exhibit.
 
 \noindent \begin{itemize}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
-    for the inputs that are supplied by the user.  This information has to be
-    explicit.}
-    - Robot shall take input from user through a keyboard
-    - User will be able to deactivate robot with a physical kill-switch, mounted on the robot
-    - upon spacebar press, robot will begin scanning sequence
-    - Robot shall move in all four directions
-    - Robot shall be able to stop moving
-    
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
-    always required, but often echoing the inputs as part of the output is a
-    good idea.}
-    - Robot shall be able to verify the inputs before processing the output
+\item \plt{Requirements for the inputs that are supplied by the user.  This information has to be explicit.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs1}:] The system shall take input from the user through a keyboard and standard pointing device such as a mouse.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs2}:] There shall be a kill-switch mounted on the robot, which immediately deactivates the the robot when pressed in emergency situations.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs3}:] The robot shall be able to move in all four directions: left, right, forwards, and backwards.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs4}:] The robot shall be stationary if no input commands are given.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be connected to over Wifi.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to operated remotely.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs7}:] The robot shall have a power on/off switch.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs8}:] The robot shall have a means of being charged.
+  
+\item \plt{It isn't always required, but often echoing the inputs as part of the output is a good idea.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs1}:] The robot shall be able to verify the inputs before processing the output.
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
-    related requirements.}
-    - robot will calculate position based on distance from landmarks
-    - robot will calculate distance and rotation between each landmark
+\item \plt{Calculation related requirements.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate1}:] The system shall be able to perform localization calculations based on landmarks in the surrounding environment.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate2}:] The system shall calculate distance and rotation between each landmark.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate2}:] The system shall transform point-cloud data into a 3D object model.
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
-  \plt{Verification related requirements.}
-  - 3D scan of reference models should be within SCANTOLERANCE
-  - Robot will verify closed-loop calculation and alert user of errors
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
-    requirements.}
-    - computer attached to machine will output 3D model file
-    - computer display will show robot's location in reference to room
-    - computer display will show LiDAR visualization
-    - computer display will show video feed from webcams
-
+\item \plt{Verification related requirements.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:] The robot shall verify closed-loop calculations.
+\item \plt{Output related requirements.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output1}:] The GUI shall output the scanned data to a 3D Object file format (.obj).
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output2}:] The GUI shall display the robot's position relative to a known location.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output3}:] The GUI shall display live video feed of the environment surrounding  the robot.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output4}:] The GUI shall display a visualization of scanned data. 
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output5}:] The GUI shall display the current state of the system, as depicted in Figure~\ref{Fig_RobotFSM}.
+\begin{figure}[H]
+\begin{center}
+ \includegraphics[width=0.75\textwidth]{Figures/Robot FSM.pdf}
+\caption{Robot FSM}
+\label{Fig_RobotFSM} 
+\end{center}
+\end{figure}
 \end{itemize}
 
 \plt{Every IM should map to at least one requirement, but not every requirement
@@ -1153,61 +1158,73 @@ qualities that the software is expected to exhibit.
 
 \plt{List your nonfunctional requirements.  You may consider using a fit
   criterion to make them verifiable.}
-\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-  and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-to give a ``high level'' view of the requirement, but allow for the details to
-be covered in the Verification and Validation document.}
-\plt{An absolute requirement on a quality of the system is rarely needed.  For
-  instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-  for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
-  describing now well the quality is achieved, through experimentation, and
-  possibly theory, rather than meeting some bar that was defined a priori.}
-\plt{You do not need an entry for correctness in your NFRs.  The purpose of the
-  SRS is to record the requirements that need to be satisfied for correctness.
-  Any statement of correctness would just be redundant. Rather than discuss
-  correctness, you can characterize how far away from the correct (true)
-  solution you are allowed to be.  This is discussed under accuracy.}
+\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract and verifiable.  This isn't easy to show succinctly, so a good strategy may be to give a ``high level'' view of the requirement, but allow for the details to be covered in the Verification and Validation document.}
+\plt{An absolute requirement on a quality of the system is rarely needed.  For instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is for 0.01 \% accuracy.  Therefore, the emphasis will often be more on describing now well the quality is achieved, through experimentation, and possibly theory, rather than meeting some bar that was defined a priori.}
+\plt{You do not need an entry for correctness in your NFRs.  The purpose of the SRS is to record the requirements that need to be satisfied for correctness. Any statement of correctness would just be redundant. Rather than discuss correctness, you can characterize how far away from the correct (true) solution you are allowed to be.  This is discussed under accuracy.}
+
+\subsubsection{Accuracy Requirements}
+\plt{Characterize the accuracy by giving the context/use for the software.  Maybe something like, ``The accuracy of the computed solutions should meet the level needed for $<$engineering or scientific application$>$.  The level of accuracy achieved by \progname{} shall be described following the procedure given in Section~X of the Verification and Validation Plan.''  A link to the VnV plan would be a nice extra.}
+    
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within SCAN\_TOLERANCE. This level of accuracy meets the requirements needed for (insert application).
+\end{itemize}
+
+\subsubsection{Performance Requirements}
 
 \noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance1}:] The robot shall be able to move at a speed of ROBOT\_SPEED.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance2}:] The robot shall be able to run for BATTERY\_LIFE time without being charged.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance3}:] The system must be able to scan SCANNING\_SPACE within SCANNING\_TIME amount of time.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of MAX\_PROCESSING\_TIME to process raw data.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of MAX\_RESPONSE\_TIME to respond to user input commands.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of MIN\_VIDEO\_RESOLUTION.
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  A link to the VnV plan would be a nice extra.}
-    - Robot shall scan within given SCANTOLERANCE
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  A
-    link to the VnV plan would be a nice extra.}
-    - Robot shall be easy to operate with very little knowledge
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
-    - Robot parts shall be replacable within an hour
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
-    - Robot shall be easy to move around
-    - Robot shall move with smooth motion
-
-\item Other NFRs that might be discussed include verifiability,
-  understandability and reusability.
-
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance7}:] The video feed displayed on the GUI shall have a maximum delay of MAX\_VIDEO\_DELAY.
 \end{itemize}
+
+\subsubsection{Usability Requirements}
+\plt{Characterize the usability by giving the context/use for the software. You should likely reference the user characteristics section.  The level of usability achieved by the software shall be described following the procedure given in Section~X of the Verification and Validation Plan.  A link to the VnV plan would be a nice extra.}
+
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability1}:] The robot shall be easy to operate with very little knowledge. (needs to be measureable)
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than ROBOT\_MAX\_WEIGHT.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions ROBOT\_MAX\_DIMENSIONS.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed MAX\_NUM\_NAV\_LEVELS.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of MIN\_FONT\_SIZE.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within EXECUTE\_TASK\_TIME seconds of accessing the user interface, for at least every 9/10 tasks.
+\end{itemize}
+
+\subsubsection{Error-Handling Requirements}
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Errors1}:] The system shall display informative messages that alert the user of errors that have occurred. The messages may provide suggested steps to resolve the error.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Errors1}:] The system shall log error information. Error information should be specific and descriptive.
+\end{itemize}
+
+\subsubsection{Maintainability Requirements}
+\plt{The effort required to make any of the likely changes listed for \progname{} should be less than FRACTION of the original development time.  FRACTION is then a symbolic constant that can be defined at the end of the report.}
+
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability1}:] Robot parts should be replaceable within an hour.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability2}:] All hardware and electronic components shall be easily accessible. This will facilitate activities such as debugging and reprogramming the robot. No special tools must be required to access hardware. 
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability2}:] Standard, off-the-shelf components shall be used where possible. 
+\end{itemize}
+
+\subsubsection{Portability Requirements}
+\plt{This NFR is easier to write than the others.  The systems that \progname{} should run on should be listed here.  When possible the specific versions of the potential operating environments should be given.  To make the NFR verifiable a statement could be made that the tests from a given section of the VnV plan can be successfully run on all of the possible operating environments.}
+
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability1}:] The user application shall run on a Windows operating system. Version??
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability2}:] The user application must be able to run on a standard personal computer. (need to define specs of a standard computer).
+\end{itemize}
+
+\subsubsection{Safety Requirements}
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety1}:] There shall not be any exposed electrical components or wiring.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety1}:] The operator shall be able to stop the robot at any time.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety2}:] The robot shall be placed in a safe-state if communication with the operator is lost.
+\end{itemize}
+
+\plt{Other NFRs that might be discussed include verifiability, understandability and reusability.}
 
 \section{Likely Changes} 
 \label{sec_LikelyChanges}   
