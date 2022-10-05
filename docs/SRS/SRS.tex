@@ -95,6 +95,7 @@
 \newcommand{\MaxNavLevels}{4}
 \newcommand{\MinFontSize}{14pt}
 \newcommand{\ExecuteTaskTime}{10s}
+\newcommand{\ReplaceTime}{1hr}
 
 \usepackage{fullpage}
 
@@ -781,9 +782,9 @@ Rationale: This video feed can be used by the remote operator.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance1}:] The robot shall be able to move at a speed of ROBOT\_SPEED.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance2}:] The robot shall be able to run for RUN\_TIME without being charged.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance3}:] The system must be able to produce a single planar scan within SCANNING\_TIME.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of MAX\_PROCESSING\_TIME to output the final stitched 3D scan file.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of MAX\_RESPONSE\_TIME to respond to user input commands.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of MIN\_VIDEO\_RESOLUTION.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of MAX\_PROCESS\_T to output the final stitched 3D scan file.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of MAX\_RESP\_T to respond to user input commands.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of MIN\_VIDEO\_RES.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance7}:] The video feed displayed on the GUI shall have a maximum delay of MAX\_VIDEO\_DELAY.
 \end{itemize}
 
@@ -793,7 +794,7 @@ Rationale: This video feed can be used by the remote operator.
 \noindent \begin{itemize}
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability1}:] The user should be able to operate the system by following the user manual without any prior knowledge.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than ROBOT\_MAX\_WEIGHT.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions ROBOT\_MAX\_DIMENSIONS.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions ROBOT\_MAX\_DIM.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed MAX\_NUM\_LEVELS.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of MIN\_FONT\_SIZE.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within EXECUTE\_TIME of accessing the user interface, for at least every 9/10 tasks.
@@ -864,85 +865,105 @@ Table ~\ref{Table:A_trace} shows the dependencies between requirements.
 \label{Table:A_trace}
 \end{table}
 
-\section{Likely Changes} 
-\label{sec_LikelyChanges}   
-\begin{landscape}
-  \begin{table}[h!]
-  \centering
-  \begin{tabular}{|c|c|c|c|}
-  \hline
-  Requirement & Likelihood of Changing & Rationale & Ways to Change //
-  NFR1 & Likely & Depending on time constraints, requirement could change & Decreasing SCAN_TOL for better quality //
-  NFR3 & Likely & Depending on time constraints, requirement could change & RUN_TIME could be increased //
-  NFR4 & Very Likely & Depending on time constraints and scope, requirement could change & SCANNING_TIME could be decreased to save time //
-  NFR5 & Likely & Depending on time constraints and scope, requirement could change & MAX_PROCESSING_TIME could be decreased to save time //
-  NFR6 & Likely & Depending on time constraints and scope, requirement could change & MAX_RESPONSE_TIME could be decreased for better user experience //
-  NFR13 & Likely & Depening on implementation, requirement could change & Font style and MIN_FONT_SIZE will dpeend on how the GUI looks. This is to ensure that the GUI is user friendly //
-  NFR17 & Likely & Depending on time constraint, requirement could change & REPLACE_TIME could be decreased for better user experience //
-  NFR21 & Likely & Depending on time constraint and scope & Improve performance so that it can run on lower than average personal computers can handle //
+\section{Likely Changes}
+\label{sec_LikelyChanges}
 
-  \hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
-\label{Table:Likely changes}
-\end{table}
-\end{landscape}
+Traceability Matrix Showing the Connections Between Assumptions and Other Items
 
-\end{itemize}
-\noindent \begin{itemize}
-
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the likely changes, with a reference to the related assumption (aref), as appropriate.}
-
-\end{itemize}
+\begin{longtable}{ | p{2.3cm} | p{3.0cm} | p{4cm} | p{4cm} |}
+\hline
+Requirement & Likelihood of Changing & Rationale & Ways to Change \\
+\hline
+NFR1 & Likely & Depending on time constraints, requirement could change & Decreasing SCAN\_TOL for better quality \\
+\hline
+NFR3 & Likely & Depending on time constraints, requirement could change & RUN\_TIME could be increased \\
+\hline
+NFR4 & Very Likely & Depending on time constraints and scope, requirement could change & SCANNING\_TIME could be decreased to save time \\
+\hline
+NFR5 & Likely & Depending on time constraints and scope, requirement could change & MAX\_PROCESS\_T could be decreased to save time \\
+\hline
+NFR6 & Likely & Depending on time constraints and scope, requirement could change & MAX\_RESP\_T could be decreased for better user experience \\
+\hline
+NFR13 & Likely & Depening on implementation, requirement could change & Font style and MIN\_FONT\_SIZE will dpeend on how the GUI looks. This is to ensure that the GUI is user friendly \\
+\hline
+NFR17 & Likely & Depending on time constraint, requirement could change & REPLACE\_TIME could be decreased for better user experience \\
+\hline
+NFR21 & Likely & Depending on time constraint and scope & Improve performance so that it can run on lower than average personal computers can handle \\
+\hline
+\end{longtable}
 
 \section{Unlikely Changes} 
-\label{sec_UnlikelyChanges} 
-\begin{landscape}
-  \begin{table}[h!]
-  \centering
-  \begin{tabular}{|c|c|c|c|}
-  \hline
-  Requirement & Likelihood of Changing & Rationale & Ways to Change //
-  R1 & Very Unlikeyl & Key implementation aspect & N/A //
-  R2 & Very Unlikely & Ensures safety of operation & N/A // 
-  R3 & Very Unlikely & Key implementation aspect & N/A //
-  R4 & Very Unlikely & Key implementation aspect & N/A //
-  R5 & Very Unlikely & Key implementation aspect & N/A //
-  R6 & Very Unlikely & Kay implementation aspect & N/A //
-  R7 & Very Unlikely & Key implementation aspect & N/A //
-  R8 & Very Unlikely & Key implementation aspect & N/A //
-  R9 & Very Unlikely & Key implementation aspect & N/A //
-  R10 & Very Unlikely & Key implementation aspect & N/A //
-  R11 & Very Unlikely & Key implementation aspect & N/A //
-  R12 & Very Unlikely & Key implementation aspect & N/A //
-  R13 & Very Unlikely & Key implementation aspect & N/A //
-  R14 & Very Unlikely & Key implementation aspect & N/A //
-  NFR2 & Unlikely & Depending on time constraints, requirement could change & Speed of movement is not a high priority  for the application //
-  NFR7 & Unlikely & Depending on monetary constraint & MIN_VIDEO_RESOLUTION will depend on the budget allowance cold be higher //
-  NFR8 & Unlikely & Depending on time and monetary constraints, requirement could change & MAX_VIDEO_DELAY will depend on the budget allowance and time given to improve latency //
-  NFR9 & Very Unlikely & Kay implementation aspect & N/A //
-  NFR10 & Very Unlikely & Key implementation aspect & N/A //
-  NFR11 & Unlikely & Depending on time constraints, requirement could change & ROBOT_MAX_DIMENSIONS could be decreased for better storage spacing //
-  NFR12 & Very Unlikely & Ensures usability by user & N/A //
-  NFR14 & Very Unlikely & Key implementation aspect & N/A //
-  NFR15 & Very Unlikely & Ensures safety of operation & N/A //
-  NFR16 & Very Unlikely & Key implementation aspect & N/A //
-  NFR18 & Unlikely & Depending on time and monetary constraint & Certain components might have to use special tools to access //
-  NFR19 & Very Unlikely & Monetary constraint & N/A //
-  NFR20 & Very Unlikcly & Key implementtion aspect & N/A //
-  NFR22 & Very Unlikely & Ensures safety of operation & N/A //
-  NFR23 & Very Unlikely & Ensures safety of operation and is a key implementation aspect & N/A //
-  NFR24 & Very Unlikely & Ensures safety of operation and is a key implementation aspect & N/A //
-  NFR25 & Very  Unlikely & Key implementation aspect & N/A //
-  \hline
-  \end{tabular}
-  \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
-  \label{Table:Unlikely changes}
-  \end{table}
-  \end{landscape}
+\label{sec_UnlikelyChanges}
 
-\end{itemize}
+Traceability Matrix Showing the Connections Between Assumptions and Other Items
+
+\begin{longtable}{ | p{2.3cm} | p{3.0cm} | p{4cm} | p{4cm} |}
+\hline
+Requirement & Likelihood of Changing & Rationale & Ways to Change \\
+\hline
+R1 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R2 & Very Unlikely & Ensures safety of operation & N/A \\ 
+\hline
+R3 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R4 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R5 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R6 & Very Unlikely & Kay implementation aspect & N/A \\
+\hline
+R7 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R8 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R9 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R10 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R11 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R12 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R13 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R14 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+NFR2 & Unlikely & Depending on time constraints, requirement could change & Speed of movement is not a high priority  for the application \\
+\hline
+NFR7 & Unlikely & Depending on monetary constraint & MIN\_VIDEO\_RES will depend on the budget allowance cold be higher \\
+\hline
+NFR8 & Unlikely & Depending on time and monetary constraints, requirement could change & MAX\_VIDEO\_DELAY will depend on the budget allowance and time given to improve latency \\
+\hline
+NFR9 & Very Unlikely & Kay implementation aspect & N/A \\
+\hline
+NFR10 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+NFR11 & Unlikely & Depending on time constraints, requirement could change & ROBOT\_MAX\_DIM could be decreased for better storage spacing \\
+\hline
+NFR12 & Very Unlikely & Ensures usability by user & N/A \\
+\hline
+NFR14 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+NFR15 & Very Unlikely & Ensures safety of operation & N/A \\
+\hline
+NFR16 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+NFR18 & Unlikely & Depending on time and monetary constraint & Certain components might have to use special tools to access \\
+\hline
+NFR19 & Very Unlikely & Monetary constraint & N/A \\
+\hline
+NFR20 & Very Unlikcly & Key implementtion aspect & N/A \\
+\hline
+NFR22 & Very Unlikely & Ensures safety of operation & N/A \\
+\hline
+NFR23 & Very Unlikely & Ensures safety of operation and is a key implementation aspect & N/A \\
+\hline
+NFR24 & Very Unlikely & Ensures safety of operation and is a key implementation aspect & N/A \\
+\hline
+NFR25 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+\end{longtable}
 
 \section{Development Plan}
 \label{sec_dp}
@@ -1037,23 +1058,25 @@ Their values are defined in this section for easy maintenance.}
   \hline
   SCANNING\_TIME & Time elapsed to complete scan of a specified scanning space. & \ScanningTime{} \\
   \hline
-  MAX\_PROCESSING\_TIME & Time needed for the robot to process raw scanned data. & \MaxProcessingTime{} \\
+  MAX\_PROCESS\_T & Time needed for the robot to process raw scanned data. & \MaxProcessingTime{} \\
   \hline
-  MAX\_RESPONSE\_TIME & Time needed for robot to respond to navigational commands given by user. & \MaxResponseTime{} \\
+  MAX\_RESP\_T & Time needed for robot to respond to navigational commands given by user. & \MaxResponseTime{} \\
   \hline
-  MIN\_VIDEO\_RESOLUTION & Minimum resolution of video output feed in GUI. & \MinVideoResolution{} \\
+  MIN\_VIDEO\_RES & Minimum resolution of video output feed in GUI. & \MinVideoResolution{} \\
   \hline
   MAX\_VIDEO\_DELAY & Max time between change in camera and output video feed in GUI. & \MaxVideoDelay{} \\
   \hline
   ROBOT\_MAX\_WEIGHT & Maximum weight of the fully assembled robot. & \RobotMaxWeight{} \\
   \hline
-  ROBOT\_MAX\_DIMENSIONS & Maximum size of the fully assembled robot. & \RobotMaxDimensions{} \\
+  ROBOT\_MAX\_DIM & Maximum size of the fully assembled robot. & \RobotMaxDimensions{} \\
   \hline
   MAX\_NAV\_LEVELS & Maximum number of layers required to access any function in GUI. & \MaxNavLevels{} \\
   \hline
   MIN\_FONT\_SIZE & The minimum font size used in the GUI for accessibility purposes. & \MinFontSize{} \\
   \hline
   EXECUTE\_TASK\_TIME & Time it would take an average user to execute 9/10 tasks within the GUI. & \ExecuteTaskTime{} \\
+  \hline
+  REPLACE\_TIME & Time it would take an average user to replace a damaged component. & \ReplaceTime{} \\
   \hline
   
 \end{tabular}
