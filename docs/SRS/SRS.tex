@@ -80,6 +80,7 @@
 \newcommand{\lcref}[1]{LC\ref{#1}}
 
 
+
 \newcommand{\RobotSpeed}{0.5m/s}
 \newcommand{\ScanTolerance}{+/- 1cm}
 \newcommand{\BatteryLife}{3hrs}
@@ -831,7 +832,7 @@ Rationale: This video feed can be used by the remote operator.
 
 \subsubsection{Standards Requirements}
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety1}:] The system shall be in conformance with the following standards:
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Standard1}:] The system shall be in conformace with the following standards:
 \begin{itemize}
 \item CSA 22.1:21, Canadian Electrical Code \cite{CSA1}
 \item CSA Z434, Industrial robots and robot systems \cite{CSA2}
@@ -865,7 +866,29 @@ Table ~\ref{Table:A_trace} shows the dependencies between requirements.
 
 \section{Likely Changes} 
 \label{sec_LikelyChanges}   
+\begin{landscape}
+  \begin{table}[h!]
+  \centering
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+  Requirement & Likelihood of Changing & Rationale & Ways to Change //
+  NFR1 & Likely & Depending on time constraints, requirement could change & Decreasing SCAN_TOL for better quality //
+  NFR3 & Likely & Depending on time constraints, requirement could change & RUN_TIME could be increased //
+  NFR4 & Very Likely & Depending on time constraints and scope, requirement could change & SCANNING_TIME could be decreased to save time //
+  NFR5 & Likely & Depending on time constraints and scope, requirement could change & MAX_PROCESSING_TIME could be decreased to save time //
+  NFR6 & Likely & Depending on time constraints and scope, requirement could change & MAX_RESPONSE_TIME could be decreased for better user experience //
+  NFR13 & Likely & Depening on implementation, requirement could change & Font style and MIN_FONT_SIZE will dpeend on how the GUI looks. This is to ensure that the GUI is user friendly //
+  NFR17 & Likely & Depending on time constraint, requirement could change & REPLACE_TIME could be decreased for better user experience //
+  NFR21 & Likely & Depending on time constraint and scope & Improve performance so that it can run on lower than average personal computers can handle //
 
+  \hline
+\end{tabular}
+\caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
+\label{Table:Likely changes}
+\end{table}
+\end{landscape}
+
+\end{itemize}
 \noindent \begin{itemize}
 
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
@@ -875,12 +898,49 @@ Table ~\ref{Table:A_trace} shows the dependencies between requirements.
 
 \section{Unlikely Changes} 
 \label{sec_UnlikelyChanges} 
-
-\noindent \begin{itemize}
-
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the unlikely changes.  The design can assume that the changes listed will
-    not occur.}
+\begin{landscape}
+  \begin{table}[h!]
+  \centering
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+  Requirement & Likelihood of Changing & Rationale & Ways to Change //
+  R1 & Very Unlikeyl & Key implementation aspect & N/A //
+  R2 & Very Unlikely & Ensures safety of operation & N/A // 
+  R3 & Very Unlikely & Key implementation aspect & N/A //
+  R4 & Very Unlikely & Key implementation aspect & N/A //
+  R5 & Very Unlikely & Key implementation aspect & N/A //
+  R6 & Very Unlikely & Kay implementation aspect & N/A //
+  R7 & Very Unlikely & Key implementation aspect & N/A //
+  R8 & Very Unlikely & Key implementation aspect & N/A //
+  R9 & Very Unlikely & Key implementation aspect & N/A //
+  R10 & Very Unlikely & Key implementation aspect & N/A //
+  R11 & Very Unlikely & Key implementation aspect & N/A //
+  R12 & Very Unlikely & Key implementation aspect & N/A //
+  R13 & Very Unlikely & Key implementation aspect & N/A //
+  R14 & Very Unlikely & Key implementation aspect & N/A //
+  NFR2 & Unlikely & Depending on time constraints, requirement could change & Speed of movement is not a high priority  for the application //
+  NFR7 & Unlikely & Depending on monetary constraint & MIN_VIDEO_RESOLUTION will depend on the budget allowance cold be higher //
+  NFR8 & Unlikely & Depending on time and monetary constraints, requirement could change & MAX_VIDEO_DELAY will depend on the budget allowance and time given to improve latency //
+  NFR9 & Very Unlikely & Kay implementation aspect & N/A //
+  NFR10 & Very Unlikely & Key implementation aspect & N/A //
+  NFR11 & Unlikely & Depending on time constraints, requirement could change & ROBOT_MAX_DIMENSIONS could be decreased for better storage spacing //
+  NFR12 & Very Unlikely & Ensures usability by user & N/A //
+  NFR14 & Very Unlikely & Key implementation aspect & N/A //
+  NFR15 & Very Unlikely & Ensures safety of operation & N/A //
+  NFR16 & Very Unlikely & Key implementation aspect & N/A //
+  NFR18 & Unlikely & Depending on time and monetary constraint & Certain components might have to use special tools to access //
+  NFR19 & Very Unlikely & Monetary constraint & N/A //
+  NFR20 & Very Unlikcly & Key implementtion aspect & N/A //
+  NFR22 & Very Unlikely & Ensures safety of operation & N/A //
+  NFR23 & Very Unlikely & Ensures safety of operation and is a key implementation aspect & N/A //
+  NFR24 & Very Unlikely & Ensures safety of operation and is a key implementation aspect & N/A //
+  NFR25 & Very  Unlikely & Key implementation aspect & N/A //
+  \hline
+  \end{tabular}
+  \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
+  \label{Table:Unlikely changes}
+  \end{table}
+  \end{landscape}
 
 \end{itemize}
 
