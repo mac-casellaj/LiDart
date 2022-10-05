@@ -79,14 +79,15 @@
 \newcommand{\lthelcnum}{LC\thelcnum}
 \newcommand{\lcref}[1]{LC\ref{#1}}
 
-\newcommand{\ROBOT_SPEED}{0.5m/s}
-\newcommand{\SCAN_TOL}{+/- 1cm}
+
+\newcommand{\RobotSpeed}{0.5m/s}
+\newcommand{\ScanTolerance}{+/- 1cm}
 \newcommand{\BatteryLife}{3hrs}
 \newcommand{\ScanningSpace}{1 square meter}
 \newcommand{\ScanningTime}{2mins}
-\newcommand{\MaxProcessingTime}{10mins}
+\newcommand{\MaxProcessingTime}{10min}
 \newcommand{\MaxResponseTime}{1s}
-\newcommand{\MinVideoResolution}{1280x720}
+\newcommand{\MinVideoResolution}{1280x720p}
 \newcommand{\MaxVideoDelay}{1s}
 \newcommand{\RobotMaxWeight}{50kg}
 \newcommand{\RobotMaxDimensions}{1m x 1m x 3m (LxWxH)}
@@ -686,20 +687,20 @@ Rationale: This video feed can be used by the remote operator.
 \plt{Characterize the accuracy by giving the context/use for the software.  Maybe something like, ``The accuracy of the computed solutions should meet the level needed for $<$engineering or scientific application$>$.  The level of accuracy achieved by \progname{} shall be described following the procedure given in Section~X of the Verification and Validation Plan.''  A link to the VnV plan would be a nice extra.}
     
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within SCAN_TOL. This level of accuracy meets the needs of parties interested in low-cost, easily accessible scanning.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within SCAN\_TOL. This level of accuracy meets the needs of parties interested in low-cost, easily accessible scanning.
 \end{itemize}
 
 \subsubsection{Performance Requirements}
 
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance1}:] The robot shall be able to move at a maximum speed of ROBOT_SPEED.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance2}:] The robot shall be able to run for RUN_TIME of time without being charged.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance3}:] The system must be able to scan \ScanningSpace{} within SCANNING_TIME of time.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of MAX_PROCESSING_TIME to process raw data.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of MAX_RESPONSE_TIME to respond to user input commands.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of MIN_VIDEO_RESOLUTION.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance1}:] The robot shall be able to move at a maximum speed of ROBOT\_SPEED.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance2}:] The robot shall be able to run for RUN\_TIME of time without being charged.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance3}:] The system must be able to scan \ScanningSpace{} within SCANNING\_TIME of time.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of MAX\_PROCESSING\_TIME to process raw data.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of MAX\_RESPONSE\_TIME to respond to user input commands.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of MIN\_VIDEO\_RESOLUTION.
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance7}:] The video feed displayed on the GUI shall have a maximum delay of MAX_VIDEO_DELAY.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance7}:] The video feed displayed on the GUI shall have a maximum delay of MAX\_VIDEO\_DELAY.
 \end{itemize}
 
 \subsubsection{Usability Requirements}
@@ -707,11 +708,11 @@ Rationale: This video feed can be used by the remote operator.
 
 \noindent \begin{itemize}
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability1}:] The robot shall be easy to operate with very little knowledge. (needs to be measureable)
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than ROBOT_MAX_WEIGHT.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions ROBOT_MAX_DIMENSIONS.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed MAX_NUM_LEVELS.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of MIN_FONT_SIZE.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within EXECUTE_TIME seconds of accessing the user interface, for at least every 9/10 tasks.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than ROBOT\_MAX\_WEIGHT.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions ROBOT\_MAX\_DIMENSIONS.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed MAX\_NUM\_LEVELS.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of MIN\_FONT\_SIZE.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within EXECUTE\_TIME seconds of accessing the user interface, for at least every 9/10 tasks.
 \end{itemize}
 
 \subsubsection{Error-Handling Requirements}
@@ -724,7 +725,7 @@ Rationale: This video feed can be used by the remote operator.
 \plt{The effort required to make any of the likely changes listed for \progname{} should be less than FRACTION of the original development time.  FRACTION is then a symbolic constant that can be defined at the end of the report.}
 
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability1}:] Robot parts should be easily replaceable. It should take a maximum of 1 hour to replace any part on the robot.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability1}:] Robot parts should be easily replaceable. It should take a maximum of REPLACE\_TIME to replace any part on the robot.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability2}:] All hardware and electronic components shall be easily accessible. No special tools must be required to access hardware. 
 \newline Rationale: This will facilitate activities such as debugging and reprogramming the robot. 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability2}:] Standard, off-the-shelf components shall be used where possible. 
@@ -861,37 +862,37 @@ Their values are defined in this section for easy maintenance.}
 
 
 \plt{The value of FRACTION, for the Maintainability NFR would be given here.}
-\begin{tabular}{ | l | p{8cm} | c |}
+\begin{tabular}{ | l | p{6cm} | c |}
   \hline
   \textbf{Constant} & \textbf{Description} & \textbf{Value} \\
   \hline
-  RobotSpeed & Maximum speed of robot in navigation mode. & \RobotSpeed{} \\
+  ROBOT\_SPEED & Maximum speed of robot in navigation mode. & \RobotSpeed{} \\
   \hline
-  ScanTolerance & Maximum deviation between sufficient scans. & \ScanTolerance{} \\
+  SCAN\_TOL & Maximum deviation between sufficient scans. & \ScanTolerance{} \\
   \hline
-  BatteryLife & Maximum time robot can run before needing to be recharged. & \BatteryLife{} \\
+  RUN\_TIME & Maximum time robot can run before needing to be recharged. & \BatteryLife{} \\
   \hline
-  ScanningSpace & Unit used for defining robot scan speed & \ScanningSpace{} \\
+  SCANNING\_SPACE & Unit used for defining robot scan speed & \ScanningSpace{} \\
   \hline
-  ScanningTime & Time elapsed to complete scan of ScanningSpace. & \ScanningTime{} \\
+  SCANNING\_TIME & Time elapsed to complete scan of a specified scanning space. & \ScanningTime{} \\
   \hline
-  MaxProcessingTime & Time needed for robot to process something. & \MaxProcessingTime{} \\
+  MAX\_PROCESSING\_TIME & Time needed for the robot to process raw scanned data. & \MaxProcessingTime{} \\
   \hline
-  MaxResponseTime & Time needed for robot to respond to navigational commands given by user. & \MaxResponseTime{} \\
+  MAX\_RESPONSE\_TIME & Time needed for robot to respond to navigational commands given by user. & \MaxResponseTime{} \\
   \hline
-  MinVideoResolution & Minimum resolution of video output feed in GUI. & \MinVideoResolution{} \\
+  MIN\_VIDEO\_RESOLUTION & Minimum resolution of video output feed in GUI. & \MinVideoResolution{} \\
   \hline
-  MaxVideoDelay & Max time between change in camera and output video feed in GUI. & \MaxVideoDelay{} \\
+  MAX\_VIDEO\_DELAY & Max time between change in camera and output video feed in GUI. & \MaxVideoDelay{} \\
   \hline
-  RobotMaxWeight & Maximum weight of fully assembled robot. & \RobotMaxWeight{} \\
+  ROBOT\_MAX\_WEIGHT & Maximum weight of the fully assembled robot. & \RobotMaxWeight{} \\
   \hline
-  RobotMaxDimensions & Maximum size of fully assembled robot. & \RobotMaxDimensions{} \\
+  ROBOT\_MAX\_DIMENSIONS & Maximum size of the fully assembled robot. & \RobotMaxDimensions{} \\
   \hline
-  MaxNavLevels & Maximum number of layers required to access any function in GUI. & \MaxNavLevels{} \\
+  MAX\_NAV\_LEVELS & Maximum number of layers required to access any function in GUI. & \MaxNavLevels{} \\
   \hline
-  MinFontSize & The minimum font size used in the GUI for accessibility purposes. & \MinFontSize{} \\
+  MIN\_FONT\_SIZE & The minimum font size used in the GUI for accessibility purposes. & \MinFontSize{} \\
   \hline
-  ExecuteTaskTime & Time it would take an average user to execute 9/10 tasks within the GUI. & \ExecuteTaskTime{} \\
+  EXECUTE\_TASK\_TIME & Time it would take an average user to execute 9/10 tasks within the GUI. & \ExecuteTaskTime{} \\
   \hline
   
 \end{tabular}
