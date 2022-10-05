@@ -72,12 +72,15 @@
 \newcounter{nfrnum} %NFR Number
 \newcommand{\rthenfrnum}{NFR\thenfrnum}
 \newcommand{\nfrref}[1]{NFR\ref{#1}}
+\newcounter{constnum} %Constraint Number
+\newcommand{\ctheconstnum}{C\theconstnum}
+\newcommand{\cref}[1]{C\ref{#1}}
 \newcounter{lcnum} %Likely change number
 \newcommand{\lthelcnum}{LC\thelcnum}
 \newcommand{\lcref}[1]{LC\ref{#1}}
 
-\newcommand{\RobotSpeed}{0.5m/s}
-\newcommand{\ScanTolerance}{+/- 1cm}
+\newcommand{\ROBOT_SPEED}{0.5m/s}
+\newcommand{\SCAN_TOL}{+/- 1cm}
 \newcommand{\BatteryLife}{3hrs}
 \newcommand{\ScanningSpace}{1 square meter}
 \newcommand{\ScanningTime}{2mins}
@@ -512,7 +515,7 @@ The \progname\ 3D scanning system does not require any domain specific knowledge
 \item Basic computer skills, such as how to navigate through application menus
 \end{itemize}
 
-\subsection{System Constraints}
+\subsection{Constraints}
 
 \plt{System constraints differ from other type of requirements because they
   limit the developers' options in the system design and they identify how the
@@ -522,10 +525,9 @@ The \progname\ 3D scanning system does not require any domain specific knowledge
   included if they are truly required.}
 
 The following constraints are imposed on the \progname\ system:
-\begin{itemize}
-\item The total cost of the system must be less than \$750.
-\item Off-the-shelf, readily-available hardware shall be used where possible.
-
+\noindent \begin{itemize}
+\item[C\refstepcounter{constnum}\theconstnum] The total cost of the system must be less than \$750.
+\item[C\refstepcounter{constnum}\theconstnum] The project must be completed by April 2022.
 \end{itemize}
 
 \section{Specific System Description} 
@@ -637,14 +639,11 @@ qualities that the software is expected to exhibit.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs2}:] There shall be a kill-switch mounted on the robot, which immediately deactivates the the robot when pressed in emergency situations.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs3}:] The robot shall be able to move in all four directions: turn left, turn right, move forwards, and move backwards.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs4}:] The robot shall be stationary if no input commands are given.
-<<<<<<< HEAD
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be connected to over a wireless network.
 \newline Rationale: A wireless connection is required for remote operation.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to operated remotely.
-=======
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be connected to over Wifi.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to be operated remotely.
->>>>>>> e72e2b9b3cb5f01454eed00802f6e5f918d20ffe
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be connected to over WiFi.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to be operated remotely.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs7}:] The robot shall have a power on/off switch.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs8}:] The robot shall have a means of being charged.
 
@@ -687,22 +686,20 @@ Rationale: This video feed can be used by the remote operator.
 \plt{Characterize the accuracy by giving the context/use for the software.  Maybe something like, ``The accuracy of the computed solutions should meet the level needed for $<$engineering or scientific application$>$.  The level of accuracy achieved by \progname{} shall be described following the procedure given in Section~X of the Verification and Validation Plan.''  A link to the VnV plan would be a nice extra.}
     
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within SCAN\_TOLERANCE. 
-\newline Rationale: This level of accuracy meets the requirements needed for users of a low-cost, easily accessible scanning system.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within \ScanTolerance{}. This level of accuracy meets the requirements needed for (insert application).
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within SCAN_TOL. This level of accuracy meets the needs of parties interested in low-cost, easily accessible scanning.
 \end{itemize}
 
 \subsubsection{Performance Requirements}
 
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance1}:] The robot shall be able to move at a maximum speed of \RobotSpeed{}.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance2}:] The robot shall be able to run for \BatteryLife{} of time without being charged.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance3}:] The system must be able to scan \ScanningSpace{} within \ScanningTime{} of time.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of \MaxProcessingTime{} to process raw data.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of \MaxResponseTime{} to respond to user input commands.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of \MinVideoResolution{}.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance1}:] The robot shall be able to move at a maximum speed of ROBOT_SPEED.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance2}:] The robot shall be able to run for RUN_TIME of time without being charged.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance3}:] The system must be able to scan \ScanningSpace{} within SCANNING_TIME of time.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of MAX_PROCESSING_TIME to process raw data.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of MAX_RESPONSE_TIME to respond to user input commands.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of MIN_VIDEO_RESOLUTION.
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance7}:] The video feed displayed on the GUI shall have a maximum delay of \MaxVideoDelay{}.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance7}:] The video feed displayed on the GUI shall have a maximum delay of MAX_VIDEO_DELAY.
 \end{itemize}
 
 \subsubsection{Usability Requirements}
@@ -710,11 +707,11 @@ Rationale: This video feed can be used by the remote operator.
 
 \noindent \begin{itemize}
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability1}:] The robot shall be easy to operate with very little knowledge. (needs to be measureable)
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than \RobotMaxWeight{}.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions \RobotMaxDimensions{}.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed \MaxNavLevels{}.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of \MinFontSize{}.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within \ExecuteTaskTime{} seconds of accessing the user interface, for at least every 9/10 tasks.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than ROBOT_MAX_WEIGHT.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions ROBOT_MAX_DIMENSIONS.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed MAX_NUM_LEVELS.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of MIN_FONT_SIZE.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within EXECUTE_TIME seconds of accessing the user interface, for at least every 9/10 tasks.
 \end{itemize}
 
 \subsubsection{Error-Handling Requirements}
@@ -757,6 +754,65 @@ Rationale: This video feed can be used by the remote operator.
 \end{itemize}
 \end{itemize}
 
+\subsection{Requirements Dependencies}
+\section{Traceability Matrices and Graphs}
+\label{sec_tm}
+
+The purpose of the traceability matrices is to provide easy references on what
+has to be additionally modified if a certain component is changed.  Every time a
+component is changed, the items in the column of that component that are marked
+with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows the
+dependencies of theoretical models, general definitions, data definitions, and
+instance models with each other. Table~\ref{Table:R_trace} shows the
+dependencies of instance models, requirements, and data constraints on each
+other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
+general definitions, data definitions, instance models, and likely changes on
+the assumptions.
+
+\plt{You will have to modify these tables for your problem.}
+
+\plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
+  means that GD1's derivation or presentation requires invocation of A1.  A1
+  does not use GD1.  A1 is ``used by'' GD1.}
+
+\plt{The traceability matrix is challenging to maintain manually.  Please do
+  your best.  In the future tools (like Drasil) will make this much easier.}
+
+\afterpage{
+\begin{landscape}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+	& \aref{A_OnlyThermalEnergy}& \aref{A_hcoeff}& \aref{A_mixed}& \aref{A_tpcm}& \aref{A_const_density}& \aref{A_const_C}& \aref{A_Newt_coil}& \aref{A_tcoil}& \aref{A_tlcoil}& \aref{A_Newt_pcm}& \aref{A_charge}& \aref{A_InitTemp}& \aref{A_OpRangePCM}& \aref{A_OpRange}& \aref{A_htank}& \aref{A_int_heat}& \aref{A_vpcm}& \aref{A_PCM_state}& \aref{A_Pressure} \\
+\hline
+\tref{T_COE}        & X& & & & & & & & & & & & & & & & & & \\ \hline
+\tref{T_SHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
+\tref{T_LHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
+\dref{NL}           & & X& & & & & & & & & & & & & & & & & \\ \hline
+\dref{ROCT}         & & & X& X& X& X& & & & & & & & & & & & & \\ \hline
+\ddref{FluxCoil}    & & & & & & & X& X& X& & & & & & & & & & \\ \hline
+\ddref{FluxPCM}     & & & X& X& & & & & & X& & & & & & & & & \\ \hline
+\ddref{D_HOF}       & & & & & & & & & & & & & & & & & & & \\ \hline
+\ddref{D_MF}        & & & & & & & & & & & & & & & & & & & \\ \hline
+\iref{ewat}         & & & & & & & & & & & X& X& & X& X& X& & & X \\ \hline
+\iref{epcm}         & & & & & & & & & & & & X& X& & & X& X& X& \\ \hline
+\iref{I_HWAT}       & & & & & & & & & & & & & & X& & & & & X \\ \hline
+\iref{I_HPCM}       & & & & & & & & & & & & & X& & & & & X & \\ \hline
+\lcref{LC_tpcm}     & & & & X& & & & & & & & & & & & & & & \\ \hline
+\lcref{LC_tcoil}    & & & & & & & & X& & & & & & & & & & & \\ \hline
+\lcref{LC_tlcoil}   & & & & & & & & & X& & & & & & & & & & \\ \hline
+\lcref{LC_charge}   & & & & & & & & & & & X& & & & & & & & \\ \hline
+\lcref{LC_InitTemp} & & & & & & & & & & & & X& & & & & & & \\ \hline
+\lcref{LC_htank}    & & & & & & & & & & & & & & & X& & & & \\
+\hline
+\end{tabular}
+\caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
+\label{Table:A_trace}
+\end{table}
+\end{landscape}
+}
+
 \section{Likely Changes} 
 \label{sec_LikelyChanges}   
 
@@ -788,6 +844,12 @@ Rationale: This video feed can be used by the remote operator.
   course, and which will be ``faked'' as future work.  This section can be
   organized as a prioritized list of requirements, or it could should the
   requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
+
+\begin{enumerate}
+  \item 
+  \item 
+  \item 
+\end{enumerate}
 
 \section{Values of Auxiliary Constants}
 \label{sec_ac}
