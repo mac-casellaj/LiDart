@@ -7,6 +7,7 @@ This subsection provides a list of terms that are used in the subsequent section
     - unique
 - State Estimation
     - process of estimating the state of the robot and its environment
+    - when the state of the robot and its environment has been confidently estimated the robot is concidered localized 
 - LiDAR
     - short for "Light Detection And Ranging"
     - a type of distance sensor
@@ -92,6 +93,14 @@ Normal operation of the LiDart system will proceed as follows:
 5. User initiates a scan
 6. Steps 4 and 5 are repeated until the user has scanned all desired areas of the environment
 7. User downloads the final stitched 3D scan
+
+There are several events that fall outside of normal operations, those include:
+
+Cancelling a scan - If the user has initiated a scan but then decides that the location is not ideal, the user can cancel the scan. This discards the information from that specific scan and allows the user to resume driving the robot.
+
+Robot not localized - If the robot is not localized, it will not allow the user to initiate a scan. To be able to initiate a scan the user must first drive the robot to a location where the robot can localize itself.
+
+Emergency stopping - If the robot begins misbehaving it can be powered off with an onboard emergency stop switch. This is required in the event that a hardware failure causes the robot to pose a safety risk or to stop responding to user commands.
 
 ## 4.3 Functional Decomposition
 
