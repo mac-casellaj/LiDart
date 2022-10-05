@@ -534,93 +534,174 @@ The following constraints are imposed on the \progname\ system:
 \section{Specific System Description} 
 \label{sec_SpecificDesc}
 
-This section presents assumptions, required behaviour, and a functional decomposition of the system.  
+The solution that LiDart proposes to the specified problem is a two wheeled mobile robot that can be remotely driven to take 3D scans of its environment.
 
-\subsection{Solution Characteristics Specification}
+The robot will have all required sensors onboard, these sensors will include:
+- One or more cameras
+- A LiDAR module capable of measuring the distance to objects in a given plane relative to the sensor's orientation and position 
+- Two encoders capable of measuring wheel rotations, one for each of the two wheels
 
-\plt{This section specifies the information in the solution domain of the system
-  to be developed. This section is intended to express what is required in
-  such a way that analysts and stakeholders get a clear picture, and the
-  latter will accept it. The purpose of this section is to reduce the problem
-  into one expressed in mathematical terms. Mathematical expertise is used to
-  extract the essentials from the underlying physical description of the
-  problem, and to collect and substantiate all physical data pertinent to the
-  problem.}
+\subsection{Assumptions}
 
-\plt{This section presents the solution characteristics by successively refining
-  models.  It starts with the abstract/general Theoretical Models (TMs) and
-  refines them to the concrete/specific Instance Models (IMs).  If necessary
-  there are intermediate refinements to General Definitions (GDs).  All of these
-  refinements can potentially use Assumptions (A) and Data Definitions (DD).
-  TMs are refined to create new models, that are called GMs or IMs. DDs are not
-  refined; they are just used. GDs and IMs are derived, or refined, from other
-  models. DDs are not derived; they are just given. TMs are also just given, but
-  they are refined, not used.  If a potential DD includes a derivation, then
-  that means it is refining other models, which would make it a GD or an IM.}
+It is assumed that the environment that LiDart will operate within will have the following properties.
 
-\plt{The above makes a distinction between ``refined'' and ``used.'' A model is
-  refined to another model if it is changed by the refinement. When we change a
-  general 3D equation to a 2D equation, we are making a refinement, by applying
-  the assumption that the third dimension does not matter. If we use a
-  definition, like the definition of density, we aren't refining, or changing
-  that definition, we are just using it.}
+- Not exposed to the elements (eg. Rain)
+The robot will not be weather proofed, as this increases cost and complexity. A weather proofed configuration could be designed at a later date by modifiying the current robot.
 
-\plt{The same information can be a TM in one problem and a DD in another.  It is
-  about how the information is used.  In one problem the definition of
-  acceleration can be a TM, in another it would be a DD.}
+- Floor should be flat and suitable for driving on with plastic wheels (dry, hard, not slippery. eg. tile, hardwood, concrete)
+The robot's simple 2 wheeled drive train is not suited to all terrains. This drive train was chosen to minimize cost and complexity.
 
-\plt{There is repetition between the information given in the different chunks
-  (TM, GDs etc) with other information in the document.  For instance, the
-  meaning of the symbols, the units etc are repeated.  This is so that the
-  chunks can stand on their own when being read by a reviewer/user.  It also
-  facilitates reuse of the models in a different context.}
+- Will remain static while the robot is active
+This ensures there are no artifacts in the final stitched 3D scan resulting from changes to the environment between individual 3D scans.
 
-\noindent \plt{The relationships between the parts of the document are show in
-  the following figure.  In this diagram ``may ref'' has the same role as
-  ``uses'' above.  The figure adds ``Likely Changes,'' which are able to
-  reference (use) Assumptions.}
+- Prepopulated with landmarks 
+This choice was made to simplify the operation of the state estimation algorithm. This should reduce the need for the user to understand the inner workings of the state estimation process.
+
+- No translucent or reflective objects
+Translucent and reflective objects can result in poorly behaved LiDAR measurements, and may impact the final stitched 3D scan.
+
+- Is illuminated such that the onboard camera(s) can clearly view the surrounding
+The robot relies on cameras for state estimation, as such it must operate in a sufficiently lit environment.
+
+\subsection{Behaviour Overview}
 
 \begin{figure}[H]
-  \includegraphics[scale=0.9]{RelationsBetweenTM_GD_IM_DD_A.pdf}
+\begin{center}
+    \includegraphics[width=0.75\textwidth]{Figures/Behaviour Overview.pdf}
+\caption{Behaviour Overview}
+\label{Fig_BehaviourOverview} 
+\end{center}
 \end{figure}
 
-The instance models that govern \progname{} are presented in
-Subsection~\ref{sec_instance}.  The information to understand the meaning of the
-instance models and their derivation is also presented, so that the instance
-models can be verified.
+Figure~\aref{Fig_BehaviourOverview} shows the high level behaviour of the LiDart system.
 
-\subsubsection{Assumptions} \label{sec_assumpt}
+Normal operation of the LiDart system will proceed as follows:
+1. Robot is powered on
+2. User connects to the robot via WiFi
+3. User opens the GUI
+4. User drives the robot to a desired location, the user can use the live video feed and LiDAR data preview to choose such a location
+5. User initiates a scan
+6. Steps 4 and 5 are repeated until the user has scanned all desired areas of the environment
+7. User downloads the final stitched 3D scan
 
-\plt{The assumptions are a refinement of the scope.  The scope is general, where
-  the assumptions are specific.  All assumptions should be listed, even those
-  that domain experts know so well that they are rarely (if ever) written down.}
-\plt{The document should not take for granted that the reader knows which
-  assumptions have been made. In the case of unusual assumptions, it is
-  recommended that the documentation either include, or point to, an explanation
-  and justification for the assumption.}
+There are several events that fall outside of normal operations, those include:
 
-This section simplifies the original problem and helps in developing the
-theoretical model by filling in the missing information for the physical
-system. The numbers given in the square brackets refer to the theoretical model
-[T], general definition [GD], data definition [DD], instance model [IM], or
-likely change [LC], in which the respective assumption is used.
+Cancelling a scan - If the user has initiated a scan but then decides that the location is not ideal, the user can cancel the scan. This discards the information from that specific scan and allows the user to resume driving the robot.
 
-\begin{itemize}
+Robot not localized - If the robot is not localized, it will not allow the user to initiate a scan. To be able to initiate a scan the user must first drive the robot to a location where the robot can localize itself.
 
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_meaningfulLabel}:]
-  \plt{Short description of each assumption.  Each assumption
-    should have a meaningful label.  Use cross-references to identify the
-    appropriate traceability to T, GD, DD etc., using commands like dref, ddref
-    etc.  Each assumption should be atomic - that is, there should not be an
-    explicit (or implicit) ``and'' in the text of an assumption.}
+Emergency stopping - If the robot begins misbehaving it can be powered off with an onboard emergency stop switch. This is required in the event that a hardware failure causes the robot to pose a safety risk or to stop responding to user commands.
 
-\end{itemize}
+\subsection{Functional Decomposition}
 
-\subsection{Behaviour Overview}\label{sec_behaviour}
+\begin{figure}[H]
+\begin{center}
+    \includegraphics[width=0.75\textwidth]{Figures/Functional Decomposition.pdf}
+\caption{Functional Decomposition}
+\label{Fig_FunctionalDecomposition} 
+\end{center}
+\end{figure}
 
-\subsection{Functional Decomposition}\label{sec_behaviour}
+Figure~\aref{Fig_FunctionalDecomposition} shows the high level data flow throughout the LiDart system. 
 
-\subsection{Subsystem Descriptions}\label{sec_behaviour}
+The system receives data from the user through the GUI alongside inputs from the various sensors onboard the robot (monitored variables). These inputs include:
+- Initiate scan command
+- Cancel scan command
+- Drive command
+- LiDAR readings
+- Camera frames
+- Wheel encoder readings
+
+The system will use the listed inputs to produce or drive the following outputs (controlled variables):
+- Final stitched 3D scan
+- Live LiDAR preview (figure ??, look here https://www.slamtec.com/en/Lidar/A1)
+- Live video feed of the robot's environment
+- Wheel voltages
+- Robot status (eg. Fault occured, Ready to scan)
+
+\subsection{Subsystem Descriptions}
+
+\subsubsection{Landmark Extraction}
+    Given a frame from the onboard camera, the landmark extraction subsystem will find all landmarks in the frame and extract information about them.
+    This information will include an ID which can be used to correlate subsequent detections of the same landmark. It will also contain some information about the position, and possibly orientation, of the landmark relative to the camera. The exact form of this information will vary based on the choice of landmark type. Two example landmark types are listed below. 
+
+    Colored Spheres
+        Uniquely colored spheres could be used as landmarks. They would be easy to detect in a frame, uniquely identifiable based on their color, and would provide information about the direction of the landmark relative to the camera. Given enough landmarks in view these directions could be used to estimate the camera's pose. The size of the sphere could also be used to estimate distance from the camera to the landmark.
+
+        Although colored spheres are a very simple example of a possible landmark, they have several drawbacks. One drawback is that for them to remain unique, each sphere would need to be a distinct color from everything else in the environment, this quickly becomes difficult and would quickly increase the rate of landmark misdetections.
+
+        Another drawback is the sort of position data provided by using colored spheres, you only get direction and distance, no information about orientation. This increases the number of landmarks required to be in view for an accurate estimation of camera pose. 
+
+    AprilTags (https://april.eecs.umich.edu/software/apriltag)
+        AprilTags are a 2D barcode system (similar in concept to QR codes) designed at the University of Michigan for easy and robust pose estimation.
+        
+        Each AprilTag encodes a unique number which can be used to correlate subsequent detections. AprilTags are also robust to misdetection, as their barcode encodes information such that errors can be detected and rejected. Finally, AprilTags provide pose information for each landmark, which greatly reduces the number of landmarks required to be in view for an accurate estimation of camera pose.
+
+\subsubsection{Differential Drive Kinematics}
+    The differential drive kinematics subsystem will provide an estimate of the pose of the robot using readings from the wheel encoders. This estimate will accumulate error over time due to being a purely feed-forward estimator, but it can be used to suplement a more complex state estimator (see section 'State Estimation').
+
+    Figure ???
+
+    The LiDart robot will use a 2 wheel differential drive system, the derivation for the kinematice of such a system is as follows.
+
+    Constants:
+    r - wheel radius
+    b - the distance between the centers of the wheels
+
+    Variables:
+    V - velocity vector of the robot
+    VL - velocity vector of the left wheel
+    VR - velocity vector of the right wheel
+    omega - angular velocity of the robot 
+    wL - velocity of the left wheel in the direction that it rotates
+    wR - velocity of the right wheel in the direction that it rotates
+    Vx - x component of the robot velocity
+    Vy - y component of the robot velocity
+
+    Rolling without slipping:
+    wL = r*omegaL
+    wR = r*omegaR
+
+    Kinematics:
+    VR = V + (omega zhat)x(b/2)xhat
+    VR = V + (omega)(b/2)yhat
+    wR*yhat = Vx*xhat + Vy*yhat + (omega)(b/2)yhat
+    
+    wR = Vy + (omega)(b/2)  <- y component
+    0 = Vx                  <- x component
+
+    Result:
+    omegaR = (Vy + omega*b/2) / r
+    omegaL = (Vy - omega*b/2) / r
+
+\subsubsection{Movement Controller}
+    The movement controller subsystem will receive commands that the user issues via the GUI and control the drive train as necessary.
+    
+    While the robot is in scanning mode this subsystem will attempt to keep the robot stationary, and as such will ignore any drive commands. While out of scanning mode this subsystem will control the drive train according to any received drive commands.
+
+    The movement controller will make use of a closed loop velocity controller to control the wheel speeds of the drive train. In this system the velocity of the wheels will be the measured variables, and the voltage given to the wheel motors will be the actuated/controlled variables.
+
+    An example closed loop controller that is suitable for this use case is a PID controller, the discrete time equation for which is as follows.
+
+    % K_p - proportional gain
+    % K_i - integral gain
+    % K_d - derivative gain
+    % e_n - error at time n 
+    % u_n - output of the controller at time n
+
+    % u_n = K_p * e_n + K_i * sigma_i e_i + K_d * (e_n - e_n-1)
+
+\subsubsection{State Estimation}
+    The state estimation subsystem will receive data from the landmark extraction and differential drive kinematics subsystems and use that data to estimate the pose of the robot alongside the poses of all the landmarks it has seen.
+    
+    This state estimation can be done using various different algorithms, one example of such algorithm is the particle filter.
+
+\subsubsection{Point Cloud Stitching}
+    The point cloud stitching subsystem will take the raw LiDAR readings along with the pose estimation from the state estimation subsystem and use that information to add data to the current 3D scan.
+
+    It will do this by first transforming the raw LiDAR readings into the reference frame of the environment, as the raw readings will initially be in the LiDAR sensor's local reference frame. This will be done using the pose estimate provided by the state estimation subsystem.
+
+    It will then take these transformed points and stitch them into the current 3D scan. There are many algorithms for point cloud stitching, two examples of such algorithms are Iterative Closest Point and Moving Least Squares.
 
 \section{Requirements}
 \label{sec_Requirements}
@@ -636,24 +717,21 @@ qualities that the software is expected to exhibit.
 
 \noindent \begin{itemize}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs1}:] The system shall take input from the user through a keyboard and standard pointing device such as a mouse.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs2}:] There shall be a kill-switch mounted on the robot, which immediately deactivates the the robot when pressed in emergency situations.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs3}:] The robot shall be able to move in all four directions: turn left, turn right, move forwards, and move backwards.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs4}:] The robot shall be stationary if no input commands are given.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be connected to over a wireless network.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs1}:] The GUI shall take input from the user through a keyboard and standard pointing device such as a mouse.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs2}:] There shall be a emergency stop mounted on the robot, which immediately powers down the the robot when pressed.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs3}:] The robot shall be able to move forward and backwards, and turn in both directions.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs4}:] The robot shall be stationary if no commands are given.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be operated remotely.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to be connected to over a wireless network.
 \newline Rationale: A wireless connection is required for remote operation.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to be operated remotely.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be connected to over WiFi.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to be operated remotely.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs7}:] The robot shall have a power on/off switch.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs8}:] The robot shall have a means of being charged.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs7}:] The robot shall be able to be connected to over WiFi.
+\item[\newline Rationale: WiFi is a commonly available wireless connection technology, it will be familiar to most users.] 
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs9}:] The robot shall have a power switch.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs10}:] The robot shall have a means of being charged.
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs1}:] The robot shall be able to verify the inputs before processing the output. (needs to be more specific)
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate1}:] The system shall be able to perform state estimation calculations based on landmarks in the surrounding environment.
-\newline Rationale: 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate2}:] The system shall calculate distance and rotation between each landmark.
-\newline Rationale:
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate2}:] The system shall transform point-cloud data into a 3D object model.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate1}:] The system shall stitch multiple LiDAR readings into a large point cloud.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate2}:] The system shall be able to perform state estimation calculations based on landmarks in the surrounding environment.
+\newline Rationale: The estimated state of the robot will be used to stitch the multiple LiDAR readings as specified in \aref{R_Calculate1} 
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:] The robot shall verify closed-loop calculations. (needs to be more specific)
 \newline Rationale:
