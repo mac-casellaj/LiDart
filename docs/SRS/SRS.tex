@@ -175,47 +175,6 @@
 
 This section records information for easy reference.
 
-\subsection{Table of Units}
-
-Throughout this document SI (Syst\`{e}me International d'Unit\'{e}s) is employed
-as the unit system.  In addition to the basic units, several derived units are
-used as described below.  For each unit, the symbol is given followed by a
-description of the unit and the SI name.
-~\newline
-
-\renewcommand{\arraystretch}{1.2}
-%\begin{table}[ht]
-  \noindent \begin{tabular}{l l l} 
-    \toprule		
-    \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
-    \midrule 
-    \si{\metre} & length & metre\\
-    \si{\kilogram} & mass	& kilogram\\
-    \si{\second} & time & second\\
-    \si{\watt} & power & watt (W = \si{\joule\per\second})\\
-    \bottomrule
-  \end{tabular}
-  %	\caption{Provide a caption}
-%\end{table}
-
-\plt{Only include the units that your SRS actually uses.}
-
-\plt{Derived units, like newtons, pascal, etc, should show their derivation
-    (the units they are derived from) if their constituent units are in the
-    table of units (that is, if the units they are derived from are used in the
-    document).  For instance, the derivation of pascals as
-    $\si{\pascal}=\si{\newton\per\square\meter}$ is shown if newtons and m are
-    both in the table.  The derivations of newtons would not be shown if kg and
-    s are not both in the table.}
-
-\plt{The symbol for units named after people use capital letters, but the name
-  of the unit itself uses lower case.  For instance, pascals use the symbol Pa,
-  watts use the symbol W, teslas use the symbol T, newtons use the symbol N,
-  etc.  The one exception to this is degree Celsius.  Details on writing metric
-  units can be found on the 
-  \href{https://www.nist.gov/pml/weights-and-measures/writing-metric-units}
-  {NIST} web-page.}
-
 \subsection{Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
@@ -928,14 +887,6 @@ Table ~\ref{Table:A_trace} shows the dependencies between requirements.
 \section{Development Plan}
 \label{sec_dp}
 
-\plt{This section is optional.  It is used to explain the plan for developing
-  the software.  In particular, this section gives a list of the order in which
-  the requirements will be implemented.  In the context of a course  this is
-  where you can indicate which requirements will be implemented as part of the
-  course, and which will be ``faked'' as future work.  This section can be
-  organized as a prioritized list of requirements, or it could should the
-  requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
-
 LiDart's development will be split into to main efforts:
 \begin{itemize}
     \item Software and Control Systems (referred to as SCS)
@@ -947,19 +898,60 @@ LiDart is broken up into phases describing what each effort will be focused on.
 
 \subsection{Phase 1 - Foundational Components}
 \textbf{Date:} Oct 6, 2022 - Nov 13, 2022 (POC Demo)
-
-In this phase SCS will work on initial versions of the landmark extraction and state estimation subsystems.
-
-In this phase EM will design, building and wiring 
+\ \newline\newline
+In this phase SCS will build initial versions of the landmark extraction and state
+estimation subsystems. These initial versions will run on a computer, not the robot,
+and be tested using images taken externally (eg. using a smart phone). SCS will also build
+a GUI which can be used to remotely drive the robot.
+\ \newline\newline
+In this phase EM will design and build the robot chassis and drive train. 
+\ \newline\newline
+The output for this phase will be:
+\begin{itemize}
+\item A robot that can be driven remotely
+\item Initial versions of the landmark extraction and state estimation subsystems
+\item An initial version of the GUI
+\end{itemize}
 
 \subsection{Phase 2 - Initial Prototype}
 \textbf{Date:} Nov 14, 2022 - Dec 8, 2022
+\ \newline\newline
+In this phase SCS will build initial versions of the differential drive kinematics and
+movement controller subsystems. SCS will also adapt the landmark extraction and state estimation
+subsystems from the previous phase such that they run on the robot and pull data from
+the onboard sensors.
+\ \newline\newline
+In this phase EM will design and build any mechanisms required by the camera and LiDAR module.
+The camera, LiDAR module and any additional sensors will be mounted and wired. 
+\ \newline\newline
+The output for this phase will be:
+\begin{itemize}
+\item A robot with all required sensors mounted and wired
+\item A software stack capable of estimating the state of the robot using onboard sensors
+\end{itemize}
 
 \subsection{Phase 3 - Minimum Viable Product}
 \textbf{Date:} Dec 26, 2022 - Feb 6, 2023 (Rev 0 Demo)
+\ \newline\newline
+In this phase SCS will build an initial version of the point cloud stitching subsystem. SCS
+will also extend the GUI such that it satisfies the LiDart functional requirements. During this
+phase the ability to perform and download 3D scans will be added to the GUI.
+\ \newline\newline
+In this phase EM will refine the mechanical and electrical design of the robot, adding additional
+features that would be required for an MVP. Examples of such features may include charging circuitry,
+additional safeties or additional sensors.
+\ \newline\newline
+The output for this phase will be:
+\begin{itemize}
+\item A robot with build quality matching that of a minimum viable product
+\item A software stack capable of generating stitched 3D scans
+\item A functionally complete version of the GUI
+\end{itemize}
 
 \subsection{Phase 4 - Refinement}
 \textbf{Date:} Feb 7, 2023 - Mar 20, 2023 (Final Demo)
+\ \newline\newline
+In this phase SCS and EM will continue to refine the project, taking into consideration the feedback from the Rev 0 presentation.
 
 \section{Values of Auxiliary Constants}
 \label{sec_ac}
