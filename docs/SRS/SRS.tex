@@ -633,9 +633,15 @@ in view for an accurate estimation of camera pose.
 \subsubsection{Differential Drive Kinematics}
 The differential drive kinematics subsystem will provide an estimate of the pose of the robot using readings from
 the wheel encoders. This estimate will accumulate error over time due to being a purely feed-forward estimator, but
-it can be used to suplement a more complex state estimator (see section 'State Estimation').
+it can be used to suplement a more complex state estimator.
 
-Figure ???
+\begin{figure}[H]
+\begin{center}
+    \includegraphics[width=0.75\textwidth]{Figures/Differential Drive Kinematics.pdf}
+\caption{Differential Drive Kinematics}
+\label{Fig_DifferentialDriveKinematics} 
+\end{center}
+\end{figure}
 
 The LiDart robot will use a 2 wheel differential drive system, the derivation for the kinematics of such a system is as follows.
 
