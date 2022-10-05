@@ -76,6 +76,21 @@
 \newcommand{\lthelcnum}{LC\thelcnum}
 \newcommand{\lcref}[1]{LC\ref{#1}}
 
+\newcommand{\RobotSpeed}{0.5m/s}
+\newcommand{\ScanTolerance}{+/- 1cm}
+\newcommand{\BatteryLife}{3hrs}
+\newcommand{\ScanningSpace}{1 square meter}
+\newcommand{\ScanningTime}{2mins}
+\newcommand{\MaxProcessingTime}{10mins}
+\newcommand{\MaxResponseTime}{1s}
+\newcommand{\MinVideoResolution}{1280x720}
+\newcommand{\MaxVideoDelay}{1s}
+\newcommand{\RobotMaxWeight}{50kg}
+\newcommand{\RobotMaxDimensions}{1m x 1m x 3m (LxWxH)}
+\newcommand{\MaxNavLevels}{4}
+\newcommand{\MinFontSize}{14pt}
+\newcommand{\ExecuteTaskTime}{10s}
+
 \usepackage{fullpage}
 
 \newcommand{\deftheory}[9][Not Applicable]
@@ -622,9 +637,14 @@ qualities that the software is expected to exhibit.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs2}:] There shall be a kill-switch mounted on the robot, which immediately deactivates the the robot when pressed in emergency situations.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs3}:] The robot shall be able to move in all four directions: turn left, turn right, move forwards, and move backwards.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs4}:] The robot shall be stationary if no input commands are given.
+<<<<<<< HEAD
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be connected to over a wireless network.
 \newline Rationale: A wireless connection is required for remote operation.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to operated remotely.
+=======
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be connected to over Wifi.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to be operated remotely.
+>>>>>>> e72e2b9b3cb5f01454eed00802f6e5f918d20ffe
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs7}:] The robot shall have a power on/off switch.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs8}:] The robot shall have a means of being charged.
 
@@ -669,19 +689,20 @@ Rationale: This video feed can be used by the remote operator.
 \noindent \begin{itemize}
 \item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within SCAN\_TOLERANCE. 
 \newline Rationale: This level of accuracy meets the requirements needed for users of a low-cost, easily accessible scanning system.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within \ScanTolerance{}. This level of accuracy meets the requirements needed for (insert application).
 \end{itemize}
 
 \subsubsection{Performance Requirements}
 
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance1}:] The robot shall be able to move at a speed of ROBOT\_SPEED.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance2}:] The robot shall be able to run for BATTERY\_LIFE time without being charged.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance3}:] The system must be able to scan SCANNING\_SPACE within SCANNING\_TIME amount of time.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of MAX\_PROCESSING\_TIME to process raw data.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of MAX\_RESPONSE\_TIME to respond to user input commands.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of MIN\_VIDEO\_RESOLUTION.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance1}:] The robot shall be able to move at a maximum speed of \RobotSpeed{}.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance2}:] The robot shall be able to run for \BatteryLife{} of time without being charged.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance3}:] The system must be able to scan \ScanningSpace{} within \ScanningTime{} of time.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of \MaxProcessingTime{} to process raw data.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of \MaxResponseTime{} to respond to user input commands.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of \MinVideoResolution{}.
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance7}:] The video feed displayed on the GUI shall have a maximum delay of MAX\_VIDEO\_DELAY.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance7}:] The video feed displayed on the GUI shall have a maximum delay of \MaxVideoDelay{}.
 \end{itemize}
 
 \subsubsection{Usability Requirements}
@@ -689,11 +710,11 @@ Rationale: This video feed can be used by the remote operator.
 
 \noindent \begin{itemize}
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability1}:] The robot shall be easy to operate with very little knowledge. (needs to be measureable)
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than ROBOT\_MAX\_WEIGHT.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions ROBOT\_MAX\_DIMENSIONS.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed MAX\_NUM\_NAV\_LEVELS.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of MIN\_FONT\_SIZE.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within EXECUTE\_TASK\_TIME seconds of accessing the user interface, for at least every 9/10 tasks.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than \RobotMaxWeight{}.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions \RobotMaxDimensions{}.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed \MaxNavLevels{}.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of \MinFontSize{}.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within \ExecuteTaskTime{} seconds of accessing the user interface, for at least every 9/10 tasks.
 \end{itemize}
 
 \subsubsection{Error-Handling Requirements}
@@ -776,7 +797,42 @@ Rationale: This video feed can be used by the remote operator.
 \plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.}
 
+
 \plt{The value of FRACTION, for the Maintainability NFR would be given here.}
+\begin{tabular}{ | l | p{8cm} | c |}
+  \hline
+  \textbf{Constant} & \textbf{Description} & \textbf{Value} \\
+  \hline
+  RobotSpeed & Maximum speed of robot in navigation mode. & \RobotSpeed{} \\
+  \hline
+  ScanTolerance & Maximum deviation between sufficient scans. & \ScanTolerance{} \\
+  \hline
+  BatteryLife & Maximum time robot can run before needing to be recharged. & \BatteryLife{} \\
+  \hline
+  ScanningSpace & Unit used for defining robot scan speed & \ScanningSpace{} \\
+  \hline
+  ScanningTime & Time elapsed to complete scan of ScanningSpace. & \ScanningTime{} \\
+  \hline
+  MaxProcessingTime & Time needed for robot to process something. & \MaxProcessingTime{} \\
+  \hline
+  MaxResponseTime & Time needed for robot to respond to navigational commands given by user. & \MaxResponseTime{} \\
+  \hline
+  MinVideoResolution & Minimum resolution of video output feed in GUI. & \MinVideoResolution{} \\
+  \hline
+  MaxVideoDelay & Max time between change in camera and output video feed in GUI. & \MaxVideoDelay{} \\
+  \hline
+  RobotMaxWeight & Maximum weight of fully assembled robot. & \RobotMaxWeight{} \\
+  \hline
+  RobotMaxDimensions & Maximum size of fully assembled robot. & \RobotMaxDimensions{} \\
+  \hline
+  MaxNavLevels & Maximum number of layers required to access any function in GUI. & \MaxNavLevels{} \\
+  \hline
+  MinFontSize & The minimum font size used in the GUI for accessibility purposes. & \MinFontSize{} \\
+  \hline
+  ExecuteTaskTime & Time it would take an average user to execute 9/10 tasks within the GUI. & \ExecuteTaskTime{} \\
+  \hline
+  
+\end{tabular}
 
 \newpage
 \nocite{*}
@@ -827,21 +883,16 @@ Their values are defined in this section for easy maintenance.}
 \newpage{}
 \section*{Appendix --- Reflection}
 
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  Please answer the following questions:
+	Throughout the LiDart project, the team will be collectively working on gaining knowledge as well as experience in order to get the project completed.  Ranging from programming to electrical to mechanical knowledge each team member will be gaining a lot of knowledge in their respective domains depending on their responsibilities.
 
-\begin{enumerate}
-  \item What knowledge and skills will the team collectively need to acquire to
-  successfully complete this capstone project?  Examples of possible knowledge
-  to acquire include domain specific knowledge from the domain of your
-  application, or software engineering knowledge, mechatronics knowledge or
-  computer science knowledge.  Skills may be related to technology, or writing,
-  or presentation, or team management, etc.  You should look to identify at
-  least one item for each team member.
-  \item For each of the knowledge areas and skills identified in the previous
-  question, what are at least two approaches to acquiring the knowledge or
-  mastering the skill?  Of the identified approaches, which will each team
-  member pursue, and why did they make this choice?
-\end{enumerate}
+Jon and Kareem will need to understand how to get the proper communication between the robot and the machine for the LIDAR sensors.
+Throughout this process of figuring out the parameters, Jon will be able to expand on his knowledge on communications between the LIDAR sensors and the connected machine by working through the available documenation online. However, Kareem will be working on the controls of the robot by working through trial and error scenarios on the movement of the robot. Even though Kareem will be primarily working through trial and error, he will be using a lot of resources online to help learn how to properly figure out the routes of communication that are going to be used.
+Jon has picked reading through online documentation since he prefers gathering information from the original source and then applying his understandings. Kareem has picked working through trial and error as that will be the best approach to seeing how the different parameters will affect the robot and its controls. Reading through documentation would not be very effective when trying to get the right controls for the robot as it would be based on theoretical values which won't directly apply to the robot. Through theory, values can be used as a starting point.
+
+While the software is being configured, Neeraj will be working on making the chassi for the robot. Making the chassi for LiDart will require a lot of knowledge based on weight distribution and stabilizing the different moving components. The robot will have a variety of components such as the LIDAR sensors, mounting components and motors to name a few.
+A lot of theory could be applied to designing the robot, but there will be a lot of trial and error with the process. That is why Neeraj is opting for using the trial and error method to figure out the best design for the robot. 
+
+Lastly, the electrical components will be a very critical domain of the robot. Getting the correct electrical equipment depending on the needs of LiDart will require a lot of work with the rest of the team. This is due to how LiDart needs to be configured. The required components such as the motor will require input from Kareem, Jon and Neeraj. The motor will depend on the weight of the chassi (Neeraj) alongside how the motor will be controlled (Kareem and Jon).
+The equipment picked will affect the mechanical design as the size of the equipment will be very critical to the design of LiDart. Michaela will be exploring online documentation to find the correct equipment that best matches what is required for the robot. Michaela figured that by searching online for the proper equipment she will be able to find the best matches for the requirements needed. This would also be the most effective strategy due to the limitation on the budget that has been given.
 
 \end{document}
