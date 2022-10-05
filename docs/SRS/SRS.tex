@@ -736,7 +736,7 @@ qualities that the software is expected to exhibit.
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate1}:] The system shall stitch multiple LiDAR readings into a large point cloud.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate2}:] The system shall be able to perform state estimation calculations based on landmarks in the surrounding environment.
-\newline Rationale: The estimated state of the robot will be used to stitch the multiple LiDAR readings as specified in \ref{R_Calculate1} 
+\newline Rationale: The estimated state of the robot will be used to stitch the multiple LiDAR readings as specified in \rref{R_Calculate1} 
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output1}:] The GUI shall output the stitched point cloud data as a file.
 \newline Rationale: The exported files can then be used in existing 3D scan processing software.
@@ -744,16 +744,8 @@ qualities that the software is expected to exhibit.
 Rationale: This video feed can be used by the remote operator.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output3}:] The GUI shall display a live preview of the raw LiDAR data. 
 \newline Rationale: The live preview can be used by the robot operator to ensure the scanner is functioning properly and that the desired area is within the scan region.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output4}:] The GUI shall display the current state of the system, as depicted in Figure~\ref{Fig_RobotFSM}.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output4}:] The GUI shall display the current state of the system, as depicted in Figure~\ref{Fig_BehaviourOverview}.
 \newline Rationale: The states can be used by the robot operator to troubleshoot operational issues.
-
-\begin{figure}[H]
-\begin{center}
- \includegraphics[width=0.75\textwidth]{Figures/Robot FSM.pdf}
-\caption{Robot FSM}
-\label{Fig_RobotFSM} 
-\end{center}
-\end{figure}
 \end{itemize}
 
 \subsection{Nonfunctional Requirements}
@@ -827,7 +819,7 @@ Rationale: This video feed can be used by the remote operator.
 
 \subsubsection{Standards Requirements}
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety1}:] The system shall be in conformace with the following standards:
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety1}:] The system shall be in conformance with the following standards:
 \begin{itemize}
 \item CSA 22.1:21, Canadian Electrical Code \cite{CSA1}
 \item CSA Z434, Industrial robots and robot systems \cite{CSA2}
@@ -858,40 +850,26 @@ the assumptions.
 \plt{The traceability matrix is challenging to maintain manually.  Please do
   your best.  In the future tools (like Drasil) will make this much easier.}
 
-\afterpage{
-\begin{landscape}
-\begin{table}[h!]
+\begin{table}[H]
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
-	& \aref{A_OnlyThermalEnergy}& \aref{A_hcoeff}& \aref{A_mixed}& \aref{A_tpcm}& \aref{A_const_density}& \aref{A_const_C}& \aref{A_Newt_coil}& \aref{A_tcoil}& \aref{A_tlcoil}& \aref{A_Newt_pcm}& \aref{A_charge}& \aref{A_InitTemp}& \aref{A_OpRangePCM}& \aref{A_OpRange}& \aref{A_htank}& \aref{A_int_heat}& \aref{A_vpcm}& \aref{A_PCM_state}& \aref{A_Pressure} \\
+	& \rref{R_Inputs6}& \nfrref{NFR_Accuracy1}& \nfrref{NFR_Performance1}& \nfrref{NFR_Performance3}& \nfrref{NFR_Performance4}& \nfrref{NFR_Performance5}& \nfrref{NFR_Performance6}& \nfrref{NFR_Performance6}& \nfrref{NFR_Performance7}& \nfrref{NFR_Safety2} \\
 \hline
-\tref{T_COE}        & X& & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_LHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\dref{NL}           & & X& & & & & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}         & & & X& X& X& X& & & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil}    & & & & & & & X& X& X& & & & & & & & & & \\ \hline
-\ddref{FluxPCM}     & & & X& X& & & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}       & & & & & & & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\iref{ewat}         & & & & & & & & & & & X& X& & X& X& X& & & X \\ \hline
-\iref{epcm}         & & & & & & & & & & & & X& X& & & X& X& X& \\ \hline
-\iref{I_HWAT}       & & & & & & & & & & & & & & X& & & & & X \\ \hline
-\iref{I_HPCM}       & & & & & & & & & & & & & X& & & & & X & \\ \hline
-\lcref{LC_tpcm}     & & & & X& & & & & & & & & & & & & & & \\ \hline
-\lcref{LC_tcoil}    & & & & & & & & X& & & & & & & & & & & \\ \hline
-\lcref{LC_tlcoil}   & & & & & & & & & X& & & & & & & & & & \\ \hline
-\lcref{LC_charge}   & & & & & & & & & & & X& & & & & & & & \\ \hline
-\lcref{LC_InitTemp} & & & & & & & & & & & & X& & & & & & & \\ \hline
-\lcref{LC_htank}    & & & & & & & & & & & & & & & X& & & & \\
+\rref{R_Inputs2}      & & & & & & & & & &X\\ 
+\hline
+\rref{R_Inputs3}      & & &X & & & & & & &\\ 
+\hline
+\rref{R_Inputs5}      &X & & & & & & & & &\\  
+\hline
+\rref{R_Output1}      & &X & &X &X & & & & &\\ 
+\hline
+\rref{R_Output2}      & & & & & & & &X &X &\\ 
 \hline
 \end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
+\caption{Traceability Matrix Showing Dependencies Between Requirements}
 \label{Table:A_trace}
 \end{table}
-\end{landscape}
-}
 
 \section{Likely Changes} 
 \label{sec_LikelyChanges}   
