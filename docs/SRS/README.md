@@ -5,6 +5,7 @@ products>
 
 The folders and files for this folder are as follows:
 
-Describe ...
+- Figures: contains figures used in the SRS document
+- Supporting Docs: Contains source files for Visio diagrams used in the SRS document
 
 Only one of the CA or SRS document should be completed

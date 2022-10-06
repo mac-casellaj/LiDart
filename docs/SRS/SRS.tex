@@ -17,7 +17,7 @@
 \usepackage{pdflscape}
 \usepackage{afterpage}
 
-\usepackage[round]{natbib}
+%\usepackage[round]{natbib}
 
 %\usepackage{refcheck}
 
@@ -72,9 +72,30 @@
 \newcounter{nfrnum} %NFR Number
 \newcommand{\rthenfrnum}{NFR\thenfrnum}
 \newcommand{\nfrref}[1]{NFR\ref{#1}}
+\newcounter{constnum} %Constraint Number
+\newcommand{\ctheconstnum}{C\theconstnum}
+\newcommand{\cref}[1]{C\ref{#1}}
 \newcounter{lcnum} %Likely change number
 \newcommand{\lthelcnum}{LC\thelcnum}
 \newcommand{\lcref}[1]{LC\ref{#1}}
+
+
+
+\newcommand{\RobotSpeed}{0.5m/s}
+\newcommand{\ScanTolerance}{+/- 1cm}
+\newcommand{\BatteryLife}{3hrs}
+\newcommand{\ScanningSpace}{1 square meter}
+\newcommand{\ScanningTime}{2mins}
+\newcommand{\MaxProcessingTime}{10min}
+\newcommand{\MaxResponseTime}{1s}
+\newcommand{\MinVideoResolution}{1280x720p}
+\newcommand{\MaxVideoDelay}{1s}
+\newcommand{\RobotMaxWeight}{50kg}
+\newcommand{\RobotMaxDimensions}{1m x 1m x 3m (LxWxH)}
+\newcommand{\MaxNavLevels}{4}
+\newcommand{\MinFontSize}{14pt}
+\newcommand{\ExecuteTaskTime}{10s}
+\newcommand{\ReplaceTime}{1hr}
 
 \usepackage{fullpage}
 
@@ -126,7 +147,8 @@
 
 \begin{document}
 
-\title{Software Requirements Specification for \progname: subtitle describing software} 
+\title{Software Requirements Specification\\
+\progname} 
 \author{\authname}
 \date{\today}
 	
@@ -142,11 +164,10 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{tabularx}{\textwidth}{p{3cm}p{2cm}p{4cm}X}
+\toprule {\bf Date} & {\bf Version} & {\bf Authors} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+05\textbackslash Oct\textbackslash 2022 & 1.0 & Michaela Schnull \newline Jonathan Casella \newline Kareem Elmokattaf \newline Neeraj Ahluwalia & Initial Release\\
 \bottomrule
 \end{tabularx}
 
@@ -156,113 +177,51 @@ Date 2 & 1.1 & Notes\\
 
 This section records information for easy reference.
 
-\subsection{Table of Units}
-
-Throughout this document SI (Syst\`{e}me International d'Unit\'{e}s) is employed
-as the unit system.  In addition to the basic units, several derived units are
-used as described below.  For each unit, the symbol is given followed by a
-description of the unit and the SI name.
-~\newline
-
-\renewcommand{\arraystretch}{1.2}
-%\begin{table}[ht]
-  \noindent \begin{tabular}{l l l} 
-    \toprule		
-    \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
-    \midrule 
-    \si{\metre} & length & metre\\
-    \si{\kilogram} & mass	& kilogram\\
-    \si{\second} & time & second\\
-    \si{\celsius} & temperature & centigrade\\
-    \si{\joule} & energy & joule\\
-    \si{\watt} & power & watt (W = \si{\joule\per\second})\\
-    \bottomrule
-  \end{tabular}
-  %	\caption{Provide a caption}
-%\end{table}
-
-\plt{Only include the units that your SRS actually uses.}
-
-\plt{Derived units, like newtons, pascal, etc, should show their derivation
-    (the units they are derived from) if their constituent units are in the
-    table of units (that is, if the units they are derived from are used in the
-    document).  For instance, the derivation of pascals as
-    $\si{\pascal}=\si{\newton\per\square\meter}$ is shown if newtons and m are
-    both in the table.  The derivations of newtons would not be shown if kg and
-    s are not both in the table.}
-
-\plt{The symbol for units named after people use capital letters, but the name
-  of the unit itself uses lower case.  For instance, pascals use the symbol Pa,
-  watts use the symbol W, teslas use the symbol T, newtons use the symbol N,
-  etc.  The one exception to this is degree Celsius.  Details on writing metric
-  units can be found on the 
-  \href{https://www.nist.gov/pml/weights-and-measures/writing-metric-units}
-  {NIST} web-page.}
-
-\subsection{Table of Symbols}
-
-The table that follows summarizes the symbols used in this document along with
-their units.  The choice of symbols was made to be consistent with the heat
-transfer literature and with existing documentation for solar water heating
-systems.  The symbols are listed in alphabetical order.
-
-\renewcommand{\arraystretch}{1.2}
-%\noindent \begin{tabularx}{1.0\textwidth}{l l X}
-\noindent \begin{longtable*}{l l p{12cm}} \toprule
-\textbf{symbol} & \textbf{unit} & \textbf{description}\\
-\midrule 
-$A_C$ & \si[per-mode=symbol] {\square\metre} & coil surface area
-\\
-$A_\text{in}$ & \si[per-mode=symbol] {\square\metre} & surface area over 
-which heat is transferred in
-\\ 
-\bottomrule
-\end{longtable*}
-\plt{Use your problems actual symbols.  The si package is a good idea to use for
-  units.}
-
 \subsection{Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
   \toprule		
-  \textbf{symbol} & \textbf{description}\\
+  \textbf{Symbol} & \textbf{Description}\\
   \midrule 
   A & Assumption\\
-  DD & Data Definition\\
-  GD & General Definition\\
+  CMM & Coordinate Measuring Machine\\
+  FSM & Finite State Machine\\
   GS & Goal Statement\\
-  IM & Instance Model\\
+  GUI & Graphical User Interface\\
+  LiDAR & Light Imaging, Detection, and Ranging\\
   LC & Likely Change\\
-  PS & Physical System Description\\
+  NFR & Nonfunctional Requirement\\
   R & Requirement\\
-  SRS & Software Requirements Specification\\
-  \progname{} & \plt{put an expanded version of your program name here (as appropriate)}\\
-  T & Theoretical Model\\
+  RAM & Random Access Memory\\
+  SRS & System Requirements Specification\\
+  VR & Virtual Reality\\
   \bottomrule
 \end{tabular}\\
 
 \plt{Add any other abbreviations or acronyms that you add}
 
-\subsection{Mathematical Notation}
+\subsection{Terminology and Definitions}
 
-\plt{This section is optional, but should be included for projects that make use
-  of notation to convey mathematical information.  For instance, if typographic
-  conventions (like bold face font) are used to distinguish matrices, this
-  should be stated here.  If symbols are used to show mathematical operations,
-  these should be summarized here.  In some cases the easiest way to summarize
-  the notation is to point to a text or other source that explains the
-  notation.}
+This subsection provides a list of terms that are used in the subsequent sections and their meaning, with the purpose of reducing ambiguity and making it easier to correctly understand the requirements.
+\newline
 
-\plt{This section was added to the template because some students use very
-  domain specific notation.  This notation will not be readily understandable to
-  people outside of your domain.  It should be explained.}
+\begin{tabularx}{\textwidth}{p{4cm}X}
+\toprule {\bf Term} & {\bf Definition}\\
+\midrule
+Landmark & Features of an image that are easily detectable and uniquely distinguishable\\
+State Estimation & The process of estimating the state of the robot and its environments\\
+Localized & The state of the robot when it has confidently estimated its state\\
+Point Cloud & A common format for 3D scans, represented as a set of positions\\
+Pose & A term for the position and orientation of an object\\
+\bottomrule
+\end{tabularx}
 
 \newpage
 
 \pagenumbering{arabic}
 
-\plt{This SRS template is based on \citet{SmithAndLai2005, SmithEtAl2007}.  It
+\plt{This SRS template is based on {SmithAndLai2005, SmithEtAl2007}.  It
   will get you started.  You should not modify the section headings, without
   first discussing the change with the course instructor.  Modification means
   you are not following the template, which loses some of the advantage of a
@@ -327,13 +286,19 @@ which heat is transferred in
 
 \section{Introduction}
 
-\plt{The introduction section is written to introduce the problem.  It starts
-  general and focuses on the problem domain. The general advice is to start with
-a paragraph or two that describes the problem, followed by a ``roadmap''
-paragraph.  A roadmap orients the reader by telling them what sub-sections to
-expect in the Introduction section.}
+\plt{The introduction section is written to introduce the problem.  It starts general and focuses on the problem domain. The general advice is to start with a paragraph or two that describes the problem, followed by a ``roadmap'' paragraph.  A roadmap orients the reader by telling them what sub-sections to expect in the Introduction section.}
+
+Businesses and individuals are increasingly using 3D scanning technologies to collect 3D data for modeling and analysis. The 3D scanning market is rapidly growing, with a wide range of applications such as virtual reality, rapid prototyping, reverse-engineering, and inspection technologies. Many current scanning technologies require that objects are brought to specialized scanning facilities, where fixed devices such as CMM machines and robotic arms are installed. Hand-held scanning devices are also available,  however these technologies are expensive and may require specialized knowledge. The cost and domain specific knowledge required are barriers to many users. There are limited solutions available for portable, remotely operated, and inexpensive 3D scanning solutions.  
+\newline
+\par
+This document defines the scope of the \progname\ project, specifies the scanning system, and defines requirements. The purpose of the SRS is discussed in detail in Section~\ref{sec_purpose}.  Section~\ref{sec_Scope} describes key project deliverables, as well as exclusions that are outside the scope of work.
+\subsection{Problem Description}
+
+LiDart aims to build a low cost, simple to use, WiFi connected 3D scanning robot. Readily available, low cost LiDAR sensors and consumer grade webcams will be used alongside inexpensive location markers. The user will interface with the robot through GUI that will allow them
+to remotely drive the robot and perform 3D scans.
 
 \subsection{Purpose of Document}
+\label{sec_purpose}
 
 \plt{This section summarizes the purpose of the SRS document.  It does not focus
   on the problem itself.  The problem is described in the ``Problem
@@ -345,7 +310,10 @@ expect in the Introduction section.}
   purpose of the SRS, including communication, planning for the design stage,
   etc.}
 
+  The purpose of this document is to provide specifications and requirements for the \progname\ 3D scanning system. This document describes functional and non-functional requirements, undesired event handling, and start-up behavior. The behaviour of the system is modeled through functional decomposition diagrams. The requirements defined in this document will drive design decisions and will be referenced throughout the design phase. They will be a direct input to the verification and validation plan.
+
 \subsection{Scope of Requirements} 
+\label{sec_Scope}
 
 \plt{Modelling the real world requires simplification.  The full complexity of
   the actual physics, chemistry, biology is too much for existing models, and
@@ -362,22 +330,16 @@ expect in the Introduction section.}
   on the ``big picture'' assumptions.  The assumptions section lists, and
   describes, all of the assumptions.}
 
-\subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
+\progname\ aims to design and build a low cost 3D scanning robot, paired with a GUI that displays a model of the scanned data.
+The robot is expected to operate indoors on flat surfaces in a controlled environment.
+A robot that is capable of operating outdoors or on rough terrain is not in the scope of this project.
+The GUI will allow the user to remotely drive the robot, initiate 3D scans, and download the final stitched 3D scan.
+However, tools for analyzing and modifying 3D scans generated by the system will not be implemented.
+Software considerations such as licensing, user authentication, security, and data storage are also not within the scope of this project.
 
-\plt{This section summarizes the skills and knowledge of the readers of the
-  SRS.  It does NOT have the same purpose as the ``User Characteristics''
-  section (Section~\ref{SecUserCharacteristics}).  The intended readers are the
-  people that will read, review and maintain the SRS.  They are the people that
-  will conceivably design the software that is intended to meet the
-  requirements.  The user, on the other hand, is the person that uses the
-  software that is built.  They may never read this SRS document.  Of course,
-  the same person could be a ``user'' and an ``intended reader.''}
+\subsection{Stakeholders}
 
-\plt{The intended reader characteristics should be written as unambiguously and
-  as specifically as possible.  Rather than say, the user should have an
-  understanding of physics, say what kind of physics and at what level.  For
-  instance, is high school physics adequate, or should the reader have had a
-  graduate course on advanced quantum mechanics?}
+Stakeholders in the project include all parties that would benefit from low cost, easily accessable 3D scanning. Examples of groups that fit this criteria include small visual effects studios, independent mechanical designers, and manufacturing firms. 
 
 \subsection{Organization of Document}
 
@@ -385,8 +347,34 @@ expect in the Introduction section.}
   reader orient themselves.  It will provide direction that will help them
   select which sections they want to read, and in what order.  This section will
   be similar between project.}
+The rest of this document provides detailed specifications and requirements for the \progname\ 3D scanning system. The document is organized as follows:  
+  
+\noindent \begin{description}
+\item Section~\ref{sec_GeneralDesc}: General System Description 
+\newline
+A general overview of the system is provided using a system context diagram. The interactions between the system, the environment,and its users are identified.
+\item Section~\ref{sec_SpecificDesc}: Specific System Description 
+\newline 
+The problem description and project goals are given, followed by system specifications including assumptions, theories, definitions, and instance models.
+\item Section~\ref{sec_Requirements}: Requirements
+\newline
+This section defines the functional and non-functional requirements of the system.
+\item Section~\ref{sec_LikelyChanges}: Likely Changes
+\newline
+This section describes changes to system components that are likely to occur as a result of new features or changes in scope.
+\item Section~\ref{sec_UnlikelyChanges}: Unlikely Changes 
+\newline
+This section describes the system requirements that are not likely to change.
+\item Section~\ref{sec_dp}: Development Plan 
+\newline
+A plan outlining the steps that will be taken to create the \progname\ system is given.
+\item Section~\ref{sec_ac}: Values of Auxiliary Constants 
+\newline
+This section provides values for symbolic parameters used in this document.
+\end{description}
 
-\section{General System Description}
+\section{General System Description} 
+\label{sec_GeneralDesc}
 
 This section provides general information about the system.  It identifies the
 interfaces between the system and its environment, describes the user
@@ -418,11 +406,13 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   libraries, these libraries can also be shown on the System Context diagram.
   They should only be named with a specific library name if this is required by
   the system constraint.}
+  
+Figure~\ref{Fig_SystemContext} is a system context diagram of the \progname\ 3D scanning system.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{center}
- \includegraphics[width=0.6\textwidth]{SystemContextFigure}
-\caption{System Context}
+ \includegraphics[width=1\textwidth]{Figures/Context Diagram.pdf}
+\caption{System Context Diagram}
 \label{Fig_SystemContext} 
 \end{center}
 \end{figure}
@@ -438,15 +428,40 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   stays away from the detail of listing every required properties.}
 
 \begin{itemize}
-\item User Responsibilities:
+\item User:
 \begin{itemize}
-\item 
+\item The user remotely controls the robot by sending commands to the robot through a graphical user interface (GUI). It is the user's responsibility to instruct the robot to move and scan the desired object. 
 \end{itemize}
-\item \progname{} Responsibilities:
+\end{itemize}
+
 \begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
+\item Environment:
+\begin{itemize}
+\item Information extracted from the surrounding environment is an input to the scanning system.
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item Object:
+\begin{itemize}
+\item The desired object that is being scanned is an input to the system.
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item 3D Scan Tools:
+\begin{itemize}
+\item External 3D scan tools are able to import stitched point cloud data that is outputted by the \progname\ system. Further analysis and modification of 3D data can be carried out using third party applications.
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item \progname\ 3D Scanning System:
+\begin{itemize}
+\item The system will provide the user with alerts about errors that occur during operation.
+\item The system is responsible for executing commands provided by the operator.
+\item The system will respond to commands provided by the user.
+\item The system outputs stitched point cloud data that is supported by third party 3D modeling tools.
 \end{itemize}
 \end{itemize}
 
@@ -460,8 +475,15 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   user characteristics should be specific an unambiguous.  For instance, ``The
   end user of \progname{} should have an understanding of undergraduate Level 1
   Calculus and Physics.''}
+  
+The \progname\ 3D scanning system does not require any domain specific knowledge. Individuals and business using the system are expected to have the following prior knowledge:   
+  
+\begin{itemize}
+\item An understanding of how to install applications on personal computers
+\item Basic computer skills, such as how to navigate through application menus
+\end{itemize}
 
-\subsection{System Constraints}
+\subsection{Constraints}
 
 \plt{System constraints differ from other type of requirements because they
   limit the developers' options in the system design and they identify how the
@@ -470,808 +492,612 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   abstraction is relaxed here.  However, system constraints should only be
   included if they are truly required.}
 
-\section{Specific System Description}
+The following constraints are imposed on the \progname\ system:
+\noindent \begin{itemize}
+\item[C\refstepcounter{constnum}\theconstnum :] The total cost of the system must be less than \$750.
+\item[C\refstepcounter{constnum}\theconstnum :] The project must be completed by April 2022.
+\end{itemize}
 
-This section first presents the problem description, which gives a high-level
-view of the problem to be solved.  This is followed by the solution characteristics
-specification, which presents the assumptions, theories, definitions and finally
-the instance models.  \plt{Add any project specific details that are relevant
-  for the section overview.}
+\section{Specific System Description} 
+\label{sec_SpecificDesc}
 
-\subsection{Problem Description} \label{Sec_pd}
-
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-The description here should be in the problem space, not the solution space.}
-
-\subsubsection{Terminology and  Definitions}
-
-\plt{This section is expressed in words, not with equations.  It provide the
-  meaning of the different words and phrases used in the domain of the problem.
-The terminology is used to introduce concepts from the world outside of the
-mathematical model  The terminology provides a real world connection to give the
-mathematical model meaning.}
-
-This subsection provides a list of terms that are used in the subsequent
-sections and their meaning, with the purpose of reducing ambiguity and making it
-easier to correctly understand the requirements:
+The solution that LiDart proposes to the specified problem is a two wheeled
+mobile robot that can be remotely driven to take 3D scans of its environment.
+The robot will have all required sensors on board; these sensors will include:
 
 \begin{itemize}
+\item One or more cameras
+\item A LiDAR module capable of measuring the distance to objects in a given plane relative to the sensor's orientation and position
+\item Two encoders capable of measuring wheel rotations, one for each of the two wheels
+\end{itemize}
 
-\item 
+\subsection{Assumptions}
+
+It is assumed that the environment that LiDart will operate within will have the following properties:
+
+\noindent \begin{itemize}
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption1}:] Not exposed to the elements (e.g. Rain)
+\newline Rationale: The robot will not be weather proofed, as this increases cost and complexity. A weather proofed configuration could be designed at a later date by modifying the current robot.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption2}:] Floor should be flat and suitable for driving on with plastic wheels (dry, hard, not slippery. e.g. tile, hardwood, concrete)
+\newline Rationale: The robot's simple 2 wheeled drive train is not suited to all terrains. This drive train was chosen to minimize cost and complexity.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption3}:] Will remain static while the robot is active
+\newline Rationale: This ensures there are no artifacts in the final stitched 3D scan resulting from changes to the environment between individual 3D scans.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption4}:] Prepopulated with landmarks
+\newline Rationale: This choice was made to simplify the operation of the state estimation algorithm. This should reduce the need for the user to understand the inner workings of the state estimation process
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption5}:] No translucent or reflective objects
+\newline Rationale: Translucent and reflective objects can result in poorly behaved LiDAR measurements, and may impact the final stitched 3D scan.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption6}:] Is illuminated such that the onboard camera(s) can clearly view the surrounding
+\newline Rationale: The robot relies on cameras for state estimation, as such it must operate in a sufficiently lit environment. 
 
 \end{itemize}
 
-\subsubsection{Physical System Description} \label{sec_phySystDescrip}
-
-\plt{The purpose of this section is to clearly and unambiguously state the
-  physical system that is to be modelled. Effective problem solving requires a
-  logical and organized approach. The statements on the physical system to be
-  studied should cover enough information to solve the problem. The physical
-  description involves element identification, where elements are defined as
-  independent and separable items of the physical system. Some example elements
-  include acceleration due to gravity, the mass of an object, and the size and
-  shape of an object. Each element should be identified and labelled, with their
-  interesting properties specified clearly. The physical description can also
-  include interactions of the elements, such as the following: i) the
-  interactions between the elements and their physical environment; ii) the
-  interactions between elements; and, iii) the initial or boundary conditions.}
-
-The physical system of \progname{}, as shown in Figure~?,
-includes the following elements:
-
-\begin{itemize}
-
-\item[PS1:] 
-
-\item[PS2:] ...
-
-\end{itemize}
-
-\plt{A figure here makes sense for most SRS documents}
-
-% \begin{figure}[h!]
-% \begin{center}
-% %\rotatebox{-90}
-% {
-%  \includegraphics[width=0.5\textwidth]{<FigureName>}
-% }
-% \caption{\label{<Label>} <Caption>}
-% \end{center}
-% \end{figure}
-
-\subsubsection{Goal Statements}
-
-\plt{The goal statements refine the ``Problem Description''
-  (Section~\ref{Sec_pd}).  A goal is a functional objective the system under
-  consideration should achieve. Goals provide criteria for sufficient
-  completeness of a requirements specification and for requirements
-  pertinence. Goals will be refined in Section “Instanced Models”
-  (Section~\ref{sec_instance}). Large and complex goals should be decomposed
-  into smaller sub-goals.  The goals are written abstractly, with a minimal
-  amount of technical language.  They should be understandable by non-domain
-  experts.}
-
-\noindent Given the \plt{inputs}, the goal statements are:
-
-\begin{itemize}
-
-\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_meaningfulLabel}:] \plt{One
-    sentence description of the goal.  There may be more than one.  Each Goal
-    should have a meaningful label.}
-
-\end{itemize}
-
-\subsection{Solution Characteristics Specification}
-
-\plt{This section specifies the information in the solution domain of the system
-  to be developed. This section is intended to express what is required in
-  such a way that analysts and stakeholders get a clear picture, and the
-  latter will accept it. The purpose of this section is to reduce the problem
-  into one expressed in mathematical terms. Mathematical expertise is used to
-  extract the essentials from the underlying physical description of the
-  problem, and to collect and substantiate all physical data pertinent to the
-  problem.}
-
-\plt{This section presents the solution characteristics by successively refining
-  models.  It starts with the abstract/general Theoretical Models (TMs) and
-  refines them to the concrete/specific Instance Models (IMs).  If necessary
-  there are intermediate refinements to General Definitions (GDs).  All of these
-  refinements can potentially use Assumptions (A) and Data Definitions (DD).
-  TMs are refined to create new models, that are called GMs or IMs. DDs are not
-  refined; they are just used. GDs and IMs are derived, or refined, from other
-  models. DDs are not derived; they are just given. TMs are also just given, but
-  they are refined, not used.  If a potential DD includes a derivation, then
-  that means it is refining other models, which would make it a GD or an IM.}
-
-\plt{The above makes a distinction between ``refined'' and ``used.'' A model is
-  refined to another model if it is changed by the refinement. When we change a
-  general 3D equation to a 2D equation, we are making a refinement, by applying
-  the assumption that the third dimension does not matter. If we use a
-  definition, like the definition of density, we aren't refining, or changing
-  that definition, we are just using it.}
-
-\plt{The same information can be a TM in one problem and a DD in another.  It is
-  about how the information is used.  In one problem the definition of
-  acceleration can be a TM, in another it would be a DD.}
-
-\plt{There is repetition between the information given in the different chunks
-  (TM, GDs etc) with other information in the document.  For instance, the
-  meaning of the symbols, the units etc are repeated.  This is so that the
-  chunks can stand on their own when being read by a reviewer/user.  It also
-  facilitates reuse of the models in a different context.}
-
-\noindent \plt{The relationships between the parts of the document are show in
-  the following figure.  In this diagram ``may ref'' has the same role as
-  ``uses'' above.  The figure adds ``Likely Changes,'' which are able to
-  reference (use) Assumptions.}
+\subsection{Behaviour Overview}
 
 \begin{figure}[H]
-  \includegraphics[scale=0.9]{RelationsBetweenTM_GD_IM_DD_A.pdf}
+\begin{center}
+    \includegraphics[width=0.75\textwidth]{Figures/Behaviour Overview.pdf}
+\caption{Behaviour Overview}
+\label{Fig_BehaviourOverview} 
+\end{center}
 \end{figure}
 
-The instance models that govern \progname{} are presented in
-Subsection~\ref{sec_instance}.  The information to understand the meaning of the
-instance models and their derivation is also presented, so that the instance
-models can be verified.
+Normal operation of the LiDart system will proceed as follows:
+\begin{enumerate}
+\item Robot is powered on
+\item User connects to the robot via WiFi
+\item User opens the GUI
+\item User drives the robot to a desired location, the user can use the live video feed and LiDAR data preview to choose such a location
+\item User initiates a scan
+\item Steps 4 and 5 are repeated until the user has scanned all desired areas of the environment
+\item User downloads the final stitched 3D scan    
+\end{enumerate}
 
-\subsubsection{Assumptions} \label{sec_assumpt}
-
-\plt{The assumptions are a refinement of the scope.  The scope is general, where
-  the assumptions are specific.  All assumptions should be listed, even those
-  that domain experts know so well that they are rarely (if ever) written down.}
-\plt{The document should not take for granted that the reader knows which
-  assumptions have been made. In the case of unusual assumptions, it is
-  recommended that the documentation either include, or point to, an explanation
-  and justification for the assumption.}
-
-This section simplifies the original problem and helps in developing the
-theoretical model by filling in the missing information for the physical
-system. The numbers given in the square brackets refer to the theoretical model
-[T], general definition [GD], data definition [DD], instance model [IM], or
-likely change [LC], in which the respective assumption is used.
-
+\ \\
+\noindent There are several events that fall outside of normal operations, those include:
 \begin{itemize}
-
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_meaningfulLabel}:]
-  \plt{Short description of each assumption.  Each assumption
-    should have a meaningful label.  Use cross-references to identify the
-    appropriate traceability to T, GD, DD etc., using commands like dref, ddref
-    etc.  Each assumption should be atomic - that is, there should not be an
-    explicit (or implicit) ``and'' in the text of an assumption.}
-
+\item \textbf{Cancelling a scan.} If the user has initiated a scan but then decides that the location is not ideal, the user can cancel the scan. This discards the information from that specific scan and allows the user to resume driving the robot.
+\item \textbf{Robot not localized.} If the robot is not localized, it will not allow the user to initiate a scan. To be able to initiate a scan the user must first drive the robot to a location where the robot can localize itself.
+\item \textbf{Emergency stopping.} If the robot begins misbehaving it can be powered off with an onboard emergency stop switch. This is required in the event that a hardware failure causes the robot to pose a safety risk or to stop responding to user commands.
 \end{itemize}
 
-\subsubsection{Theoretical Models}\label{sec_theoretical}
+\subsection{Functional Decomposition}
 
-\plt{Theoretical models are sets of abstract mathematical equations or axioms
-  for solving the problem described in Section ``Physical System Description''
-  (Section~\ref{sec_phySystDescrip}). Examples of theoretical models are
-  physical laws, constitutive equations, relevant conversion factors, etc.}
+\begin{figure}[H]
+\begin{center}
+    \includegraphics[width=0.75\textwidth]{Figures/Functional Decomposition.pdf}
+\caption{Functional Decomposition}
+\label{Fig_FunctionalDecomposition} 
+\end{center}
+\end{figure}
 
-This section focuses on the general equations and laws that \progname{} is based
-on.  \plt{Modify the examples below for your problem, and add additional models
-  as appropriate.}
+Figure~\ref{Fig_FunctionalDecomposition} shows the high level data flow throughout the LiDart system. 
 
-~\newline
+\ \\
+The system receives data from the user through the GUI alongside inputs from the various sensors onboard the robot (monitored variables). These inputs include:
+\begin{itemize}
+\item Initiate scan command
+\item Cancel scan command
+\item Drive command
+\item LiDAR readings
+\item Camera frames
+\item Wheel encoder readings
+\end{itemize}
 
-\noindent
-\deftheory
-% #2 refname of theory
-{T:COE}
-% #3 label
-{Conservation of thermal energy}
-% #4 equation
-{
-  $-{\bf \nabla \cdot q} + g$ = $\rho C \frac{\partial T}{\partial t}$
-}
-% #5 description
-{
-  The above equation gives the conservation of energy for transient heat transfer in a material
-  of specific heat capacity $C$ (\si{\joule\per\kilogram\per\celsius}) and density $\rho$ 
-  (\si{\kilogram\per\cubic\metre}), where $\bf q$ is the thermal flux vector (\si{\watt\per\square\metre}),
-  $g$ is the volumetric heat generation
-  (\si{\watt\per\cubic\metre}), $T$ is the temperature
-  (\si{\celsius}),  $t$ is time (\si{\second}), and $\nabla$ is
-  the gradient operator.  For this equation to apply, other forms
-  of energy, such as mechanical energy, are assumed to be negligible in the
-  system (\aref{A_OnlyThermalEnergy}).  In general, the material properties ($\rho$ and $C$) depend on temperature.
-}
-% #6 Notes
-{
-None.
-}
-% #7 Source
-{
-  \url{http://www.efunda.com/formulae/heat_transfer/conduction/overview_cond.cfm}
-}
-% #8 Referenced by
-{
-  \dref{ROCT}
-}
-% #9 Preconditions
-{
-None
-}
-% #1 derivation - not applicable by default
-{}
+\ \\
+The system will use the listed inputs to produce or drive the following outputs (controlled variables):
+\begin{itemize}
+\item Final stitched 3D scan
+\item Live LiDAR preview
+\item Live video feed of the robot's environment
+\item Wheel voltages
+\item Robot status (eg. Fault occured, Ready to scan) 
+\end{itemize}
 
-\plt{``Ref.\ By'' is used repeatedly with the different types of information.
-  This stands for Referenced By.  It means that the models, definitions and
-  assumptions listed reference the current model, definition or assumption.
-  This information is given for traceability.  Ref. By provides a pointer in the
-  opposite direction to what we commonly do.  You still need to have a reference
-  in the other direction pointing to the current model, definition or
-  assumption.  As an example, if T1 is referenced by G2, that means that G2 will
-  explicitly include a reference to T1.}
+\subsection{Subsystem Descriptions}
 
-~\newline
+\subsubsection{Landmark Extraction}
+Given a frame from the onboard camera, the landmark extraction subsystem will find all landmarks in
+the frame and extract information about them. This information will include an ID which can be used
+to correlate subsequent detections of the same landmark. It will also contain some information about
+the position, and possibly orientation, of the landmark relative to the camera. The exact form of this
+information will vary based on the choice of landmark type. Two example landmark types are listed below. 
 
-\subsubsection{General Definitions}\label{sec_gendef}
+\ \\
+\textbf{Colored Spheres}
+\ \\
+Uniquely colored spheres could be used as landmarks. They would be easy to detect in a frame, uniquely
+identifiable based on their color, and would provide information about the direction of the landmark
+relative to the camera. Given enough landmarks in view these directions could be used to estimate the
+camera's pose. The size of the sphere could also be used to estimate distance from the camera to the landmark.
+\newline\newline
+Although colored spheres are a very simple example of a possible landmark, they have several drawbacks. One
+drawback is that for them to remain unique, each sphere would need to be a distinct color from everything else
+in the environment, this quickly becomes difficult and would quickly increase the rate of landmark misdetections.
+\newline\newline
+Another drawback is the sort of position data provided by using colored spheres, you only get direction and
+distance, no information about orientation. This increases the number of landmarks required to be in view for
+an accurate estimation of camera pose. 
 
-\plt{General Definitions (GDs) are a refinement of one or more TMs, and/or of
-  other GDs.  The GDs are less abstract than the TMs.  Generally the reduction
-  in abstraction is possible through invoking (using/referencing) Assumptions.
-  For instance, the TM could be Newton's Law of Cooling stated abstracting.  The
-  GD could take the general law and apply it to get a 1D equation.}
+\ \\
+\textbf{AprilTags \cite{olson2011tags}}
+\ \\
+AprilTags are a 2D barcode system (similar in concept to QR codes) designed at the University of Michigan for
+easy and robust pose estimation.
+\newline\newline
+Each AprilTag encodes a unique number which can be used to correlate subsequent detections. AprilTags are also
+robust to misdetection, as their barcode encodes information such that errors can be detected and rejected. Finally,
+AprilTags provide pose information for each landmark, which greatly reduces the number of landmarks required to be
+in view for an accurate estimation of camera pose.
 
-This section collects the laws and equations that will be used in building the
-instance models.
+\subsubsection{Differential Drive Kinematics}
+The differential drive kinematics subsystem will provide an estimate of the pose of the robot using readings from
+the wheel encoders. This estimate will accumulate error over time due to being a purely feed-forward estimator, but
+it can be used to suplement a more complex state estimator.
 
-\plt{Some projects may not have any content for this section, but the section
-  heading should be kept.}  \plt{Modify the examples below for your problem, and
-  add additional definitions as appropriate.}
+\begin{figure}[H]
+\begin{center}
+    \includegraphics[width=0.75\textwidth]{Figures/Differential Drive Kinematics.pdf}
+\caption{Differential Drive Kinematics}
+\label{Fig_DifferentialDriveKinematics} 
+\end{center}
+\end{figure}
 
-~\newline
+The LiDart robot will use a 2 wheel differential drive system, the derivation for the kinematics of such a system is as follows.
 
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& GD\refstepcounter{defnum}\thedefnum \label{NL}\\
-\hline
-Label &\bf Newton's law of cooling \\
-\hline
-% Units&$MLt^{-3}T^0$\\
-% \hline
-SI Units&\si{\watt\per\square\metre}\\
-\hline
-Equation&$ q(t) = h \Delta T(t)$  \\
-\hline
-Description &
-Newton's law of cooling describes convective cooling from a surface.  The law is
-stated as: the rate of heat loss from a body is proportional to the difference
-in temperatures between the body and its surroundings.
-\\
-& $q(t)$ is the thermal flux (\si{\watt\per\square\metre}).\\
-& $h$ is the heat transfer coefficient, assumed independent of $T$ (\aref{A_hcoeff})
-	(\si{\watt\per\square\metre\per\celsius}).\\
-&$\Delta T(t)$= $T(t) - T_{\text{env}}(t)$ is the time-dependent thermal gradient
-between the environment and the object (\si{\celsius}).
-\\
-\hline
-  Source & Citation here \\
-  \hline
-  Ref.\ By & \ddref{FluxCoil}, \ddref{FluxPCM}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
+\ \newline
+\textbf{Constants}
+\newline $r$ - Wheel radius
+\newline $b$ - Distance between the centers of the wheels
 
-\subsubsection*{Detailed derivation of simplified rate of change of temperature}
+\ \newline
+\textbf{Variables}
+\newline $\vec{V}$ - Velocity vector of the robot
+\newline $\vec{V}_L$ - Velocity vector of the left wheel
+\newline $\vec{V}_R$ - Velocity vector of the right wheel
+\newline $\omega$ - Angular velocity of the robot 
+\newline $V_x$ - X component of the robot velocity
+\newline $V_y$ - Y component of the robot velocity
+\newline $\omega_L$ - Angular velocity of the left wheel 
+\newline $\omega_R$ - Angular velocity of the right wheel
 
-\plt{This may be necessary when the necessary information does not fit in the
-  description field.}
-\plt{Derivations are important for justifying a given GD.  You want it to be
-  clear where the equation came from.}
+\ \newline
+\textbf{Rolling without slipping}
+\newline $\vec{V}_L = r\omega_L\hat{y}$
+\newline $\vec{V}_R = r\omega_R\hat{y}$
 
-\subsubsection{Data Definitions}\label{sec_datadef}
+\ \newline
+\textbf{Kinematics}
+\newline $\vec{V}_L = \vec{V} + (\omega\hat{z}) \times \frac{-1}{2}b\hat{x}$
+\newline $\vec{V}_L = \vec{V} - \frac{1}{2}b\omega\hat{y}$
+\newline $r\omega_L\hat{y} = V_x\hat{x} + V_y\hat{y} - \frac{1}{2}b\omega\hat{y}$
+\newline $\vec{V}_R = \vec{V} + (\omega\hat{z}) \times \frac{1}{2}b\hat{x}$
+\newline $\vec{V}_R = \vec{V} + \frac{1}{2}b\omega\hat{y}$
+\newline $r\omega_R\hat{y} = V_x\hat{x} + V_y\hat{y} + \frac{1}{2}b\omega\hat{y}$
 
-\plt{The Data Definitions are definitions of symbols and equations that are
-  given for the problem.  They are not derived; they are simply used by other
-  models.  For instance, if a problem depends on density, there may be a data
-  definition for the equation defining density.  The DDs are given information
-  that you can use in your other modules.}
+\ \newline
+\textbf{Separate into components}
+\newline $r\omega_L = V_y - \frac{1}{2}b\omega$
+\newline $r\omega_R = V_y + \frac{1}{2}b\omega$
+\newline $V_x = 0$
 
-\plt{All Data Definitions should be used (referenced) by at least one other
-  model.}
+\ \newline
+\textbf{Result}
+\newline $\omega_L = \frac{1}{r} (V_y - \frac{1}{2}b\omega)$
+\newline $\omega_R = \frac{1}{r} (V_y + \frac{1}{2}b\omega)$
 
-This section collects and defines all the data needed to build the instance
-models. The dimension of each quantity is also given.  \plt{Modify the examples
-  below for your problem, and add additional definitions as appropriate.}
+\subsubsection{Movement Controller}
+The movement controller subsystem will receive commands that the user issues via the GUI and control the
+drive train as necessary.
+\newline\newline
+While the robot is in scanning mode this subsystem will attempt to keep the robot stationary, and as such
+will ignore any drive commands. While out of scanning mode this subsystem will control the drive train
+according to any received drive commands.
+\newline\newline
+The movement controller will make use of a closed loop velocity controller to control the wheel speeds of
+the drive train. In this system the velocity of the wheels will be the measured variables, and the voltage
+given to the wheel motors will be the actuated/controlled variables. An example closed loop controller that
+is suitable for this use case is a PID controller, the discrete time equation for which is as follows.
 
-~\newline
+\ \newline
+\textbf{Constants}
+\newline $K_p$ - proportional gain
+\newline $K_i$ - integral gain
+\newline $K_d$ - derivative gain
 
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{FluxCoil}\\
-\hline
-Label& \bf Heat flux out of coil\\
-\hline
-Symbol &$q_C$\\
-\hline
-% Units& $Mt^{-3}$\\
-% \hline
-  SI Units & \si{\watt\per\square\metre}\\
-  \hline
-  Equation&$q_C(t) = h_C (T_C - T_W(t))$, over area $A_C$\\
-  \hline
-  Description & 
-                $T_C$ is the temperature of the coil (\si{\celsius}).  $T_W$ is the temperature of the water (\si{\celsius}).  
-                The heat flux out of the coil, $q_C$ (\si{\watt\per\square\metre}), is found by
-                assuming that Newton's Law 
-                of Cooling applies (\aref{A_Newt_coil}).  This law (\dref{NL}) is used on the surface of
-                the coil, which has area $A_C$ (\si{\square\metre}) and heat 
-                transfer coefficient $h_C$
-                (\si{\watt\per\square\metre\per\celsius}).  This equation
-                assumes that the temperature of the coil is constant over time (\aref{A_tcoil}) and that it does not vary along the length
-                of the coil (\aref{A_tlcoil}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{ewat}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
+\ \newline
+\textbf{Variables}
+\newline $e_n$ - error at time $n$
+\newline $u_n$ - output of the controller at time $n$
 
-\subsubsection{Data Types}\label{sec_datatypes}
+\ \newline
+\textbf{PID Controller}
+\newline $u_n = K_p e_n + K_i \sum e_k + K_d (e_n - e_{n-1})$
 
-\plt{This section is optional.  In many scientific computing programs it isn't
-  necessary, since the inputs and outpus are straightforward types, like reals,
-  integers, and sequences of reals and integers.  However, for some problems it
-  is very helpful to capture the type information.}
+\subsubsection{State Estimation}
+The state estimation subsystem will receive data from the landmark extraction and differential drive kinematics
+subsystems and use that data to estimate the pose of the robot alongside the poses of all the landmarks it has seen.
+This state estimation can be done using various different algorithms, one example of such algorithm is the particle filter.
 
-\plt{The data types are not derived; they are simply stated and used by other
-  models.}
-
-\plt{All data types must be used by at least one of the models.}
-
-\plt{For the mathematical notation for expressing types, the recommendation is
-  to use the notation of~\citet{HoffmanAndStrooper1995}.}
-
-This section collects and defines all the data types needed to document the
-models. \plt{Modify the examples below for your problem, and add additional
-  definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Type Name & Name for Type\\
-  \hline
-  Type Def & mathematical definition of the type\\
-  \hline
-  Description & description here
-  \\
-  \hline
-  Sources & Citation here, if the type is borrowed from another source\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection{Instance Models} \label{sec_instance}    
-
-\plt{The motivation for this section is to reduce the problem defined in
-  ``Physical System Description'' (Section~\ref{sec_phySystDescrip}) to one
-  expressed in mathematical terms. The IMs are built by refining the TMs and/or
-  GDs.  This section should remain abstract.  The SRS should specify the
-  requirements without considering the implementation.}
-
-This section transforms the problem defined in Section~\ref{Sec_pd} into 
-one which is expressed in mathematical terms. It uses concrete symbols defined 
-in Section~\ref{sec_datadef} to replace the abstract symbols in the models 
-identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
-
-The goals \plt{reference your goals} are solved by \plt{reference your instance
-  models}.  \plt{other details, with cross-references where appropriate.}
-\plt{Modify the examples below for your problem, and add additional models as
-  appropriate.}
-
-~\newline
-
-%Instance Model 1
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Number& IM\refstepcounter{instnum}\theinstnum \label{ewat}\\
-  \hline
-  Label& \bf Energy balance on water to find $T_W$\\
-  \hline
-  Input&$m_W$, $C_W$, $h_C$, $A_C$, $h_P$, $A_P$, $t_\text{final}$, $T_C$, 
-  $T_\text{init}$, $T_P(t)$ from \iref{epcm}\\
-  & The input is constrained so that $T_\text{init} \leq T_C$ (\aref{A_charge})\\
-  \hline
-  Output&$T_W(t)$, $0\leq t \leq t_\text{final}$, such that\\
-  &$\frac{dT_W}{dt} = \frac{1}{\tau_W}[(T_C - T_W(t)) + {\eta}(T_P(t) - T_W(t))]$,\\
-  &$T_W(0) = T_P(0) = T_\text{init}$ (\aref{A_InitTemp}) and $T_P(t)$ from \iref{epcm} \\
-  \hline
-  Description&$T_W$ is the water temperature (\si{\celsius}).\\
-  &$T_P$ is the PCM temperature (\si{\celsius}).\\
-  &$T_C$ is the coil temperature (\si{\celsius}).\\
-  &$\tau_W = \frac{m_W C_W}{h_C A_C}$ is a constant (\si{\second}).\\
-  &$\eta = \frac{h_P A_P}{h_C A_C}$ is a constant (dimensionless).\\
-  & The above equation applies as long as the water is in liquid form,
-  $0<T_W<100^o\text{C}$, where $0^o\text{C}$ and $100^o\text{C}$ are the melting
-  and boiling points of water, respectively (\aref{A_OpRange}, \aref{A_Pressure}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{epcm}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-%~\newline
-
-\subsubsection*{Derivation of ...}
-
-\plt{The derivation shows how the IM is derived from the TMs/GDs.  In cases
-  where the derivation cannot be described under the Description field, it will
-  be necessary to include this subsection.}
-
-\subsubsection{Input Data Constraints} \label{sec_DataConstraints}    
-
-Table~\ref{TblInputVar} shows the data constraints on the input output
-variables.  The column for physical constraints gives the physical limitations
-on the range of values that can be taken by the variable.  The column for
-software constraints restricts the range of inputs to reasonable values.  The
-software constraints will be helpful in the design stage for picking suitable
-algorithms.  The constraints are conservative, to give the user of the model the
-flexibility to experiment with unusual situations.  The column of typical values
-is intended to provide a feel for a common scenario.  The uncertainty column
-provides an estimate of the confidence with which the physical quantities can be
-measured.  This information would be part of the input if one were performing an
-uncertainty quantification exercise.
-
-The specification parameters in Table~\ref{TblInputVar} are listed in
-Table~\ref{TblSpecParams}.
-
-\begin{table}[!h]
-  \caption{Input Variables} \label{TblInputVar}
-  \renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l l l c} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} &
-                             \textbf{Typical Value} & \textbf{Uncertainty}\\
-  \midrule 
-  $L$ & $L > 0$ & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol] {\metre} & 10\%
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\noindent 
-\begin{description}
-\item[(*)] \plt{you might need to add some notes or clarifications}
-\end{description}
-
-\begin{table}[!h]
-\caption{Specification Parameter Values} \label{TblSpecParams}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Value} \\
-  \midrule 
-  $L_\text{min}$ & 0.1 \si{\metre}\\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\subsubsection{Properties of a Correct Solution} \label{sec_CorrectSolution}
-
-\noindent
-A correct solution must exhibit \plt{fill in the details}.  \plt{These
-  properties are in addition to the stated requirements.  There is no need to
-  repeat the requirements here.  These additional properties may not exist for
-  every problem.  Examples include conservation laws (like conservation of
-  energy or mass) and known constraints on outputs, which are usually summarized
-  in tabular form.  A sample table is shown in Table~\ref{TblOutputVar}}
-
-\begin{table}[!h]
-\caption{Output Variables} \label{TblOutputVar}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} \\
-  \midrule 
-  $T_W$ & $T_\text{init} \leq T_W \leq T_C$ (by~\aref{A_charge})
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\plt{This section is not for test cases or techniques for verification and
-  validation.  Those topics will be addressed in the Verification and Validation
-  plan.}
+\subsubsection{Point Cloud Stitching}
+The point cloud stitching subsystem will take the raw LiDAR readings along with the pose estimation from the state
+estimation subsystem and use that information to add data to the current 3D scan.
+\newline\newline
+It will do this by first transforming the raw LiDAR readings into the reference frame of the environment, as the
+raw readings will initially be in the LiDAR sensor's local reference frame. This will be done using the pose estimate
+provided by the state estimation subsystem.
+\newline\newline
+It will then take these transformed points and stitch them into the current 3D scan. There are many algorithms for
+point cloud stitching, two examples of such algorithms are Iterative Closest Point and Moving Least Squares.
 
 \section{Requirements}
+\label{sec_Requirements}
 
 \plt{The requirements refine the goal statement.  They will make heavy use of
   references to the instance models.}
 
-This section provides the functional requirements, the business tasks that the
-software is expected to complete, and the nonfunctional requirements, the
-qualities that the software is expected to exhibit.
+This section provides the functional and nonfunctional requirements that the
+system is expected to exhibit.
 
 \subsection{Functional Requirements}
 
 \noindent \begin{itemize}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
-    for the inputs that are supplied by the user.  This information has to be
-    explicit.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs1}:] The GUI shall take input from the user through a keyboard and standard pointing device such as a mouse.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs2}:] There shall be an emergency stop mounted on the robot, which immediately powers down the the robot when pressed.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs3}:] The robot shall be able to move forward and backwards, and turn in both directions.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs4}:] The robot shall be stationary if no commands are given.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be operated remotely.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to be connected to over WiFi.
+\newline Rationale: Wireless connection is required for remote opertaion. WiFi is a commonly available wireless connection technology, it will be familiar to most users. 
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs7}:] The robot shall have a power switch.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs8}:] The robot shall have a means of being charged.
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
-    always required, but often echoing the inputs as part of the output is a
-    good idea.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate1}:] The system shall stitch multiple LiDAR readings into a large point cloud.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate2}:] The system shall be able to perform state estimation calculations based on landmarks in the surrounding environment.
+\newline Rationale: The estimated state of the robot will be used to stitch the multiple LiDAR readings as specified in \rref{R_Calculate1} 
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
-    related requirements.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
-  \plt{Verification related requirements.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
-    requirements.}
-
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output1}:] The GUI shall output the stitched point cloud data as a file.
+\newline Rationale: The exported files can then be used in existing 3D scan processing software.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output2}:] The GUI shall display live video feed of the environment surrounding the robot.
+Rationale: This video feed can be used by the remote operator.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output3}:] The GUI shall display a live preview of the raw LiDAR data. 
+\newline Rationale: The live preview can be used by the robot operator to ensure the scanner is functioning properly and that the desired area is within the scan region.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output4}:] The GUI shall display the current state of the system, as depicted in Figure~\ref{Fig_BehaviourOverview}.
+\newline Rationale: The states can be used by the robot operator to troubleshoot operational issues.
 \end{itemize}
-
-\plt{Every IM should map to at least one requirement, but not every requirement
-  has to map to a corresponding IM.}
 
 \subsection{Nonfunctional Requirements}
 
-\plt{List your nonfunctional requirements.  You may consider using a fit
-  criterion to make them verifiable.}
-\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-  and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-to give a ``high level'' view of the requirement, but allow for the details to
-be covered in the Verification and Validation document.}
-\plt{An absolute requirement on a quality of the system is rarely needed.  For
-  instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-  for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
-  describing now well the quality is achieved, through experimentation, and
-  possibly theory, rather than meeting some bar that was defined a priori.}
-\plt{You do not need an entry for correctness in your NFRs.  The purpose of the
-  SRS is to record the requirements that need to be satisfied for correctness.
-  Any statement of correctness would just be redundant. Rather than discuss
-  correctness, you can characterize how far away from the correct (true)
-  solution you are allowed to be.  This is discussed under accuracy.}
+\plt{List your nonfunctional requirements.  You may consider using a fit criterion to make them verifiable.}
+\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract and verifiable.  This isn't easy to show succinctly, so a good strategy may be to give a ``high level'' view of the requirement, but allow for the details to be covered in the Verification and Validation document.}
+\plt{An absolute requirement on a quality of the system is rarely needed.  For instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is for 0.01 \% accuracy.  Therefore, the emphasis will often be more on describing now well the quality is achieved, through experimentation, and possibly theory, rather than meeting some bar that was defined a priori.}
+\plt{You do not need an entry for correctness in your NFRs.  The purpose of the SRS is to record the requirements that need to be satisfied for correctness. Any statement of correctness would just be redundant. Rather than discuss correctness, you can characterize how far away from the correct (true) solution you are allowed to be.  This is discussed under accuracy.}
 
+\subsubsection{Accuracy Requirements}
+\plt{Characterize the accuracy by giving the context/use for the software.  Maybe something like, ``The accuracy of the computed solutions should meet the level needed for $<$engineering or scientific application$>$.  The level of accuracy achieved by \progname{} shall be described following the procedure given in Section~X of the Verification and Validation Plan.''  A link to the VnV plan would be a nice extra.}
+    
 \noindent \begin{itemize}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  A link to the VnV plan would be a nice extra.}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  A
-    link to the VnV plan would be a nice extra.}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
-
-\item Other NFRs that might be discussed include verifiability,
-  understandability and reusability.
-
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within SCAN\_TOL. This level of accuracy meets the needs of parties interested in low-cost, easily accessible 3D scanning.
 \end{itemize}
 
-\section{Likely Changes}    
+\subsubsection{Performance Requirements}
 
 \noindent \begin{itemize}
-
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the likely changes, with a reference to the related assumption (aref), as appropriate.}
-
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance1}:] The robot shall be able to move at a speed of ROBOT\_SPEED.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance2}:] The robot shall be able to run for RUN\_TIME without being charged.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance3}:] The system must be able to produce a single planar scan within SCANNING\_TIME.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance4}:] The system shall require a maximum of MAX\_PROCESS\_T to output the final stitched 3D scan file.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance5}:] The robot shall require a maximum of MAX\_RESP\_T to respond to user input commands.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance6}:] The video feed shall have a minimum resolution of MIN\_VIDEO\_RES.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Performance7}:] The video feed displayed on the GUI shall have a maximum delay of MAX\_VIDEO\_DELAY.
 \end{itemize}
 
-\section{Unlikely Changes}    
+\subsubsection{Usability Requirements}
+\plt{Characterize the usability by giving the context/use for the software. You should likely reference the user characteristics section.  The level of usability achieved by the software shall be described following the procedure given in Section~X of the Verification and Validation Plan.  A link to the VnV plan would be a nice extra.}
 
 \noindent \begin{itemize}
-
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the unlikely changes.  The design can assume that the changes listed will
-    not occur.}
-
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability1}:] The user should be able to operate the system by following the user manual without any prior knowledge.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than ROBOT\_MAX\_WEIGHT.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions ROBOT\_MAX\_DIM.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed MAX\_NUM\_LEVELS.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of MIN\_FONT\_SIZE.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within EXECUTE\_TIME of accessing the user interface, for at least every 9/10 tasks.
 \end{itemize}
 
-\section{Traceability Matrices and Graphs}
+\subsubsection{Error-Handling Requirements}
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Errors1}:] The system shall display informative messages that alert the user of errors that have occurred. The messages may provide suggested steps to resolve the error.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Errors2}:] The system shall log error information. Error information should be specific and descriptive.
+\end{itemize}
 
-The purpose of the traceability matrices is to provide easy references on what
-has to be additionally modified if a certain component is changed.  Every time a
-component is changed, the items in the column of that component that are marked
-with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows the
-dependencies of theoretical models, general definitions, data definitions, and
-instance models with each other. Table~\ref{Table:R_trace} shows the
-dependencies of instance models, requirements, and data constraints on each
-other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, and likely changes on
-the assumptions.
+\subsubsection{Maintainability Requirements}
+\plt{The effort required to make any of the likely changes listed for \progname{} should be less than FRACTION of the original development time.  FRACTION is then a symbolic constant that can be defined at the end of the report.}
 
-\plt{You will have to modify these tables for your problem.}
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability1}:] Robot parts should be easily replaceable. It should take a maximum of REPLACE\_TIME to replace any part on the robot.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability2}:] All hardware and electronic components shall be easily accessible. No special tools must be required to access hardware. 
+\newline Rationale: This will facilitate activities such as debugging and reprogramming the robot. 
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability3}:] Standard, off-the-shelf components shall be used where possible. 
+\end{itemize}
 
-\plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
-  means that GD1's derivation or presentation requires invocation of A1.  A1
-  does not use GD1.  A1 is ``used by'' GD1.}
+\subsubsection{Portability Requirements}
+\plt{This NFR is easier to write than the others.  The systems that \progname{} should run on should be listed here.  When possible the specific versions of the potential operating environments should be given.  To make the NFR verifiable a statement could be made that the tests from a given section of the VnV plan can be successfully run on all of the possible operating environments.}
 
-\plt{The traceability matrix is challenging to maintain manually.  Please do
-  your best.  In the future tools (like Drasil) will make this much easier.}
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability1}:] The GUI shall run on a Windows operating system.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability2}:] The GUI must be able to run on a standard personal computer. For example, a system with an IntelCore i5 processor and 8 GB of RAM.
+\end{itemize}
 
-\afterpage{
-\begin{landscape}
-\begin{table}[h!]
+\subsubsection{Safety Requirements}
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety1}:] There shall not be any exposed electrical components or wiring.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety2}:] The operator shall be able to stop the robot at any time.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety3}:] The robot shall be placed in a safe-state if communication with the GUI is lost.
+\end{itemize}
+
+\subsubsection{Standards Requirements}
+\noindent \begin{itemize}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Standard1}:] The system shall be in conformace with the following standards:
+\begin{itemize}
+\item CSA 22.1:21, Canadian Electrical Code \cite{CSA1}
+\item CSA Z434, Industrial robots and robot systems \cite{CSA2}
+\end{itemize}
+\end{itemize}
+
+\subsection{Requirements Dependencies}
+
+Table ~\ref{Table:A_trace} shows the dependencies between requirements.
+
+\begin{table}[H]
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\caption{Requirements Dependency Matrix}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
-	& \aref{A_OnlyThermalEnergy}& \aref{A_hcoeff}& \aref{A_mixed}& \aref{A_tpcm}& \aref{A_const_density}& \aref{A_const_C}& \aref{A_Newt_coil}& \aref{A_tcoil}& \aref{A_tlcoil}& \aref{A_Newt_pcm}& \aref{A_charge}& \aref{A_InitTemp}& \aref{A_OpRangePCM}& \aref{A_OpRange}& \aref{A_htank}& \aref{A_int_heat}& \aref{A_vpcm}& \aref{A_PCM_state}& \aref{A_Pressure} \\
+	& \rref{R_Inputs6}& \nfrref{NFR_Accuracy1}& \nfrref{NFR_Performance1}& \nfrref{NFR_Performance3}& \nfrref{NFR_Performance4}& \nfrref{NFR_Performance5}& \nfrref{NFR_Performance6}& \nfrref{NFR_Performance6}& \nfrref{NFR_Performance7}& \nfrref{NFR_Safety2} \\
 \hline
-\tref{T_COE}        & X& & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_LHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\dref{NL}           & & X& & & & & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}         & & & X& X& X& X& & & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil}    & & & & & & & X& X& X& & & & & & & & & & \\ \hline
-\ddref{FluxPCM}     & & & X& X& & & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}       & & & & & & & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\iref{ewat}         & & & & & & & & & & & X& X& & X& X& X& & & X \\ \hline
-\iref{epcm}         & & & & & & & & & & & & X& X& & & X& X& X& \\ \hline
-\iref{I_HWAT}       & & & & & & & & & & & & & & X& & & & & X \\ \hline
-\iref{I_HPCM}       & & & & & & & & & & & & & X& & & & & X & \\ \hline
-\lcref{LC_tpcm}     & & & & X& & & & & & & & & & & & & & & \\ \hline
-\lcref{LC_tcoil}    & & & & & & & & X& & & & & & & & & & & \\ \hline
-\lcref{LC_tlcoil}   & & & & & & & & & X& & & & & & & & & & \\ \hline
-\lcref{LC_charge}   & & & & & & & & & & & X& & & & & & & & \\ \hline
-\lcref{LC_InitTemp} & & & & & & & & & & & & X& & & & & & & \\ \hline
-\lcref{LC_htank}    & & & & & & & & & & & & & & & X& & & & \\
+\rref{R_Inputs2}      & & & & & & & & & &X\\ 
+\hline
+\rref{R_Inputs3}      & & &X & & & & & & &\\ 
+\hline
+\rref{R_Inputs5}      &X & & & & & & & & &\\  
+\hline
+\rref{R_Output1}      & &X & &X &X & & & & &\\ 
+\hline
+\rref{R_Output2}      & & & & & & & &X &X &\\ 
 \hline
 \end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
+
 \label{Table:A_trace}
 \end{table}
-\end{landscape}
-}
 
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline        
-	& \tref{T_COE}& \tref{T_SHE}& \tref{T_LHE}& \dref{NL}& \dref{ROCT} & \ddref{FluxCoil}& \ddref{FluxPCM} & \ddref{D_HOF}& \ddref{D_MF}& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM} \\
+\section{Likely Changes}
+\label{sec_LikelyChanges}
+
+\begin{longtable}{ | p{2.5cm} | p{2.8cm} | p{4cm} | p{4cm} |}
+\caption{Likely Changes to Requirements}
+\label{Table:Likely}\\
 \hline
-\tref{T_COE}     & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}     & & & X& & & & & & & & & & \\ \hline
-\tref{T_LHE}     & & & & & & & & & & & & & \\ \hline
-\dref{NL}        & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}      & X& & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil} & & & & X& & & & & & & & & \\ \hline
-\ddref{FluxPCM}  & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}    & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}     & & & & & & & & X& & & & & \\ \hline
-\iref{ewat}      & & & & & X& X& X& & & & X& & \\ \hline
-\iref{epcm}      & & & & & X& & X& & X& X& & & X \\ \hline
-\iref{I_HWAT}    & & X& & & & & & & & & & & \\ \hline
-\iref{I_HPCM}    & & X& X& & & & X& X& X& & X& & \\
+{\bf Requirement} & {\bf Likelihood of Change} & {\bf Rationale} & {\bf Ways to Change} \\
 \hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
-\label{Table:trace}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
+NFR1 & Likely & Depending on time constraints, requirement could change & Decreasing SCAN\_TOL for better quality \\
 \hline
-	& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM}& \ref{sec_DataConstraints}& \rref{R_RawInputs}& \rref{R_MassInputs} \\
+NFR3 & Likely & Depending on time constraints, requirement could change & RUN\_TIME could be increased \\
 \hline
-\iref{ewat}            & & X& & & & X& X \\ \hline
-\iref{epcm}            & X& & & X& & X& X \\ \hline
-\iref{I_HWAT}          & & & & & & X& X \\ \hline
-\iref{I_HPCM}          & & X& & & & X& X \\ \hline
-\rref{R_RawInputs}     & & & & & & & \\ \hline
-\rref{R_MassInputs}    & & & & & & X& \\ \hline
-\rref{R_CheckInputs}   & & & & & X& & \\ \hline
-\rref{R_OutputInputs}  & X& X& & & & X& X \\ \hline
-\rref{R_TempWater}     & X& & & & & & \\ \hline 
-\rref{R_TempPCM}       & & X& & & & & \\ \hline
-\rref{R_EnergyWater}   & & & X& & & & \\ \hline
-\rref{R_EnergyPCM}     & & & & X& & & \\ \hline
-\rref{R_VerifyOutput}  & & & X& X& & & \\ \hline
-\rref{R_timeMeltBegin} & & X& & & & & \\ \hline
-\rref{R_timeMeltEnd}   & & X& & & & & \\ 
+NFR4 & Very Likely & Depending on time constraints and scope, requirement could change & SCANNING\_TIME could be decreased to save time \\
 \hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
-\label{Table:R_trace}
-\end{table}
+NFR5 & Likely & Depending on time constraints and scope, requirement could change & MAX\_PROCESS\_T could be decreased to save time \\
+\hline
+NFR6 & Likely & Depending on time constraints and scope, requirement could change & MAX\_RESP\_T could be decreased for better user experience \\
+\hline
+NFR13 & Likely & Depening on implementation, requirement could change & Font style and MIN\_FONT\_SIZE will dpeend on how the GUI looks. This is to ensure that the GUI is user friendly \\
+\hline
+NFR17 & Likely & Depending on time constraint, requirement could change & REPLACE\_TIME could be decreased for better user experience \\
+\hline
+NFR21 & Likely & Depending on time constraint and scope & Improve performance so that it can run on lower than average personal computers can handle \\
+\hline
+\end{longtable}
 
-The purpose of the traceability graphs is also to provide easy references on
-what has to be additionally modified if a certain component is changed.  The
-arrows in the graphs represent dependencies. The component at the tail of an
-arrow is depended on by the component at the head of that arrow. Therefore, if a
-component is changed, the components that it points to should also be
-changed. Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, likely changes, and
-assumptions on each other. Figure~\ref{Fig_RTrace} shows the dependencies of
-instance models, requirements, and data constraints on each other.
+\section{Unlikely Changes} 
+\label{sec_UnlikelyChanges}
 
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=\textwidth]{ATrace.png}
-% 		}
-% 		\caption{\label{Fig_ATrace} Traceability Matrix Showing the Connections Between Items of Different Sections}
-% 	\end{center}
-% \end{figure}
+Traceability Matrix Showing the Connections Between Assumptions and Other Items
 
-
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=0.7\textwidth]{RTrace.png}
-% 		}
-% 		\caption{\label{Fig_RTrace} Traceability Matrix Showing the Connections Between Requirements, Instance Models, and Data Constraints}
-% 	\end{center}
-% \end{figure}
+\begin{longtable}{ | p{2.3cm} | p{3.0cm} | p{4cm} | p{4cm} |}
+\caption{Unlikely Changes to Requirements}
+\label{Table:Unlikely}\\
+\hline
+Requirement & Likelihood of Changing & Rationale & Ways to Change \\
+\hline
+R1 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R2 & Very Unlikely & Ensures safety of operation & N/A \\ 
+\hline
+R3 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R4 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R5 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R6 & Very Unlikely & Kay implementation aspect & N/A \\
+\hline
+R7 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R8 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R9 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R10 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R11 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R12 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R13 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+R14 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+NFR2 & Unlikely & Depending on time constraints, requirement could change & Speed of movement is not a high priority  for the application \\
+\hline
+NFR7 & Unlikely & Depending on monetary constraint & MIN\_VIDEO\_RES will depend on the budget allowance cold be higher \\
+\hline
+NFR8 & Unlikely & Depending on time and monetary constraints, requirement could change & MAX\_VIDEO\_DELAY will depend on the budget allowance and time given to improve latency \\
+\hline
+NFR9 & Very Unlikely & Kay implementation aspect & N/A \\
+\hline
+NFR10 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+NFR11 & Unlikely & Depending on time constraints, requirement could change & ROBOT\_MAX\_DIM could be decreased for better storage spacing \\
+\hline
+NFR12 & Very Unlikely & Ensures usability by user & N/A \\
+\hline
+NFR14 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+NFR15 & Very Unlikely & Ensures safety of operation & N/A \\
+\hline
+NFR16 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+NFR18 & Unlikely & Depending on time and monetary constraint & Certain components might have to use special tools to access \\
+\hline
+NFR19 & Very Unlikely & Monetary constraint & N/A \\
+\hline
+NFR20 & Very Unlikcly & Key implementtion aspect & N/A \\
+\hline
+NFR22 & Very Unlikely & Ensures safety of operation & N/A \\
+\hline
+NFR23 & Very Unlikely & Ensures safety of operation and is a key implementation aspect & N/A \\
+\hline
+NFR24 & Very Unlikely & Ensures safety of operation and is a key implementation aspect & N/A \\
+\hline
+NFR25 & Very Unlikely & Key implementation aspect & N/A \\
+\hline
+\end{longtable}
 
 \section{Development Plan}
+\label{sec_dp}
 
-\plt{This section is optional.  It is used to explain the plan for developing
-  the software.  In particular, this section gives a list of the order in which
-  the requirements will be implemented.  In the context of a course  this is
-  where you can indicate which requirements will be implemented as part of the
-  course, and which will be ``faked'' as future work.  This section can be
-  organized as a prioritized list of requirements, or it could should the
-  requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
+LiDart's development will be split into two main efforts:
+\begin{itemize}
+    \item Software and Control Systems (referred to as SCS)
+    \item Electrical and Mechanical (referred to as EM)
+\end{itemize}
+
+As these efforts can both make progress independently, the development plan for
+LiDart is broken up into phases describing what each effort will be focused on.
+
+\subsection{Phase 1 - Foundational Components}
+\textbf{Date:} Oct 6, 2022 - Nov 13, 2022 (POC Demo)
+\ \newline\newline
+In this phase SCS will build initial versions of the landmark extraction and state
+estimation subsystems. These initial versions will run on a computer, not the robot,
+and be tested using images taken externally (eg. using a smart phone). SCS will also build
+a GUI which can be used to remotely drive the robot.
+\ \newline\newline
+In this phase EM will design and build the robot chassis and drive train. 
+\ \newline\newline
+The output for this phase will be:
+\begin{itemize}
+\item A robot that can be driven remotely
+\item Initial versions of the landmark extraction and state estimation subsystems
+\item An initial version of the GUI
+\end{itemize}
+
+\subsection{Phase 2 - Initial Prototype}
+\textbf{Date:} Nov 14, 2022 - Dec 8, 2022
+\ \newline\newline
+In this phase SCS will build initial versions of the differential drive kinematics and
+movement controller subsystems. SCS will also adapt the landmark extraction and state estimation
+subsystems from the previous phase such that they run on the robot and pull data from
+the onboard sensors.
+\ \newline\newline
+In this phase EM will design and build any mechanisms required by the camera and LiDAR module.
+The camera, LiDAR module and any additional sensors will be mounted and wired. 
+\ \newline\newline
+The output for this phase will be:
+\begin{itemize}
+\item A robot with all required sensors mounted and wired
+\item A software stack capable of estimating the state of the robot using onboard sensors
+\end{itemize}
+
+\subsection{Phase 3 - Minimum Viable Product}
+\textbf{Date:} Dec 26, 2022 - Feb 6, 2023 (Rev 0 Demo)
+\ \newline\newline
+In this phase SCS will build an initial version of the point cloud stitching subsystem. SCS
+will also extend the GUI such that it satisfies the LiDart functional requirements. During this
+phase the ability to perform and download 3D scans will be added to the GUI.
+\ \newline\newline
+In this phase EM will refine the mechanical and electrical design of the robot, adding additional
+features that would be required for an MVP. Examples of such features may include charging circuitry,
+additional safeties or additional sensors.
+\ \newline\newline
+The output for this phase will be:
+\begin{itemize}
+\item A robot with build quality matching that of a minimum viable product
+\item A software stack capable of generating stitched 3D scans
+\item A functionally complete version of the GUI
+\end{itemize}
+
+\subsection{Phase 4 - Refinement}
+\textbf{Date:} Feb 7, 2023 - Mar 20, 2023 (Final Demo)
+\ \newline\newline
+In this phase SCS and EM will continue to refine the project, taking into consideration the feedback from the Rev 0 presentation.
 
 \section{Values of Auxiliary Constants}
+\label{sec_ac}
 
 \plt{Show the values of the symbolic parameters introduced in the report.}
 
 \plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.}
 
+
 \plt{The value of FRACTION, for the Maintainability NFR would be given here.}
+\begin{tabular}{ | l | p{6cm} | c |}
+  \hline
+  \textbf{Constant} & \textbf{Description} & \textbf{Value} \\
+  \hline
+  ROBOT\_SPEED & Maximum speed of robot in navigation mode. & \RobotSpeed{} \\
+  \hline
+  SCAN\_TOL & Maximum deviation between sufficient scans. & \ScanTolerance{} \\
+  \hline
+  RUN\_TIME & Maximum time robot can run before needing to be recharged. & \BatteryLife{} \\
+  \hline
+  SCANNING\_SPACE & Unit used for defining robot scan speed & \ScanningSpace{} \\
+  \hline
+  SCANNING\_TIME & Time elapsed to complete scan of a specified scanning space. & \ScanningTime{} \\
+  \hline
+  MAX\_PROCESS\_T & Time needed for the robot to process raw scanned data. & \MaxProcessingTime{} \\
+  \hline
+  MAX\_RESP\_T & Time needed for robot to respond to navigational commands given by user. & \MaxResponseTime{} \\
+  \hline
+  MIN\_VIDEO\_RES & Minimum resolution of video output feed in GUI. & \MinVideoResolution{} \\
+  \hline
+  MAX\_VIDEO\_DELAY & Max time between change in camera and output video feed in GUI. & \MaxVideoDelay{} \\
+  \hline
+  ROBOT\_MAX\_WEIGHT & Maximum weight of the fully assembled robot. & \RobotMaxWeight{} \\
+  \hline
+  ROBOT\_MAX\_DIM & Maximum size of the fully assembled robot. & \RobotMaxDimensions{} \\
+  \hline
+  MAX\_NAV\_LEVELS & Maximum number of layers required to access any function in GUI. & \MaxNavLevels{} \\
+  \hline
+  MIN\_FONT\_SIZE & The minimum font size used in the GUI for accessibility purposes. & \MinFontSize{} \\
+  \hline
+  EXECUTE\_TASK\_TIME & Time it would take an average user to execute 9/10 tasks within the GUI. & \ExecuteTaskTime{} \\
+  \hline
+  REPLACE\_TIME & Time it would take an average user to replace a damaged component. & \ReplaceTime{} \\
+  \hline
+  
+\end{tabular}
 
 \newpage
+\nocite{*}
+\bibliographystyle{ieeetr}
+\bibliography{references}
 
-\bibliographystyle {plainnat}
-\bibliography {../../refs/References}
-
-\newpage
 
 \noindent \plt{The following is not part of the template, just some things to consider
   when filing in the template.}
@@ -1316,21 +1142,20 @@ Their values are defined in this section for easy maintenance.}
 \newpage{}
 \section*{Appendix --- Reflection}
 
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  Please answer the following questions:
-
-\begin{enumerate}
-  \item What knowledge and skills will the team collectively need to acquire to
-  successfully complete this capstone project?  Examples of possible knowledge
-  to acquire include domain specific knowledge from the domain of your
-  application, or software engineering knowledge, mechatronics knowledge or
-  computer science knowledge.  Skills may be related to technology, or writing,
-  or presentation, or team management, etc.  You should look to identify at
-  least one item for each team member.
-  \item For each of the knowledge areas and skills identified in the previous
-  question, what are at least two approaches to acquiring the knowledge or
-  mastering the skill?  Of the identified approaches, which will each team
-  member pursue, and why did they make this choice?
-\end{enumerate}
+	Throughout the \progname\ project, the team will collectively work on gaining experience with 3D scanning systems and robotics.  Ranging from software development to electrical and mechanical design, each team member will gain knowledge in their respective domain depending on their responsibilities. All group members will gain skills in technical documentation, project management, and team management.
+\newline
+\\
+Jon and Kareem will develop algorithms for 3D scanning using a LiDAR sensor, control software for the robot, and a GUI. Jon will be able to expand on his knowledge on state estimation and machine vision. Furthermore, Jon will develop the GUI application, gaining skills in frontend and backend development. Kareem will handle the closed loop control system of the robot by working through trial and error scenarios on movement and navigation. Even though Kareem will be primarily working through trial and error, he will be using resources online to learn about the theory behind robot control. Kareem has picked working through trial and error as that will be the best approach to seeing how the different parameters will affect the robot and its controls. Through theory, values can be used as a starting point. Jon will acquire knowledge from online documentation since he prefers gathering information from the original source and then applying his understanding. 
+\newline
+\\
+While the software is being developed, Neeraj will be working on the chassis and mechanical design of the robot. Making the frame for LiDart will require knowledge based on weight distribution and stabilizing different moving components. The robot will have a variety of parts such as the LiDAR sensor, belts, cameras, and motors. Theory will be applied to designing the robot, but there will also be trial and error throughout the process by prototyping mechanical designs. Neeraj will use an iterative method to create the best design for the robot. 
+\newline
+\\
+Finally, the electrical and hardware design is an  important part of the robot. Getting the correct electrical equipment requires an understanding of the overall system and collaboration with the rest of the team. Components such as the motor will require input from Kareem, Jon and Neeraj. The motor will depend on the weight of the chassis (Neeraj) alongside how the motor will be controlled (Kareem and Jon). The selected components will affect the mechanical design as the size of the parts will be critical to the overall design of \progname. Michaela will be exploring online documentation to create the optimal electrical design for the robot. Michaela will research online to select suitable components for the electrical design. 
+\newline
+\\
+\indent Lastly, throughout this whole project, the team will be working on increasing their teamwork skills and much more. Michaela will be the liaison of the team throughout this project improving on her task management and team management skills. 
+Neeraj will be working closely with Jon and Kareem to give them inputs on their GUI as he has an eye for good design. This will only further his interdisciplinary skills. Jon and Kareem will be working together on the software which is a new experience for both of them.
+This will further improve their skills as being part of a team and having to trust and rely on your team to get the work done.
 
 \end{document}
