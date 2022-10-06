@@ -182,7 +182,7 @@ This section records information for easy reference.
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
   \toprule		
-  \textbf{symbol} & \textbf{description}\\
+  \textbf{Symbol} & \textbf{Description}\\
   \midrule 
   A & Assumption\\
   CMM & Coordinate Measuring Machine\\
@@ -206,7 +206,7 @@ This section records information for easy reference.
 This subsection provides a list of terms that are used in the subsequent sections and their meaning, with the purpose of reducing ambiguity and making it easier to correctly understand the requirements.
 
 \begin{tabularx}{\textwidth}{p{4cm}X}
-\toprule {\bf term} & {\bf definition}\\
+\toprule {\bf Term} & {\bf Definition}\\
 \midrule
 Landmark & Features of an image that are easily detectable and uniquely distinguishable\\
 State Estimation & The process of estimating the state of the robot and its environments\\
@@ -493,8 +493,8 @@ The \progname\ 3D scanning system does not require any domain specific knowledge
 
 The following constraints are imposed on the \progname\ system:
 \noindent \begin{itemize}
-\item[C\refstepcounter{constnum}\theconstnum] The total cost of the system must be less than \$750.
-\item[C\refstepcounter{constnum}\theconstnum] The project must be completed by April 2022.
+\item[C\refstepcounter{constnum}\theconstnum :] The total cost of the system must be less than \$750.
+\item[C\refstepcounter{constnum}\theconstnum :] The project must be completed by April 2022.
 \end{itemize}
 
 \section{Specific System Description} 
@@ -748,12 +748,12 @@ qualities that the software is expected to exhibit.
 \noindent \begin{itemize}
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs1}:] The GUI shall take input from the user through a keyboard and standard pointing device such as a mouse.
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs2}:] There shall be a emergency stop mounted on the robot, which immediately powers down the the robot when pressed.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs2}:] There shall be an emergency stop mounted on the robot, which immediately powers down the the robot when pressed.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs3}:] The robot shall be able to move forward and backwards, and turn in both directions.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs4}:] The robot shall be stationary if no commands are given.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs5}:] The robot shall be able to be operated remotely.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs6}:] The robot shall be able to be connected to over WiFi.
-\item[\newline Rationale: Wireless connection is required for remote opertaion. WiFi is a commonly available wireless connection technology, it will be familiar to most users.] 
+\newline Rationale: Wireless connection is required for remote opertaion. WiFi is a commonly available wireless connection technology, it will be familiar to most users. 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs7}:] The robot shall have a power switch.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs8}:] The robot shall have a means of being charged.
 
@@ -877,7 +877,6 @@ Table ~\ref{Table:A_trace} shows the dependencies between requirements.
 \section{Likely Changes}
 \label{sec_LikelyChanges}
 
-Traceability Matrix Showing the Connections Between Assumptions and Other Items
 
 \begin{longtable}{ | p{2.3cm} | p{3.0cm} | p{4cm} | p{4cm} |}
 \hline
@@ -977,7 +976,7 @@ NFR25 & Very Unlikely & Key implementation aspect & N/A \\
 \section{Development Plan}
 \label{sec_dp}
 
-LiDart's development will be split into to main efforts:
+LiDart's development will be split into two main efforts:
 \begin{itemize}
     \item Software and Control Systems (referred to as SCS)
     \item Electrical and Mechanical (referred to as EM)
@@ -1139,16 +1138,30 @@ Their values are defined in this section for easy maintenance.}
 \newpage{}
 \section*{Appendix --- Reflection}
 
-	Throughout the LiDart project, the team will be collectively working on gaining knowledge as well as experience in order to get the project completed.  Ranging from programming to electrical to mechanical, each team member will be gaining a lot of knowledge in their respective domains depending on their responsibilities.
+\indent Throughout the LiDart project, the team will be collectively working on gaining knowledge as well as experience in order to get the project completed. 
+Ranging from programming to electrical to mechanical, each team member will be gaining a lot of knowledge in their respective domains depending on their responsibilities.\\
 
-Jon and Kareem will need to understand how to get the proper communication between the robot and the machine for the LIDAR sensors.
-Throughout this process of figuring out the parameters, Jon will be able to expand on his knowledge on communications between the LIDAR sensors and the connected machine by working through the available documenation online. However, Kareem will be handling the controls of the robot by working through trial and error scenarios on movement and navigation. Even though Kareem will be primarily working through trial and error, he will be using a lot of resources online to help learn how to properly figure out the routes of communication that are going to be used.
-Kareem has picked working through trial and error as that will be the best approach to seeing how the different parameters will affect the robot and its controls. Reading through documentation would not be very effective when trying to get the right controls for the robot as it would be based on theoretical values which won't directly apply to the robot. Jon has picked reading through online documentation since he prefers gathering information from the original source and then applying his understandings. Through theory, values can be used as a starting point.
+\indent Jon and Kareem will need to understand how to get the proper communication between the robot and the machine for the LiDAR sensors.
+Throughout this process of figuring out the parameters, Jon will be able to expand on his knowledge on communications between the LiDAR sensors and the connected machine by working through the available documenation online. 
+However, Kareem will be handling the controls of the robot by working through trial and error scenarios on movement and navigation. 
+Even though Kareem will be primarily working through trial and error, he will be using a lot of resources online to help learn how to properly figure out the routes of communication that are going to be used.
+This will involve a lot of work with the differential drive kinematics and FSM.
+Kareem has picked working through trial and error as that will be the best approach to seeing how the different parameters will affect the robot and its controls. 
+Reading through documentation would not be very effective when trying to get the right controls for the robot as it would be based on theoretical values which won't directly apply to the robot. 
+Jon has picked reading through online documentation since he prefers gathering information from the original source and then applying his understandings. Through theory, values can be used as a starting point.\\
 
-While the software is being configured, Neeraj will be working on making the chassis for the robot. Making the frame for LiDart will require a lot of knowledge based on weight distribution and stabilizing the different moving components. The robot will have a variety of parts such as the LIDAR sensors, belts, cameras, and motors.
-A lot of theory could be applied to designing the robot, but there will be a lot of trial and error as well within the process. That is why Neeraj is opting for using an iterative method to figure out the best design for the robot. 
+\indent While the software is being configured, Neeraj will be working on making the chassis for the robot. Making the frame for LiDart will require a lot of knowledge based on weight distribution and stabilizing the different moving components. 
+The robot will have a variety of parts such as the LiDAR sensors, belts, cameras, and motors.
+A lot of theory could be applied to designing the robot, but there will be a lot of trial and error as well within the process. That is why Neeraj is opting for using an iterative method to figure out the best design for the robot.\\
 
-Lastly, the electrical components will be a very critical domain of the machine. Getting the correct electrical equipment depending on the needs of LiDart will require a lot of work with the rest of the team. This is due to how LiDart needs to be configured. The required components such as the motor will require input from Kareem, Jon and Neeraj. The motor will depend on the weight of the chassis (Neeraj) alongside how the motor will be controlled (Kareem and Jon).
-The equipment picked will affect the mechanical design as the size of the parts will be very critical to the overall design of LiDart. Michaela will be exploring online documentation to find the correct equipment that best matches what is required for the robot. Michaela figured that by searching online for the proper equipment she will best prepared for the electrical design that needs to be done. This would also be the most effective strategy due to the limitation on the budget that has been given.
+\indent The electrical components will be a very critical domain of the machine. Getting the correct electrical equipment depending on the needs of LiDart will require a lot of work with the rest of the team. 
+This is due to how LiDart needs to be configured. The required components such as the motor will require input from Kareem, Jon and Neeraj. The motor will depend on the weight of the chassis (Neeraj) alongside how the motor will be controlled (Kareem and Jon).
+The equipment picked will affect the mechanical design as the size of the parts will be very critical to the overall design of LiDart. Michaela will be exploring online documentation to find the correct equipment that best matches what is required for the robot. 
+Michaela figured that by searching online for the proper equipment she will best prepared for the electrical design that needs to be done. This would also be the most effective strategy due to the limitation on the budget that has been given.\\
+
+\indent Lastly, throughout this whole project, the team will be working on increasing their teamwork skills and much more. Michaela will be the liaison of the team throughout this project improving on her task management and team management skills. 
+Neeraj will be working closely with Jon and Kareem to give them inputs on their GUI as he has an eye for good design. This will only further his interdisciplinary skills. Jon and Kareem will be working together on the software which is a new experience for both of them.
+This will further improve their skills as being part of a team and having to trust and rely on your team to get the work done.
+
 
 \end{document}
