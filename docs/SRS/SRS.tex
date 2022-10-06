@@ -204,9 +204,10 @@ This section records information for easy reference.
 \subsection{Terminology and Definitions}
 
 This subsection provides a list of terms that are used in the subsequent sections and their meaning, with the purpose of reducing ambiguity and making it easier to correctly understand the requirements.
+\newline
 
 \begin{tabularx}{\textwidth}{p{4cm}X}
-\toprule {\bf Term} & {\bf Definition}\\
+\toprule {\bf term} & {\bf definition}\\
 \midrule
 Landmark & Features of an image that are easily detectable and uniquely distinguishable\\
 State Estimation & The process of estimating the state of the robot and its environments\\
@@ -287,11 +288,14 @@ Pose & A term for the position and orientation of an object\\
 
 \plt{The introduction section is written to introduce the problem.  It starts general and focuses on the problem domain. The general advice is to start with a paragraph or two that describes the problem, followed by a ``roadmap'' paragraph.  A roadmap orients the reader by telling them what sub-sections to expect in the Introduction section.}
 
-Businesses and individuals are increasingly using 3D scanning technologies to collect 3D data for modeling and analysis. The 3D scanning market is rapidly growing, with a wide range of applications such as VR, rapid prototyping, reverse-engineering, and inspection technologies. Many current scanning technologies require that objects are brought to specialized scanning facilities, where fixed devices such as CMM machines and robotic arms are installed. Hand-held scanning devices are also available,  however these technologies are expensive and require human operation. The cost and domain specific knowledge required are barriers to many users. There are limited solutions available for portable, remotely operated, and inexpensive 3D scanning solutions.  A low cost, portable, and user-friendly 3D scanner would make this technology accessible to a wider audience.
+Businesses and individuals are increasingly using 3D scanning technologies to collect 3D data for modeling and analysis. The 3D scanning market is rapidly growing, with a wide range of applications such as virtual reality, rapid prototyping, reverse-engineering, and inspection technologies. Many current scanning technologies require that objects are brought to specialized scanning facilities, where fixed devices such as CMM machines and robotic arms are installed. Hand-held scanning devices are also available,  however these technologies are expensive and may require specialized knowledge. The cost and domain specific knowledge required are barriers to many users. There are limited solutions available for portable, remotely operated, and inexpensive 3D scanning solutions.  
 \newline
 \par
 This document defines the scope of the \progname\ project, specifies the scanning system, and defines requirements. The purpose of the SRS is discussed in detail in Section~\ref{sec_purpose}.  Section~\ref{sec_Scope} describes key project deliverables, as well as exclusions that are outside the scope of work.
-\subsection{Problem Description and Goals}
+\subsection{Problem Description}
+
+LiDart aims to build a low cost, simple to use, WiFi connected 3D scanning robot. Readily available, low cost LiDAR sensors and consumer grade webcams will be used alongside inexpensive location markers. The user will interface with the robot through GUI that will allow them
+to remotely drive the robot and perform 3D scans.
 
 \subsection{Purpose of Document}
 \label{sec_purpose}
@@ -305,8 +309,8 @@ This document defines the scope of the \progname\ project, specifies the scannin
   section will be similar between projects.  The purpose of the document is the
   purpose of the SRS, including communication, planning for the design stage,
   etc.}
-  
-  The purpose of this document is to provide specifications and requirements for the \progname\ 3D scanning system. This document describes functional and non-functional requirements, undesired event handling, and start-up behavior. The behaviour of the system is modeled through system decomposition diagrams. The requirements defined in this document will direct design decisions and will be referenced throughout the design phase to ensure requirements are being met. The requirements will be a direct input to the verification and validation plan.
+
+  The purpose of this document is to provide specifications and requirements for the \progname\ 3D scanning system. This document describes functional and non-functional requirements, undesired event handling, and start-up behavior. The behaviour of the system is modeled through functional decomposition diagrams. The requirements defined in this document will drive design decisions and will be referenced throughout the design phase. They will be a direct input to the verification and validation plan.
 
 \subsection{Scope of Requirements} 
 \label{sec_Scope}
@@ -367,9 +371,6 @@ A plan outlining the steps that will be taken to create the \progname\ system is
 \item Section~\ref{sec_ac}: Values of Auxiliary Constants 
 \newline
 This section provides values for symbolic parameters used in this document.
-\item Section~\ref{sec_ac}: Appendix - Reflection 
-\newline
-This section provides descriptions of the skills and knowledge required by each group member.
 \end{description}
 
 \section{General System Description} 
@@ -429,7 +430,7 @@ Figure~\ref{Fig_SystemContext} is a system context diagram of the \progname\ 3D 
 \begin{itemize}
 \item User:
 \begin{itemize}
-\item The user remotely controls the robot by sending commands to the robot. It is the user's responsibility to instruct the robot to move and scan the desired object. 
+\item The user remotely controls the robot by sending commands to the robot through a graphical user interface (GUI). It is the user's responsibility to instruct the robot to move and scan the desired object. 
 \end{itemize}
 \end{itemize}
 
@@ -450,17 +451,17 @@ Figure~\ref{Fig_SystemContext} is a system context diagram of the \progname\ 3D 
 \begin{itemize}
 \item 3D Scan Tools:
 \begin{itemize}
-\item External 3D scan tools are able to import 3D scan files that are outputted by the \progname\ system. Further analysis and modification of 3D data can be carried out by third party applications.
+\item External 3D scan tools are able to import stitched point cloud data that is outputted by the \progname\ system. Further analysis and modification of 3D data can be carried out using third party applications.
 \end{itemize}
 \end{itemize}
 
 \begin{itemize}
 \item \progname\ 3D Scanning System:
 \begin{itemize}
-\item The system will provide the robot operator with alerts about errors that occur during scanning operations.
+\item The system will provide the user with alerts about errors that occur during operation.
 \item The system is responsible for executing commands provided by the operator.
-\item The GUI will respond to commands provided by the user.
-\item The system outputs 3D scan files that are supported by third party 3D scan tools.
+\item The system will respond to commands provided by the user.
+\item The system outputs stitched point cloud data that is supported by third party 3D modeling tools.
 \end{itemize}
 \end{itemize}
 
@@ -502,7 +503,7 @@ The following constraints are imposed on the \progname\ system:
 
 The solution that LiDart proposes to the specified problem is a two wheeled
 mobile robot that can be remotely driven to take 3D scans of its environment.
-The robot will have all required sensors onboard, these sensors will include:
+The robot will have all required sensors on board; these sensors will include:
 
 \begin{itemize}
 \item One or more cameras
@@ -515,10 +516,10 @@ The robot will have all required sensors onboard, these sensors will include:
 It is assumed that the environment that LiDart will operate within will have the following properties:
 
 \noindent \begin{itemize}
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption1}:] Not exposed to the elements (eg. Rain)
-\newline Rationale: The robot will not be weather proofed, as this increases cost and complexity. A weather proofed configuration could be designed at a later date by modifiying the current robot.
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption1}:] Not exposed to the elements (e.g. Rain)
+\newline Rationale: The robot will not be weather proofed, as this increases cost and complexity. A weather proofed configuration could be designed at a later date by modifying the current robot.
 
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption2}:] Floor should be flat and suitable for driving on with plastic wheels (dry, hard, not slippery. eg. tile, hardwood, concrete)
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption2}:] Floor should be flat and suitable for driving on with plastic wheels (dry, hard, not slippery. e.g. tile, hardwood, concrete)
 \newline Rationale: The robot's simple 2 wheeled drive train is not suited to all terrains. This drive train was chosen to minimize cost and complexity.
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption3}:] Will remain static while the robot is active
@@ -739,9 +740,8 @@ point cloud stitching, two examples of such algorithms are Iterative Closest Poi
 \plt{The requirements refine the goal statement.  They will make heavy use of
   references to the instance models.}
 
-This section provides the functional requirements, the business tasks that the
-software is expected to complete, and the nonfunctional requirements, the
-qualities that the software is expected to exhibit.
+This section provides the functional and nonfunctional requirements that the
+system is expected to exhibit.
 
 \subsection{Functional Requirements}
 
@@ -855,6 +855,7 @@ Table ~\ref{Table:A_trace} shows the dependencies between requirements.
 
 \begin{table}[H]
 \centering
+\caption{Requirements Dependency Matrix}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
 	& \rref{R_Inputs6}& \nfrref{NFR_Accuracy1}& \nfrref{NFR_Performance1}& \nfrref{NFR_Performance3}& \nfrref{NFR_Performance4}& \nfrref{NFR_Performance5}& \nfrref{NFR_Performance6}& \nfrref{NFR_Performance6}& \nfrref{NFR_Performance7}& \nfrref{NFR_Safety2} \\
@@ -870,17 +871,18 @@ Table ~\ref{Table:A_trace} shows the dependencies between requirements.
 \rref{R_Output2}      & & & & & & & &X &X &\\ 
 \hline
 \end{tabular}
-\caption{Traceability Matrix Showing Dependencies Between Requirements}
+
 \label{Table:A_trace}
 \end{table}
 
 \section{Likely Changes}
 \label{sec_LikelyChanges}
 
-
-\begin{longtable}{ | p{2.3cm} | p{3.0cm} | p{4cm} | p{4cm} |}
+\begin{longtable}{ | p{2.5cm} | p{2.8cm} | p{4cm} | p{4cm} |}
+\caption{Likely Changes to Requirements}
+\label{Table:Likely}\\
 \hline
-Requirement & Likelihood of Changing & Rationale & Ways to Change \\
+{\bf Requirement} & {\bf Likelihood of Change} & {\bf Rationale} & {\bf Ways to Change} \\
 \hline
 NFR1 & Likely & Depending on time constraints, requirement could change & Decreasing SCAN\_TOL for better quality \\
 \hline
@@ -906,6 +908,8 @@ NFR21 & Likely & Depending on time constraint and scope & Improve performance so
 Traceability Matrix Showing the Connections Between Assumptions and Other Items
 
 \begin{longtable}{ | p{2.3cm} | p{3.0cm} | p{4cm} | p{4cm} |}
+\caption{Unlikely Changes to Requirements}
+\label{Table:Unlikely}\\
 \hline
 Requirement & Likelihood of Changing & Rationale & Ways to Change \\
 \hline
@@ -1138,30 +1142,15 @@ Their values are defined in this section for easy maintenance.}
 \newpage{}
 \section*{Appendix --- Reflection}
 
-\indent Throughout the LiDart project, the team will be collectively working on gaining knowledge as well as experience in order to get the project completed. 
-Ranging from programming to electrical to mechanical, each team member will be gaining a lot of knowledge in their respective domains depending on their responsibilities.\\
-
-\indent Jon and Kareem will need to understand how to get the proper communication between the robot and the machine for the LiDAR sensors.
-Throughout this process of figuring out the parameters, Jon will be able to expand on his knowledge on communications between the LiDAR sensors and the connected machine by working through the available documenation online. 
-However, Kareem will be handling the controls of the robot by working through trial and error scenarios on movement and navigation. 
-Even though Kareem will be primarily working through trial and error, he will be using a lot of resources online to help learn how to properly figure out the routes of communication that are going to be used.
-This will involve a lot of work with the differential drive kinematics and FSM.
-Kareem has picked working through trial and error as that will be the best approach to seeing how the different parameters will affect the robot and its controls. 
-Reading through documentation would not be very effective when trying to get the right controls for the robot as it would be based on theoretical values which won't directly apply to the robot. 
-Jon has picked reading through online documentation since he prefers gathering information from the original source and then applying his understandings. Through theory, values can be used as a starting point.\\
-
-\indent While the software is being configured, Neeraj will be working on making the chassis for the robot. Making the frame for LiDart will require a lot of knowledge based on weight distribution and stabilizing the different moving components. 
-The robot will have a variety of parts such as the LiDAR sensors, belts, cameras, and motors.
-A lot of theory could be applied to designing the robot, but there will be a lot of trial and error as well within the process. That is why Neeraj is opting for using an iterative method to figure out the best design for the robot.\\
-
-\indent The electrical components will be a very critical domain of the machine. Getting the correct electrical equipment depending on the needs of LiDart will require a lot of work with the rest of the team. 
-This is due to how LiDart needs to be configured. The required components such as the motor will require input from Kareem, Jon and Neeraj. The motor will depend on the weight of the chassis (Neeraj) alongside how the motor will be controlled (Kareem and Jon).
-The equipment picked will affect the mechanical design as the size of the parts will be very critical to the overall design of LiDart. Michaela will be exploring online documentation to find the correct equipment that best matches what is required for the robot. 
-Michaela figured that by searching online for the proper equipment she will best prepared for the electrical design that needs to be done. This would also be the most effective strategy due to the limitation on the budget that has been given.\\
-
-\indent Lastly, throughout this whole project, the team will be working on increasing their teamwork skills and much more. Michaela will be the liaison of the team throughout this project improving on her task management and team management skills. 
-Neeraj will be working closely with Jon and Kareem to give them inputs on their GUI as he has an eye for good design. This will only further his interdisciplinary skills. Jon and Kareem will be working together on the software which is a new experience for both of them.
-This will further improve their skills as being part of a team and having to trust and rely on your team to get the work done.
-
+	Throughout the \progname\ project, the team will collectively work on gaining experience with 3D scanning systems and robotics.  Ranging from software development to electrical and mechanical design, each team member will gain knowledge in their respective domain depending on their responsibilities. All group members will gain skills in technical documentation, project management, and team management.
+\newline
+\\
+Jon and Kareem will develop algorithms for 3D scanning using a LiDAR sensor, control software for the robot, and a GUI. Jon will be able to expand on his knowledge on state estimation and machine vision. Furthermore, Jon will develop the GUI application, gaining skills in frontend and backend development. Kareem will handle the closed loop control system of the robot by working through trial and error scenarios on movement and navigation. Even though Kareem will be primarily working through trial and error, he will be using resources online to learn about the theory behind robot control. Kareem has picked working through trial and error as that will be the best approach to seeing how the different parameters will affect the robot and its controls. Through theory, values can be used as a starting point. Jon will acquire knowledge from online documentation since he prefers gathering information from the original source and then applying his understanding. 
+\newline
+\\
+While the software is being developed, Neeraj will be working on the chassis and mechanical design of the robot. Making the frame for LiDart will require knowledge based on weight distribution and stabilizing different moving components. The robot will have a variety of parts such as the LiDAR sensor, belts, cameras, and motors. Theory will be applied to designing the robot, but there will also be trial and error throughout the process by prototyping mechanical designs. Neeraj will use an iterative method to create the best design for the robot. 
+\newline
+\\
+Finally, the electrical and hardware design is an  important part of the robot. Getting the correct electrical equipment requires an understanding of the overall system and collaboration with the rest of the team. Components such as the motor will require input from Kareem, Jon and Neeraj. The motor will depend on the weight of the chassis (Neeraj) alongside how the motor will be controlled (Kareem and Jon). The selected components will affect the mechanical design as the size of the parts will be critical to the overall design of \progname. Michaela will be exploring online documentation to create the optimal electrical design for the robot. Michaela will research online to select suitable components for the electrical design. 
 
 \end{document}
