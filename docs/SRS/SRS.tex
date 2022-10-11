@@ -147,7 +147,7 @@
 
 \begin{document}
 
-\title{Software Requirements Specification\\
+\title{System Requirements Specification\\
 \progname} 
 \author{\authname}
 \date{\today}
@@ -168,6 +168,8 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Authors} & {\bf Notes}\\
 \midrule
 05\textbackslash Oct\textbackslash 2022 & 1.0 & Michaela Schnull \newline Jonathan Casella \newline Kareem Elmokattaf \newline Neeraj Ahluwalia & Initial Release\\
+\hline
+10\textbackslash Oct\textbackslash 2022 & 1.1 & Michaela Schnull & Added fit criteria \newline Added requirements to development plan\\
 \bottomrule
 \end{tabularx}
 
@@ -205,7 +207,8 @@ This section records information for easy reference.
 
 This subsection provides a list of terms that are used in the subsequent sections and their meaning, with the purpose of reducing ambiguity and making it easier to correctly understand the requirements.
 \newline
-
+\\
+\noindent
 \begin{tabularx}{\textwidth}{p{4cm}X}
 \toprule {\bf Term} & {\bf Definition}\\
 \midrule
@@ -747,7 +750,8 @@ system is expected to exhibit.
 
 \noindent \begin{itemize}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs1}:] The GUI shall take input from the user through a keyboard and standard pointing device such as a mouse.
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs1}:] The GUI shall take be able to take inputs from the user. 
+\newline Fit criteria: The system can take inputs from a keyboard, standard pointing device such as a mouse, or other input devices.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs2}:] There shall be an emergency stop mounted on the robot, which immediately powers down the the robot when pressed.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs3}:] The robot shall be able to move forward and backwards, and turn in both directions.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs4}:] The robot shall be stationary if no commands are given.
@@ -756,15 +760,15 @@ system is expected to exhibit.
 \newline Rationale: Wireless connection is required for remote opertaion. WiFi is a commonly available wireless connection technology, it will be familiar to most users. 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs7}:] The robot shall have a power switch.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs8}:] The robot shall have a means of being charged.
-
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate1}:] The system shall stitch multiple LiDAR readings into a large point cloud.
+\newline Rationale: A point cloud can be used to model 3D data.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate2}:] The system shall be able to perform state estimation calculations based on landmarks in the surrounding environment.
 \newline Rationale: The estimated state of the robot will be used to stitch the multiple LiDAR readings as specified in \rref{R_Calculate1} 
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output1}:] The GUI shall output the stitched point cloud data as a file.
 \newline Rationale: The exported files can then be used in existing 3D scan processing software.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output2}:] The GUI shall display live video feed of the environment surrounding the robot.
-Rationale: This video feed can be used by the remote operator.
+\newline Rationale: This video feed can be used by the remote operator.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output3}:] The GUI shall display a live preview of the raw LiDAR data. 
 \newline Rationale: The live preview can be used by the robot operator to ensure the scanner is functioning properly and that the desired area is within the scan region.
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output4}:] The GUI shall display the current state of the system, as depicted in Figure~\ref{Fig_BehaviourOverview}.
@@ -782,7 +786,8 @@ Rationale: This video feed can be used by the remote operator.
 \plt{Characterize the accuracy by giving the context/use for the software.  Maybe something like, ``The accuracy of the computed solutions should meet the level needed for $<$engineering or scientific application$>$.  The level of accuracy achieved by \progname{} shall be described following the procedure given in Section~X of the Verification and Validation Plan.''  A link to the VnV plan would be a nice extra.}
     
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within SCAN\_TOL. This level of accuracy meets the needs of parties interested in low-cost, easily accessible 3D scanning.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum\label{NFR_Accuracy1}:] The accuracy of the scans shall be within SCAN\_TOL. 
+\newline Rationale: This level of accuracy meets the needs of parties interested in low-cost, easily accessible 3D scanning.
 \end{itemize}
 
 \subsubsection{Performance Requirements}
@@ -802,11 +807,15 @@ Rationale: This video feed can be used by the remote operator.
 
 \noindent \begin{itemize}
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability1}:] The user should be able to operate the system by following the user manual without any prior knowledge.
+\newline Fit criteria: 9/10 users with no prior knowledge of the system are able to successfully drive the robot, perform a scan, and save the scan data using the instructions in the user manual. 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability2}:] The robot shall weigh less than ROBOT\_MAX\_WEIGHT.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability3}:] The robot shall be able to be stored within the dimensions ROBOT\_MAX\_DIM.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. The number of levels of navigation shall not exceed MAX\_NUM\_LEVELS.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. Fonts must be sans-serif and have a minimum font size of MIN\_FONT\_SIZE.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. Users must be able to execute desired tasks within EXECUTE\_TIME of accessing the user interface, for at least every 9/10 tasks.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability4}:] The GUI shall be easy to navigate. 
+\newline Fit criteria: The number of levels of navigation shall not exceed MAX\_NUM\_LEVELS.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability5}:] The font style and size shall be consistent throughout the GUI. 
+\newline Fit criteria: Fonts must be sans-serif and have a minimum font size of MIN\_FONT\_SIZE.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability6}:] The GUI shall be intuitive to use. 
+\newline Fit criteria: Users must be able to execute desired tasks within EXECUTE\_TIME of accessing the user interface, for at least every 9/10 tasks.
 \end{itemize}
 
 \subsubsection{Error-Handling Requirements}
@@ -819,24 +828,28 @@ Rationale: This video feed can be used by the remote operator.
 \plt{The effort required to make any of the likely changes listed for \progname{} should be less than FRACTION of the original development time.  FRACTION is then a symbolic constant that can be defined at the end of the report.}
 
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability1}:] Robot parts should be easily replaceable. It should take a maximum of REPLACE\_TIME to replace any part on the robot.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability2}:] All hardware and electronic components shall be easily accessible. No special tools must be required to access hardware. 
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability1}:] Robot parts should be easily replaceable. 
+\newline Fit criteria: It should take a maximum of REPLACE\_TIME to replace any part on the robot.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability2}:] All hardware and electronic components shall be easily accessible.  
 \newline Rationale: This will facilitate activities such as debugging and reprogramming the robot. 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability3}:] Standard, off-the-shelf components shall be used where possible. 
+\newline Fit criteria: No special tools must be required to access hardware.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability3}:] Standard, off-the-shelf components shall be used where possible.
+\newline Rationale: Off-the shelf parts are less expensive and easier to source than custom parts.
 \end{itemize}
 
 \subsubsection{Portability Requirements}
 \plt{This NFR is easier to write than the others.  The systems that \progname{} should run on should be listed here.  When possible the specific versions of the potential operating environments should be given.  To make the NFR verifiable a statement could be made that the tests from a given section of the VnV plan can be successfully run on all of the possible operating environments.}
 
 \noindent \begin{itemize}
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability1}:] The GUI shall run on a Windows operating system.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability2}:] The GUI must be able to run on a standard personal computer. For example, a system with an IntelCore i5 processor and 8 GB of RAM.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability1}:] The GUI shall be able to run on a Windows operating system.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability2}:] The GUI shall be able to run on a standard personal computer. 
+\newline Fit criteria: A standard personal computer has specifications such as a system with an IntelCore i5 processor and 8 GB of RAM.
 \end{itemize}
 
 \subsubsection{Safety Requirements}
 \noindent \begin{itemize}
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety1}:] There shall not be any exposed electrical components or wiring.
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety2}:] The operator shall be able to stop the robot at any time.
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety2}:] The operator shall be able to stop the movement of the robot at any time.
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Safety3}:] The robot shall be placed in a safe-state if communication with the GUI is lost.
 \end{itemize}
 
@@ -851,7 +864,7 @@ Rationale: This video feed can be used by the remote operator.
 
 \subsection{Requirements Dependencies}
 
-Table ~\ref{Table:A_trace} shows the dependencies between requirements.
+Table ~\ref{Table:A_trace} shows the dependencies between requirements. Requirements that are not shown in the table do not have any dependencies.
 
 \begin{table}[H]
 \centering
@@ -1006,6 +1019,8 @@ The output for this phase will be:
 \item An initial version of the GUI
 \end{itemize}
 
+\noindent \textbf{Phase 1 Requirements}: \rref{R_Inputs1}, \rref{R_Inputs2}, \rref{R_Inputs3}, \rref{R_Inputs4}, \rref{R_Inputs5}, \rref{R_Inputs6}, \rref{R_Inputs7}, \rref{R_Inputs8}, \rref{R_Calculate2}, \nfrref{NFR_Performance1}, \nfrref{NFR_Performance2}, \nfrref{NFR_Usability2}, \nfrref{NFR_Usability3}
+
 \subsection{Phase 2 - Initial Prototype}
 \textbf{Date:} Nov 14, 2022 - Dec 8, 2022
 \ \newline\newline
@@ -1022,6 +1037,8 @@ The output for this phase will be:
 \item A robot with all required sensors mounted and wired
 \item A software stack capable of estimating the state of the robot using onboard sensors
 \end{itemize}
+
+\noindent \textbf{Phase 2 Requirements}: \rref{R_Output2}, \nfrref{NFR_Performance6}, \nfrref{NFR_Performance7}, \nfrref{NFR_Usability1}, \nfrref{NFR_Maintainability1}, \nfrref{NFR_Maintainability2}, \nfrref{NFR_Maintainability3}
 
 \subsection{Phase 3 - Minimum Viable Product}
 \textbf{Date:} Dec 26, 2022 - Feb 6, 2023 (Rev 0 Demo)
@@ -1041,10 +1058,12 @@ The output for this phase will be:
 \item A functionally complete version of the GUI
 \end{itemize}
 
+\noindent \textbf{Phase 3 Requirements}: \rref{R_Calculate1}, \rref{R_Output1}, \rref{R_Output3}, \rref{R_Output4}, \nfrref{NFR_Accuracy1}, \nfrref{NFR_Performance3}, \nfrref{NFR_Performance4}, \nfrref{NFR_Performance5}, \nfrref{NFR_Usability4}, \nfrref{NFR_Usability5}, \nfrref{NFR_Usability6}, \nfrref{NFR_Errors1}, \nfrref{NFR_Errors2}, \nfrref{NFR_Portability1}, \nfrref{NFR_Portability2}, \nfrref{NFR_Safety1}, \nfrref{NFR_Safety2}, \nfrref{NFR_Safety3},\nfrref{NFR_Standard1}
+
 \subsection{Phase 4 - Refinement}
 \textbf{Date:} Feb 7, 2023 - Mar 20, 2023 (Final Demo)
 \ \newline\newline
-In this phase SCS and EM will continue to refine the project, taking into consideration the feedback from the Rev 0 presentation.
+In this phase SCS and EM will continue to refine the project, taking into consideration the feedback from the Rev 0 presentation.\\
 
 \section{Values of Auxiliary Constants}
 \label{sec_ac}
