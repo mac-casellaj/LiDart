@@ -1,7 +1,24 @@
-\documentclass{article}
-
+\documentclass[12pt]{article}
+\usepackage{longtable}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fullpage}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{multirow}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+
+\newcounter{assumpnum} %Assumption Number
+\newcommand{\atheassumpnum}{P\theassumpnum}
+\newcommand{\aref}[1]{A\ref{#1}}
+\newcounter{haznum} %Hazard Category Number
+\newcommand{\hthehaznum}{H\thehaznum}
+\newcommand{\href}[1]{H\ref{#1}}
 
 \title{Hazard Analysis\\\progname}
 
@@ -13,23 +30,195 @@
 \input{../Common}
 
 \begin{document}
-
-\begin{table}[hp]
-\caption{Revision History} \label{TblRevisionHistory}
-\begin{tabularx}{\textwidth}{llX}
-\toprule
-\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
-\midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\newpage
+\pagenumbering{roman}
 
 \maketitle
 
+\newpage
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+~\newpage
+
+\section*{Revision History}
+
+\begin{tabularx}{1.0\textwidth}{p{3cm}p{2cm}p{4cm}X}
+\toprule {\bf Date} & {\bf Version} & {\bf Authors} & {\bf Notes}\\
+\midrule
+10\textbackslash Oct\textbackslash 2022 & 1.0 & Michaela Schnull \newline Kareem Elmokattaf  & Initial Release\\
+\bottomrule
+\end{tabularx}
+
+~\newpage
+
+\section{Reference Material}
+
+This section records information for easy reference.
+
+\subsection{Abbreviations and Acronyms}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l} 
+  \toprule		
+  \textbf{Symbol} & \textbf{Description}\\
+  \midrule 
+  A & Assumption\\
+  ALARA & As Low as Reasonably Achievable\\
+  FMEA & Failure Modes Effects Analysis\\
+  GUI & Graphical User Interface\\
+  H & Hazard\\
+  \bottomrule
+\end{tabular}\\
+
+\pagenumbering{arabic}
+
+\section{Background}
+
+3D scanning is a versatile technology that is used across many industries, but its uses are often limited by high cost
+and complexity. \progname aims to build a low cost, simple to use 3D scanning robot. A software suite will process
+data obtained from the robot and provide a user interface. \progname’s end product will be a wheel based mobile robot
+with all required sensors on-board that can be connected to over WiFi.
+
+\section{Introduction}
+
+\subsection{Purpose}
+
+The purpose of this document is to identify and provide actions to eliminate or mitigate hazards associated with the setup and operation of \progname. This document is intended to identify failure modes, effects, and causes related to the safety of the system. Recommended actions have been assigned to each failure mode.
+
+\subsection{Scope}
+The \progname ~system consists of a graphical user interface that allows the user to remotely drive a robot, initiate 3D scans, and download the final stitched 3D scan. Hazard analysis will be performed on all processes relating to the installation and operation of the LiDart system.  Hazard analysis will not be completed for software components such as licensing, user authentication, security, and data storage as these considerations are not within the scope of the project. Failure modes due to human performance factors are not included in this hazard analysis.
+
+\section{Assumptions and Definitions}
+
+\subsection{Assumptions}
+
+The following assumptions were used in the development of this process FMEA:
+
+\noindent \begin{itemize}
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption1}:] The \progname ~system is in good condition. All maintenance activities have been properly completed. 
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption2}:]The \progname ~system has not been damaged or modified by the user.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{Assumption4}:] The user will follow operating instructions as provided in the user manual.
+
+\end{itemize}
+
+\subsection{Definitions}
+
+\subsubsection{Hazard}
+
+The definition of a hazard used throughout this document is based on  Nancy Leveson's work. A hazard is defined as any property or condition of a system coupled with an environment that has the potential to cause harm, damage, or adverse effects.
+
+\section{System Overview}
+
+The \progname ~system is a 3D scanning solution in the form of a mobile robot. The system includes location markers, a remote-controlled robot, and a graphical user interface.
+
+\subsection{System Boundary}
+
+Hazard analysis is performed on \progname ~system, which consists of: 
+
+\begin{itemize}
+\item The physical robot, including the hardware and firmware running on the robot
+\item Location markers
+\item The GUI application
+\end{itemize}
+
+The physical device running the GUI application and the environment surrounding the robot are not controlled by \progname. Hazard analysis will not be performed on elements external to the system.
+ 
+\subsection{System Processes}
+
+ \noindent The processes executed by the \progname ~system can be broken into the following categories:
+
+\noindent \begin{itemize}
+\item[\textbf{H\thehaznum \label{H0}}] \textbf{General Failure Modes}\\
+Consists of the failure modes that may occur at any time. 
+
+\item[\textbf{H\refstepcounter{haznum}\thehaznum \label{H1}}] \textbf{System Setup and Installation}\\
+Before performing scanning operations, the robot must be powered on, and communication must be established between the robot and the user interface over WiFi. A series of functionality checks are performed after communication is established to ensure the robot is in an operational state. Furthermore, location markers must be installed. Figure~\ref{fig_Setup} illustrates the setup and installation processes.
+\begin{figure}[H]
+\centering 
+\includegraphics[width=0.5\textwidth]{Figures/Setup Processes.pdf}
+\caption{Setup and Installation Process Diagram}
+\label{fig_Setup}
+\end{figure}
+
+\item[\textbf{H\refstepcounter{haznum}\thehaznum \label{H2}}] \textbf{Operation}\\
+While in operation, the robot must respond to inputs from the user and perform scanning operations. The system must perform state estimation, acquire sensor data, and output 3D models. Figure~\ref{fig_Operation} illustrates the operational process logic.
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.4\textwidth]{Figures/Operation Processes.pdf}
+\caption{Operation Process Diagram}
+\label{fig_Operation}
+\end{figure}
+\end{itemize}
+
+\section{Process Failure Modes and Effects Analysis}
+
+A process FMEA is used to perform hazard analysis of the \progname ~system. The table is included in Appendix ~\ref{FMEA}.
+
+\section{Recommended Actions and Safety Requirements}
+
+\section{Roadmap }
+
+New safety requirements created from the hazard analysis will improve the safety of the \progname ~system. Additionally, recommended actions from the FMEA will be implemented throughout the design phase of this project to eliminate and mitigate hazards. The principle of ALARA will be used to reduce risk and decide which which recommended actions will be implemented. 
+
+
+\afterpage{
+\clearpage
+\thispagestyle{empty}
+\newgeometry{margin=0.5in}
+\begin{landscape}
+\centering
+\appendix
+\section{Failure Modes and Effects Analysis Table}
+\label{FMEA}
+\small
+\captionof{table}{Failure Modes and Effects Analysis}
+\begin{tabularx}{\linewidth}{|p{3cm}|p{1cm}|p{3.25cm}|p{3.25cm}|p{3cm}|p{3cm}|p{4cm}|X|}
+\hline
+\textbf{Design Component} & \textbf{Ref.} & \textbf{Failure Mode} & \textbf{Effect of Failure} & \textbf{Cause of Failure} & \textbf{Detection} & \textbf{Recommended Actions} & \textbf{SR}\\
+\hline
+\multicolumn{8}{|c|}{General Failure Modes}\\
+
+\hline
+{} & H0-1 & {} & {} & {} & {} & {} & {}\\
+
+\hline
+{} & H0-2 & {} & {} & {} & {} & {}& {}\\
+
+\hline
+{} & H0-3 & {} & {} & {} & {} & {}& {}\\
+
+\hline
+\multicolumn{8}{|c|}{System Setup and Installation}\\
+
+\hline
+Power On System & H1-1 & {} & {} & {} & {} & {}& {}\\
+
+\hline
+Establish Communication & H1-2 & {} & {} & {} & {} & {}& {}\\
+
+\hline
+Functional Checks & H1-3 & {} & {} & {} & {} & {}& {}\\
+
+\hline
+\multicolumn{8}{|c|}{Operation}\\
+
+\hline
+Move Robot & H2-1 & {} & {} & {} & {} & {}& {}\\
+
+\hline
+State Estimation & H2-2 & {} & {} & {} & {} & {}& {}\\
+
+\hline
+Perform Scan & H2-3 & {} & {} & {} & {} & {}& {}\\
+\hline
+
+\end{tabularx}
+\end{landscape}
+\clearpage% Flush page
+}
 
 \end{document}
