@@ -183,22 +183,24 @@ New safety requirements created from the hazard analysis will improve the safety
 \multicolumn{8}{|c|}{General Failure Modes}\\
 
 \hline
-{} & H0-1 & {} & {} & {} & {} & {} & {}\\
+LiDar Sensor Calibration& H0-1 & Sensor doesn't scan the object & 3D scanning can't take place & LiDar Ssnsor hasn't been calibrated properly & Software checks for calibration confirmation from sensors & Following steps to calibrate the sensor & {}\\ %look at this again
 
 \hline
-{} & H0-2 & {} & {} & {} & {} & {}& {}\\
+Robot location calibration & H0-2 & Robot can't calibrate its location & Robot can't start scanning & - Tags are not in visible range of the robot & Software checks for calibration confirmation & - Adjusting the placement of the tags to be visible by the robot & {}\\ %word it better
+{} & {} & {} & {} & - Not enough tags are placed to calibrate the robot &  {} & - Ensuring enough tags are placed around the space & {}\\
 
 \hline
-{} & H0-3 & {} & {} & {} & {} & {}& {}\\
+System Power & H0-3 & Robot does not have have any power & Robot can't operate & Damage to the power supply & System no longer functions and is completely halted & Damaged power supply is replaced & {}\\
 
 \hline
 \multicolumn{8}{|c|}{System Setup and Installation}\\
+\hline
+Power On System & H1-1 & - Robot does not power on & - Robot does not function & - Battery died & Through GUI & - Charging the battery & *Something to be inserted here* \\ %compare to top entry
+{} & {} & {} & - Robot does not move & - Short Circuit & {} & - Powering robot off  & *Insert*\\
 
 \hline
-Power On System & H1-1 & {} & {} & {} & {} & {}& {}\\
-
-\hline
-Establish Communication & H1-2 & {} & {} & {} & {} & {}& {}\\
+Establish Communication & H1-2 & - Robot does not receive input & - Robot will not be controlled by user & - Wifi signal being too weak & Through GUI & - Keeping robot closer to the WIFI signal & {}\\
+{} & {} & - Robot does not give output & - User will not be able to assess the processing of the robot & - Bluetooth signal is too weak  & {} & - Keeping robot closer to bluetooth communication source  & *Insert*\\
 
 \hline
 Functional Checks & H1-3 & {} & {} & {} & {} & {}& {}\\
@@ -207,13 +209,13 @@ Functional Checks & H1-3 & {} & {} & {} & {} & {}& {}\\
 \multicolumn{8}{|c|}{Operation}\\
 
 \hline
-Move Robot & H2-1 & {} & {} & {} & {} & {}& {}\\
+Move Robot & H2-1 & Robot does not move as instructed by user input & Robot could end up in the wrong location & Communication strength not being strong enough (wifi or bluetooth signals) & Software checks the strength of the signal between host and robot &Limiting robots movement to keep signal strength with the host & {}\\ %compare to other entry
 
 \hline
-State Estimation & H2-2 & {} & {} & {} & {} & {}& {}\\
+State Estimation & H2-2 & Robot is not properly calibrated in comparison to the tags & Robot will have the scan incorrectly shaped & *Undecided* & Software displays location of robot and user to confirm & Robot to be recalibrated & {}\\ %To be looked at again
 
 \hline
-Perform Scan & H2-3 & {} & {} & {} & {} & {}& {}\\
+Perform Scan & H2-3 & & {} & {} & {} & {}& {}\\
 \hline
 
 \end{tabularx}
