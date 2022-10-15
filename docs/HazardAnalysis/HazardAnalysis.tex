@@ -13,6 +13,7 @@
 \usepackage{multirow}
 \usepackage[margin=1in]{geometry}
 \usepackage{enumitem}
+\usepackage{pdflscape}
 
 \newcounter{assumpnum} %Assumption Number
 \newcommand{\atheassumpnum}{P\theassumpnum}
@@ -76,7 +77,7 @@ This section records information for easy reference.
   FMEA & Failure Modes and Effects Analysis\\
   GUI & Graphical User Interface\\
   H & Hazard\\
-  SR & Safety Requirement\\
+  SR & System Requirement\\
   \bottomrule
 \end{tabular}\\
 
@@ -167,7 +168,23 @@ While in operation, the robot must respond to inputs from the user and perform s
 
 A Failure Modes and Effects Analysis (FMEA) is used to perform hazard analysis of the \progname ~system. The table is included in Appendix ~\ref{FMEA}.
 
-\section{Recommended Actions and Safety Requirements}
+\section{System Requirements}
+
+New requirements have been created based on recommended actions from the FMEA.
+
+\begin{itemize}
+
+\item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR1}}] The system shall prevent the robot from driving into an obstacle. An error message should be displayed if the user attempts to move the robot into an obstacle.
+
+\item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR2}}] The system shall prevent the robot from moving during scanning operations.
+
+\item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR3}}] The system shall automatically save data from scanning operations.
+
+\item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR4}}] The system shall prevent robot from moving if communication with the user is lost.
+
+\item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR5}}] The system shall validate all input data.
+
+\end{itemize}
 
 \section{Roadmap }
 
@@ -175,13 +192,11 @@ New safety requirements created from the hazard analysis will improve the safety
 
 
 \afterpage{
-\clearpage
-\thispagestyle{empty}
 \newgeometry{margin=0.5in}
 \begin{landscape}
 \centering
 \appendix
-\section{Failure Modes and Effects Analysis Table}
+\section{Failure Modes and Effects Analysis}
 \label{FMEA}
 \tiny
 \captionof{table}{Failure Modes and Effects Analysis}
@@ -192,7 +207,7 @@ New safety requirements created from the hazard analysis will improve the safety
 \multicolumn{8}{|c|}{General Failure Modes}\\
 
 \hline
-Robot location calibration & H0-1& Robot can't calibrate its location & Robot can't start scanning & - Tags are not in visible range of the robot & Software checks for calibration confirmation & - Adjusting the placement of the tags to be visible by the robot & {}\\ %word it better
+Robot location calibration & H0-1& Robot cannot calibrate its location & Robot can't start scanning & - Tags are not in visible range of the robot & Software checks for calibration confirmation & - Adjusting the placement of the tags to be visible by the robot & {}\\ %word it better
 {} & {} & {} & {} & - Not enough tags are placed to calibrate the robot &  {} & - Ensuring enough tags are placed around the space & {}\\
 
 \hline
@@ -206,7 +221,7 @@ System Power & H0-3 & Power is lost & - Damaged battery \newline - Battery died 
 
 %Establish Communication
 \hline
-Establish Communication & H1-1 & Cannot establish communication with robot & Network connectivity issue & Delay to investigate and fix network issues & {} & Reset the network \newline & {}\\
+Establish Communication & H1-1 & Cannot establish communication with robot & Network connectivity issue & Delay to investigate and fix network issues & Error message on GUI & Reset the network \newline & {}\\
 
 %Functional Checks
 
@@ -214,40 +229,31 @@ Establish Communication & H1-1 & Cannot establish communication with robot & Net
 Functional Checks & H1-2 & Functional checks (e.g. check that ll required devices are connected) are not successful & - Checks fail when they should pass \newline - Checks pass when they should fail & Delay to investigate and fix error \newline Potential downstream functional and performance issues & {} & {}& {}\\
 
 \hline
-LiDar Sensor Calibration& H1-3 & Sensor doesn't scan the object & 3D scanning can't take place & LiDar Sensor hasn't been calibrated properly & Software checks for calibration confirmation from sensors & Following steps to calibrate the sensor & {}\\ %look at this again
+LiDAR Sensor Calibration& H1-3 & Sensor doesn't scan the object & 3D scanning can't take place & LiDAR sensor hasn't been calibrated properly & Software checks for calibration confirmation from sensors & Following steps to calibrate the sensor & {}\\ %look at this again
 
 \hline
 \multicolumn{8}{|c|}{Operation}\\
 
 %Communication
 \hline
-Communication & H2-1 & Communication between the GUI and the robot is lost & - Wifi signal is too weak \newline - WiFi signal intermittently cuts out & - Robot will not be able to be controlled by user \newline - Data messages are lost & Through GUI & - Keep the robot closer to the WiFi signal \newline - Use networking protocols that check for missed messages & {}\\
+Communication & H2-1 & Communication between the GUI and the robot is lost & - Wifi signal is too weak \newline - WiFi signal intermittently cuts out & - Robot will not be able to be controlled by user \newline - Data messages are lost & Visual inspection & - Keep the robot closer to the WiFi signal \newline - Use networking protocols that check for missed messages & \srref{SR3}, \srref{SR4}\\
 
 %Movement of robot
 \hline
-\multirow{2}{*}{Movement of Robot} & H2-2 & Robot crashes & - Robot does not respond to input \newline - Robot is not capable of stopping in time & - Damage to the surrounding environment & {} & - Display warning when the robot is getting too close to an obstacle \newline - Use software controls to prevent user input from instructing the robot to drive into an obstacle & {}\\\cline{2-8}
+\multirow{2}{*}{Movement of Robot} & H2-2 & Robot crashes & - Robot does not respond to input \newline - Robot is not capable of stopping in time & - Damage to the surrounding environment & Visual inspection & - Display warning when the robot is getting too close to an obstacle \newline - Use software controls to prevent user input from instructing the robot to drive into an obstacle & \srref{SR1}\\\cline{2-8}
 & H2-3 & Robot does not move as instructed by user input & Robot could end up in the wrong location & Communication strength not being strong enough (WiFi signals) & Software checks the strength of the signal between host and robot &Limiting robots movement to keep signal strength with the host & {}\\ %compare to other entry
 
+%State Estimation
 \hline
-\multirow{2}{*}{State Estimation}  & H2-4 & State cannot be estimated & - Markers are not in the camera(s)' field of view \newline - Camera cannot identify markers\newline -No encoder feedback \newline Inadequate number of markers & System cannot correctly perform scanning operations & Software checks for calibration confirmation & - Re-calibrate the system \newline - Ensure enough markers are used \newline - Adjust the position of markers so that they are visible to the robot \newline - Move the robot to a new location & {}\\\cline{2-8}
-& H2-5 & False positive that the state is correctly estimated & State estimation filtering error & {} & {} & {}& {}\\\cline{2-8}
-& H2-6 & False negative that state has not been correctly estimated & State estimation filtering error & {} & {} & {}& {}\\\cline{2-8}
+\multirow{2}{*}{State Estimation}  & H2-4 & State cannot be estimated & - Markers are not in the camera(s)' field of view \newline - Camera cannot identify markers\newline - No encoder feedback \newline - Inadequate number of markers & System cannot correctly perform scanning operations & Software checks for calibration confirmation & - Re-calibrate the system \newline - Ensure enough markers are used \newline - Adjust the position of markers so that they are visible to the robot \newline - Move the robot to a new location & {}\\\cline{2-8}
+& H2-5 & False positive that the state is correctly estimated & State estimation filtering error & Scanning output is incorrect & Visual inspection of 3D model output & {}& {}\\\cline{2-8}
+& H2-6 & False negative that state has not been correctly estimated & State estimation filtering error & System will prevent the user from scanning & Error message on GUI & {}& {}\\\cline{2-8}
 
 %Perform Scan
 \hline
-\multirow{2}{*}{Perform Scan} & H2-7 & Incorrect amount of data acquired & Insufficient amount of data acquired & Accuracy of output may decrease  & {} & {}& {}\\\cline{2-8}
-& H2-8 & Data acquired is not correct & - Sensor malfunction \newline - Robot moves during data acquisition & 3D models are inaccurate & {} & -Use software controls to prevent the robot from moving during scanning \newline - Validate output of sensor data& {}\\\cline{2-8}
+\multirow{2}{*}{Perform Scan} & H2-7 & Incorrect amount of data acquired & Insufficient amount of data acquired & Accuracy of output may decrease  & Visual inspection of 3D model output & {}& {}\\\cline{2-8}
+& H2-8 & Data acquired is not correct & - Sensor malfunction \newline - Robot moves during data acquisition & 3D models are inaccurate & Visual inspection of 3D model output & -Use software controls to prevent the robot from moving during scanning \newline - Validate output of sensor data& \srref{SR2}, \srref{SR5}\\\cline{2-8}
 \hline
-
-\hline
-{} & {} & {} & {} & {} & {} & {}& {}\\
-
-\hline
-{} & {} & {} & {} & {} & {} & {}& {}\\
-
-\hline
-{} & {} & {} & {} & {} & {} & {}& {}\\
-
 
 \end{xltabular}
 \end{landscape}
