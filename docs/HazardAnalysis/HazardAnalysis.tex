@@ -192,7 +192,16 @@ Requirements have been created based on recommended actions from the FMEA.
 \newline Rationale: Short circuit protection should be implemented as a safety precaution and to protect electrical devices.
 
 \item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR7}}] An adequate number of location markers shall be used such that the robot can determine it's location in any position.
-\newline Rationale: Short circuit protection should be implemented as a safety precaution and to protect electrical devices.
+\newline Rationale: The system must be able to perform localization in any position in order to stitch point cloud data.
+
+\item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR8}}] The robot shall perform a power-on self-test (POST) to check the functionality of system components prior to operation.
+\newline Rationale: The POST will identify functional issues and mitigate downstream functional and performance issues.
+
+\item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR10}}] The system shall display a warning if there is insufficient data acquired to create a 3D model.
+\newline Rationale: The point stitching algorithm requires sufficient data to create a 3D model. The accuracy of the model may decrease or a model may not be able to be created if there is insufficient data.
+
+\item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR11}}] The system shall be able to retroactively correct stitched point cloud models given new data.
+\newline Rationale: If there is an issue with a certain section of a 3D model, the system should be able to correct the model given new data for that section. The user should not have to re-scan every section.
 
 \end{itemize}
 
@@ -204,7 +213,7 @@ Requirements have been created based on recommended actions from the FMEA.
 \newline Rationale: The robot must not be able to move if communication with the user is lost.
 
 \item[\textbf{SR\refstepcounter{srnum}\thesrnum \label{SR9}}]All hardware and electronic components shall be easily accessible.
-\newline Rationale: Electrical components should be easily accessible for trouble-shooting and maintenace purposes.
+\newline Rationale: Electrical components should be easily accessible for trouble-shooting and maintenance purposes.
 
 \end{itemize}
 
@@ -240,12 +249,12 @@ GUI & H0-1 & GUI crashes & 1. Poor software memory management and performance \n
 
 %Establish Communication
 \hline
-Establish Communication & H1-1 & Cannot establish communication with the robot & 1. Incorrect network settings 2. Robot is not in the range of the network & 1. Delay to investigate and fix network issues & Error message on the GUI when attempting to connect to a network & 1. Move the robot to a location with a strong network signal \newline 2. Check the network settings, and correct the settings if necessary \newline 3. Reset the network & {}\\
+Establish Communication & H1-1 & Cannot establish communication with the robot & 1. Incorrect network settings \newline 2. Robot is not in the range of the network \newline 3. Hardware/system power failure & 1. Delay to investigate and fix network issues & Error message on the GUI when attempting to connect to a network & 1. Move the robot to a location with a strong network signal \newline 2. Check the network settings, and correct the settings if necessary \newline 3. Reset the network \newline 4. Power cycle the robot & \srref{SR3} \\
 
 %Functional Checks
 
 \hline
-Functional Checks & H1-2 & Functional checks (e.g. check that all required devices are connected, sensors are calibrated) are not successful & 1. Checks fail when they should pass \newline 2. Checks pass when they should fail & 1. Delay to investigate and fix error \newline 2. Potential downstream functional and performance issues & Functional and performance issues such as incorrect data readings and system errors & {}& {}\\
+Functional Checks & H1-2 & Functional checks (e.g. check that all required devices are connected, sensors are calibrated) are not successful & 1. Checks fail when they should pass & 1. Delay to investigate and fix any errors & An error message on the GUI stating which checks failed & 1. Display a warning on the GUI stating which checks failed \newline 2. Investigate and fix system components that have failed & \srref{SR3}, \srref{SR8}\\
 
 \hline
 \multicolumn{8}{|c|}{\textbf{Operation}}\\
@@ -257,16 +266,15 @@ Communication & H2-1 & Communication between the GUI and the robot is lost & 1. 
 %Movement of robot
 \hline
 \multirow{2}{*}{Movement of Robot} & H2-2 & The robot crashes & 1. The robot does not respond to user input \newline 2. The robot is not capable of stopping in time & 1. Damage to the surrounding environment \newline 2. Damage to the robot & Visual inspection & 1. Display a warning on the GUI when the robot is getting too close to an obstacle \newline 2. Use software controls to prevent user input from instructing the robot to drive into an obstacle & \srref{SR1}\\\cline{2-8}
-& H2-3 & The robot does not move as instructed by the user input & 1. Encoder feedback is incorrect \newline 2. The robot wheels slip on the floor & 1. The robot may end up in the wrong location \newline 2. The robot may crash into an obstacle & The movement of the robot does not match input commands; the robot may not move at the correct speed, in the correct direction, or may move sporadically & 1. Validate the encoder input \newline 2.  & {}\\ %compare to other entry
 
 %State Estimation
 \hline
-\multirow{2}{*}{State Estimation}  & H2-4 & The location of the robot cannot be determined & 1. The location markers are not in the camera(s)' field of view \newline 2. The object detection algorithms cannot identify the location markers \newline 3. Inadequate number of location markers & The system cannot stitch point cloud data and create a 3D model &  The GUI displays a message that the state cannot be estimated & 1. Re-calibrate the system \newline 2. Ensure enough markers are used \newline 3. Adjust the position of the location markers so that they are visible to the robot \newline 4. Move the robot to a new location & \srref{SR7}\\\cline{2-8}
-& H2-5 & False positive that the state is correctly estimated & State estimation filtering error & The 3D model output is incorrect & Visual inspection of 3D model output & {}& {}\\\cline{2-8}
+\multirow{2}{*}{State Estimation}  & H2-3 & The location of the robot cannot be determined & 1. The location markers are not in the camera(s)' field of view \newline 2. The object detection algorithms cannot identify the location markers \newline 3. Inadequate number of location markers & 1. The system cannot stitch point cloud data and create a 3D model &  The GUI displays a message that the state cannot be estimated & 1. Re-calibrate the system \newline 2. Ensure enough markers are used \newline 3. Adjust the position of the location markers so that they are visible to the robot \newline 4. Move the robot to a new location & \srref{SR7}\\\cline{2-8}
+& H2-4 & False positive that the state is correctly estimated & State estimation filtering error & 1. The 3D model output is incorrect & Visual inspection of 3D model output & 1. Automatically save data so that the scans performed prior to incorrect localization are not lost \newline 2. Re-scan the affected area & \srref{SR11} \\\cline{2-8}
 
 %Perform Scan
 \hline
-\multirow{2}{*}{Perform Scan} & H2-6 & Insufficient amount of data acquired & Not enough scans are performed & Accuracy of output may decrease  & Visual inspection of 3D model output & {}& {}\\\cline{2-8}
+\multirow{2}{*}{Perform Scan} & H2-5 & Insufficient amount of data acquired & 1. Not enough scans are performed & 1. A 3D model cannot be created \newline 2. The accuracy of the 3D model may decrease & An error message on the GUI stating not enough scans when the system attempts to process data & 1. Perform additional scans & \srref{SR10}\\\cline{2-8}
 & H2-7 & The data acquired is not correct & 1. Sensor malfunction \newline 2. The robot moves during data acquisition & 3D models are inaccurate & Visual inspection of 3D model output & 1. Use software controls to prevent the robot from moving during scanning \newline 2. Validate output of sensor data & \srref{SR2}, \srref{SR5}\\\cline{2-8}
 \hline
 
