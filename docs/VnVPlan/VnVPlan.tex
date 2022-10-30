@@ -3,6 +3,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -10,14 +12,14 @@
     linkcolor=red,
     urlcolor=blue
 }
-\usepackage[round]{natbib}
+%\usepackage[round]{natbib}
 
 \input{../Comments}
 \input{../Common}
 
 \begin{document}
 
-\title{Project Title: System Verification and Validation Plan for \progname{}} 
+\title{System Verification and Validation Plan for \progname{}} 
 \author{\authname}
 \date{\today}
 	
@@ -27,11 +29,10 @@
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{tabularx}{\textwidth}{p{3cm}p{2cm}p{4cm}X}
+\toprule {\bf Date} & {\bf Version} & {\bf Authors} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+02/Nov/2022 & 1.0 & Michaela Schnull \newline Jonathan Casella \newline Kareem Elmokattaf \newline Neeraj Ahluwalia & Initial Release\\
 \bottomrule
 \end{tabularx}
 
@@ -54,28 +55,45 @@ Date 2 & 1.1 & Notes\\
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
+  GUI & Graphical User Interface\\
+  LiDAR & Light Imaging, Detection, and Ranging\\
+  MIS & Module Interface Specification\\
+  SLAM & Simultaneous Localization and Mapping\\
+  SRS & System Requirements Specification\\
+  V\&V & Verification and Validation\\
   T & Test\\
+  TA & Teaching Assistant\\
   \bottomrule
 \end{tabular}\\
 
 \wss{symbols, abbreviations or acronyms --- you can simply reference the SRS
-  \citep{SRS} tables, if appropriate}
+  \cite{SRS} tables, if appropriate}
 
 \wss{Remove this section if it isn't needed}
 
 \newpage
 
 \pagenumbering{arabic}
+\wss{provide an introductory blurb and roadmap of the Verification and Validation plan}
+  
+This document presents a verification and validation plan for the \progname~ system. It will be used to establish verification and testing procedures and create a plan to determine if \progname~ meets it's goals as defined in the Problem Statement and Goals document.\\
+\newline
+\noindent The remainder of this document is structured as follows:
 
-This document ... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
+\begin{itemize}
+  \item \textbf{Section \ref{GeneralInfo}} provides background information about the ~\progname system which will be subject to verification and validation activities. It also outlines the objectives of this plan and lists relevant documents.
+  \item \textbf{Section \ref{Plan}} defines the verification and validation team roles and responsibilities. It presents verification methodologies and tools that will be used.
+  \item \textbf{Sections \ref{SysTests}} and \textbf{\ref{UnitTests}} define what will be tested, and provide specific test cases. Furthermore, traceability matrices are provided to link test cases to requirements.
+\end{itemize}
 
-\section{General Information}
+\section{General Information} \label{GeneralInfo}
 
 \subsection{Summary}
 
 \wss{Say what software is being tested.  Give its name and a brief overview of
   its general functions.}
+  
+  \progname~ is a low cost, simple to use, 3D scanning robot. The \progname~ system uses of low cost LiDAR sensors, consumer grade web cams, and inexpensive location markers. The user interfaces with the robot through GUI that allows them to remotely drive the robot and perform 3D scans.
 
 \subsection{Objectives}
 
@@ -84,6 +102,16 @@ This document ... \wss{provide an introductory blurb and roadmap of the
   something like: ``build confidence in the software correctness,''
   ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
   just those that are most important.}
+  
+The purpose of this document is to create a plan to demonstrate that \progname~ satisfies requirements as specified in the SRS and meets the goals of the project. This includes following objectives:
+  
+\begin{itemize}
+  \item Validate that the \progname~ system fulfills its intended use and meets the needs of users
+  \item Create a plan to asses if the \progname~ system is in conformance with both functional and non-functional requirements as specified in the SRS
+  \item Identify the methodologies, tools, and equipment that will be used to perform V\&V activities
+  \item Identify key V\&V activities
+  \item Create a roadmap to execute the V\&V plan
+\end{itemize}
 
 \subsection{Relevant Documentation}
 
@@ -91,19 +119,51 @@ This document ... \wss{provide an introductory blurb and roadmap of the
   and your other project documents (design documents, like MG, MIS, etc).  You
   can include these even before they are written, since by the time the project
   is done, they will be written.}
+  
+Project documentation such as the SRS and design documents are referred to throughout the V\&V plan. Relevant documents are included below for reference.
 
-\citet{SRS}
+\begin{itemize}
+	\item System Requirements Specification (SRS) \cite{SRS}
+	\item Problem Statement and Goals \cite{PSG}
+	\item Module Interface Specification (MIS) \cite{MIS}
+	\item Module Guide (MG) \cite{MG}
+	\item Hazard Analysis \cite{FMEA}
+\end{itemize}
 
-\section{Plan}
+\section{Plan} \label{Plan}
 
 \wss{Introduce this section.   You can provide a roadmap of the sections to
   come.}
 
+This section introduces methods and techniques used to verify design requirements and provides a high-level plan to validate the \progname~ system. 
+
 \subsection{Verification and Validation Team}
 
 \wss{Your teammates.  Maybe your supervisor.
-  You shoud do more than list names.  You should say what each person's role is
+  You should do more than list names.  You should say what each person's role is
   for the project's verification.  A table is a good way to summarize this information.}
+  
+\noindent Table \ref{Table:Roles} summarizes the roles and responsibilities of the verification and validation team.
+  
+\begin{table}[h]
+\caption{Team Member Roles}
+\label{Table:Roles}
+\begin{tabularx}{\textwidth}{|p{5cm}|X|}
+\hline{\bf Team Member} & {\bf Roles and Responsibilities} \\
+\hline
+Jonathan Casella & - Software unit testing lead\newline - Implementation of automated software testing methods\newline - Design review lead\\
+\hline
+Michaela Schnull &  - Verification of project documents \newline - Reporting of verification and validation activities\\
+\hline
+Kareem Elmokattaf &  - Responsible for the design and execution of testing procedures \newline - Maintenance of  records documenting results from testing activities\\
+\hline
+Neeraj Ahluwalia &  - Preparation and maintenance of testing equipment \newline - Execution of test cases\\
+\hline
+Independent Reviewers (i.e. Teaching Assistant) &  - Quality assurance and independent review\\
+\hline
+\end{tabularx}
+\label{Table:Roles}
+\end{table}
 
 \subsection{SRS Verification Plan}
 
@@ -113,6 +173,14 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \wss{Maybe create an SRS checklist?}
 
+The SRS will be verified to ensure that requirements are complete, unambiguous, and meet the goals of the \progname~ system. The following methods shall be used to verify the SRS: 
+
+\begin{itemize}
+  \item Verify that the SRS follows the SRS checklist \cite{Checklist-SRS}
+  \item Review from all team members using GitHub pull request reviews
+  \item Independent review from the TA and classmates
+\end{itemize}
+
 \subsection{Design Verification Plan}
 
 \wss{Plans for design verification}
@@ -120,6 +188,14 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 \wss{The review will include reviews by your classmates}
 
 \wss{Create a checklists?}
+The design of the \progname~ system will be verified throughout development to ensure the system meets specifications and functions as intended. The following methods shall be used to verify the design:
+
+\begin{itemize}
+  \item Hold internal design reviews before the proof of concept demo and prior to manufacturing of the system for Revision 0 and Revision 1 project phases
+  \item Perform a failure modes and effects analysis
+  \item Independent review from teaching assistants and classmates
+  \item Verify that the design documentation follows the MIS \cite{Checklist-MIS} and MG \cite{checklist-MG} checklists
+\end{itemize}
 
 \subsection{Verification and Validation Plan Verification Plan}
 
@@ -129,6 +205,14 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \wss{Create a checklists?}
 
+The V\&V plan will be verified to ensure that the plan to verify and validate the \progname~ system is complete and feasible. The following methods shall be used to verify the v\&V plan:
+
+\begin{itemize}
+  \item Independent review from TA and classmates
+  \item Review from all team members using GitHub pull request reviews
+    \item Verify that the V\&V plan follows the v\&V plan checklist \cite{Checklist-VnV}
+\end{itemize}
+
 \subsection{Implementation Verification Plan}
 
 \wss{You should at least point to the tests listed in this document and the unit
@@ -137,6 +221,14 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 \wss{In this section you would also give any details of any plans for static verification of
   the implementation.  Potential techniques include code walkthroughs, code
   inspection, static analyzers, etc.}
+  
+  The implementation verification plan will be used to ensure the \progname~ system meets all requirements as specified in the SRS. Verification methods that will be used include analysis, review, demonstration, and testing. 
+\begin{itemize}
+  \item \textbf{Review}: Review can be used when meeting a requirement is evident to a trained observer. Review of engineering drawings, code, or the physical device may be used. Techniques include code walk-throughs, code inspection, and drawing reviews.
+  \item \textbf{Analysis}: Analysis can be used to verify design requirements where physical testing is not necessary, for example through mathematical and computer modeling. Analysis of data obtained through testing may be used to verify requirements. This verification method must be conducted by qualified individuals.
+  \item \textbf{Demonstration}: Demonstration can be used to show that the system functions as intended. Unlike testing, demonstration does not require further analysis to determine if the system meets a requirement.
+  \item \textbf{Testing}: Testing can be used to verify the behaviour of the system. Testing is conducted in a controlled environment with defined inputs and outputs. Test results must be analyzed to determine if tests pass or fail. Techniques that will be used include unit testing, automated testing, regression testing, and integration testing.
+\end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
 
@@ -167,7 +259,7 @@ inspection?}
 
 \wss{This section might reference back to the SRS verification section.}
 
-\section{System Test Description}
+\section{System Test Description} \label{SysTests}
 	
 \subsection{Tests for Functional Requirements}
 
@@ -277,7 +369,7 @@ How test will be performed:
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
 
-\section{Unit Test Description}
+\section{Unit Test Description} \label{UnitTests}
 
 \wss{Reference your MIS (detailed design document) and explain your overall
   philosophy for test case selection.}  
@@ -393,9 +485,10 @@ How test will be performed:
 
 \wss{Provide evidence that all of the modules have been considered.}
 				
-\bibliographystyle{plainnat}
-
-\bibliography{../../refs/References}
+\newpage
+\nocite{*}
+\bibliographystyle{ieeetr}
+\bibliography{references}
 
 \newpage
 
