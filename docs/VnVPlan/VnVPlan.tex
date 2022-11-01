@@ -4,6 +4,7 @@
 \usepackage{tabularx}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry}
 \hypersetup{
     colorlinks,
@@ -55,8 +56,13 @@
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
+  CAD & Computer Aided Design\\
+  DRC & Design Rule Check\\
+  ERC & Electrical Rule Check\\
   GUI & Graphical User Interface\\
+  HA & Hazard Analysis\\
   LiDAR & Light Imaging, Detection, and Ranging\\
+  MG & Module Guide\\
   MIS & Module Interface Specification\\
   SLAM & Simultaneous Localization and Mapping\\
   SRS & System Requirements Specification\\
@@ -106,11 +112,10 @@ This document presents a verification and validation plan for the \progname~ sys
 The purpose of this document is to create a plan to demonstrate that \progname~ satisfies requirements as specified in the SRS and meets the goals of the project. This includes following objectives:
   
 \begin{itemize}
-  \item Validate that the \progname~ system fulfills its intended use and meets the needs of users
+  \item Validate that the \progname~ system meets its goals
   \item Create a plan to asses if the \progname~ system is in conformance with both functional and non-functional requirements as specified in the SRS
   \item Identify the methodologies, tools, and equipment that will be used to perform V\&V activities
-  \item Identify key V\&V activities
-  \item Create a roadmap to execute the V\&V plan
+  \item Create test cases to execute the V\&V plan
 \end{itemize}
 
 \subsection{Relevant Documentation}
@@ -127,7 +132,7 @@ Project documentation such as the SRS and design documents are referred to throu
 	\item Problem Statement and Goals \cite{PSG}
 	\item Module Interface Specification (MIS) \cite{MIS}
 	\item Module Guide (MG) \cite{MG}
-	\item Hazard Analysis \cite{FMEA}
+	\item Hazard Analysis (HA) \cite{FMEA}
 \end{itemize}
 
 \section{Plan} \label{Plan}
@@ -145,19 +150,19 @@ This section introduces methods and techniques used to verify design requirement
   
 \noindent Table \ref{Table:Roles} summarizes the roles and responsibilities of the verification and validation team.
   
-\begin{table}[h]
+\begin{table}[H]
 \caption{Team Member Roles}
 \label{Table:Roles}
 \begin{tabularx}{\textwidth}{|p{5cm}|X|}
 \hline{\bf Team Member} & {\bf Roles and Responsibilities} \\
 \hline
-Jonathan Casella & - Software unit testing lead\newline - Implementation of automated software testing methods\newline - Design review lead\\
+Jonathan Casella & - Software testing lead\newline - Implementation of automated software testing methods\newline - Design review lead\\
 \hline
-Michaela Schnull &  - Verification of project documents \newline - Reporting of verification and validation activities\\
+Michaela Schnull &  - Verification of project documents including the SRS and V\&V plan \newline - Reporting of verification and validation activities \newline - Printed circuit board verification\\
 \hline
-Kareem Elmokattaf &  - Responsible for the design and execution of testing procedures \newline - Maintenance of  records documenting results from testing activities\\
+Kareem Elmokattaf &  - Responsible for the design and execution of testing procedures \newline - Maintenance of  records documenting results from testing activities \newline - Code verification\\
 \hline
-Neeraj Ahluwalia &  - Preparation and maintenance of testing equipment \newline - Execution of test cases\\
+Neeraj Ahluwalia &  - Preparation and maintenance of testing equipment \newline - Hardware verification\\
 \hline
 Independent Reviewers (i.e. Teaching Assistant) &  - Quality assurance and independent review\\
 \hline
@@ -205,12 +210,12 @@ The design of the \progname~ system will be verified throughout development to e
 
 \wss{Create a checklists?}
 
-The V\&V plan will be verified to ensure that the plan to verify and validate the \progname~ system is complete and feasible. The following methods shall be used to verify the v\&V plan:
+The V\&V plan will be verified to ensure that the plan to verify and validate the \progname~ system is complete and feasible. The following methods shall be used to verify the V\&V plan:
 
 \begin{itemize}
-  \item Independent review from TA and classmates
+  \item Independent review from the TA and classmates
   \item Review from all team members using GitHub pull request reviews
-    \item Verify that the V\&V plan follows the v\&V plan checklist \cite{Checklist-VnV}
+    \item Verify that the V\&V plan follows the V\&V plan checklist \cite{Checklist-VnV}
 \end{itemize}
 
 \subsection{Implementation Verification Plan}
@@ -222,13 +227,15 @@ The V\&V plan will be verified to ensure that the plan to verify and validate th
   the implementation.  Potential techniques include code walkthroughs, code
   inspection, static analyzers, etc.}
   
-  The implementation verification plan will be used to ensure the \progname~ system meets all requirements as specified in the SRS. Verification methods that will be used include analysis, review, demonstration, and testing. 
+  The implementation verification plan will be used to ensure the \progname~ system meets all requirements as specified in the SRS. Verification methods that will be used include review, analysis, demonstration, and testing. 
 \begin{itemize}
   \item \textbf{Review}: Review can be used when meeting a requirement is evident to a trained observer. Review of engineering drawings, code, or the physical device may be used. Techniques include code walk-throughs, code inspection, and drawing reviews.
   \item \textbf{Analysis}: Analysis can be used to verify design requirements where physical testing is not necessary, for example through mathematical and computer modeling. Analysis of data obtained through testing may be used to verify requirements. This verification method must be conducted by qualified individuals.
   \item \textbf{Demonstration}: Demonstration can be used to show that the system functions as intended. Unlike testing, demonstration does not require further analysis to determine if the system meets a requirement.
   \item \textbf{Testing}: Testing can be used to verify the behaviour of the system. Testing is conducted in a controlled environment with defined inputs and outputs. Test results must be analyzed to determine if tests pass or fail. Techniques that will be used include unit testing, automated testing, regression testing, and integration testing.
 \end{itemize}
+
+\noindent Section~\ref{SysTests} specifies system test cases and Section~\ref{UnitTests} specifies unit test cases.
 
 \subsection{Automated Testing and Verification Tools}
 
@@ -248,9 +255,9 @@ that document.}
   implementation.}
 
 \subsubsection{Rust}
-Software for the LiDart project will be written in Rust, which nativly includes testing facilities.
+Software for the LiDart project will be written in Rust, which natively includes testing facilities.
 The testing facilities built into Rust are explained in chapter 5 of the
-rustc book (https://doc.rust-lang.org/rustc/tests/index.html).
+rustc book \cite{rust}.
 
 \subsubsection{Rustfmt}
 The primary linter for Rust is Rustfmt. Rustfmt will be used to ensure a consistent
@@ -261,6 +268,9 @@ LiDart's CAD suite of choice, Autodesk Inventor, will be used to ensure no mecha
 exist in the design prior to manufacturing and assembly. This will be done by first modeling the LiDart
 robot in Autodesk Inventor then using tools within Inventor to detect any
 collisions or interpenetrating components.
+
+\subsubsection{EAGLE}
+Printed circuit board design will be done in EAGLE, which has built-in error checking tools. ERC (Electrical Rule Check) will be used to test schematics for electrical errors. DRC (Design Rule Check) will be used to ensure there are no board layout errors.
 
 \subsection{System Validation Plan}
 
@@ -313,12 +323,12 @@ To validate that the goal of low cost, easily accessable hardware was met two ex
 \ \\
 
 \noindent The first exercise will be to compare LiDart's price to other options in the market with equivalent features
-and comperable build quality. LiDart's price should fall below the median price of the existing solutions.
+and comparable build quality. LiDart's price should fall below the median price of the existing solutions.
 \ \\
 
 \noindent The second exercise will be to evaluate the accessibility of the hardware used by LiDart. During
 this exercise a list of alternative hardware components will be created for all major components of the LiDart
-system (eg. motor controller, motors, cameras). This exercise will be deemed complete when all major components
+system (e.g. motor controller, motors, cameras). This exercise will be deemed complete when all major components
 have at least one alternate part listed.
 
 \subsubsection{Ease of Use}
@@ -329,7 +339,7 @@ with the user manual then asked to scan an object. The time required to complete
 percentage of successful subjects will be used to determine the success of this exercise.
 \ \\
 
-\noindent \bf{TODO Usability survey questions}
+\noindent \textbf{Usability survey questions}
 
 \section{System Test Description} \label{SysTests}
 	
@@ -469,7 +479,7 @@ How test will be performed:
 \wss{Static tests, review, inspections, and walkthroughs, will not follow the
 format for the tests given below.}
 
-\subsubsection{Area of Testing1}
+\subsubsection{Usability Testing}
 		
 \paragraph{Title for Test}
 
@@ -479,17 +489,87 @@ format for the tests given below.}
 
 
 					
-\item{test-id2\\}
+\item{NFR10\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+Verification Method: Testing	\\				
+Initial State: Robot is fully assembled	\\			
+Input: n/a\\
+Output: The robot must weight less than ROBOT\_MAX\_WEIGHT.\\
+How test will be performed: The robot shall be weighed on a scale. The weight of the robot and the accuracy of the measuring device must be recorded.\\
+
+\item{NFR11\\}
+
+Verification Method: Testing\\					
+Initial State: Robot is fully assembled	\\			
+Input: n/a\\
+Output: The robot dimensions must be less than ROBOT\_MAX\_DIM.	\\
+How test will be performed: The robot dimensions (length x width x height) shall be measured with a measuring tape. The robot dimensions and the accuracy of the measuring device must be recorded.\\
+
+\item{NFR12\\}
+
+Verification Method: Review\\					
+Initial State: The GUI main page is open\\			
+Input: n/a\\
+Output: n/a\\
+How test will be performed: Each page will be navigated to from the main screen. The number of navigation levels will be recorded for each page. It must take less than MAX\_NUM\_LEVELS to navigate to any page on the application\\
+
+\item{NFR13\\}
+
+Verification Method: Review\\					
+Initial State: The GUI main page is open\\			
+Input: n/a\\
+Output: n/a\\
+How test will be performed: A qualified individual will review the website to ensure all text is consistent, has a minimum font size of MIN\_FONT\_SIZE, and is sans-serif. \\
+
+\item{NFR9\\}
+
+Verification Method: Testing\\					
+Initial State: The robot is powered-on and connected to the GUI through WiFi\\			
+Input: Module Guide document\\
+Output: At least 9/10 users with no prior knowledge of the system are able to successfully drive the robot, perform a scan, and save the scan data\\
+How test will be performed: A usability test shall be performed. Users will be given the Module Guide and instructed to drive the robot, perform a scan, and save the scanned data.
+user manual.\\ 
+
+\item{NFR14, NFR12, NFR9\\}
+
+Verification Method: Usability Survey\\					
+Initial State: 		\\
+Input: \\
+Output: \\
+How test will be performed:\\
+
+\item{NFR15\\}
+
+Verification Method: Testing\\					
+Initial State: 	The robot is powered-on and connected to the GUI through WiFi	\\
+Input: User begins scanning and then attempts to move the robot\\
+Output: Error message stating the robot cannot move until scanning is complete\\
+How test will be performed:
+
+\item{NFR20, NFR21\\}
+
+Verification Method: Testing\\					
+Initial State:  The GUI application is installed\\ 
+Input: Open the application\\
+Output: The application must run without crashing or performance issues\\
+How test will be performed: The application will run on a computer with the specifications IntelCore i5 processor and 8 GB of RAM or equivalent.\\
+
+\item{NFR22\\}
+
+Verification Method: Review\\					
+Initial State:  The robot is fully assembled\\
+Input: n/a\\
+Output: n/a\\
+How test will be performed: A qualified individual shall inspect the robot to ensure there is no exposed wiring.\\
+
+
+\item{NFR25\\}
+
+Verification Method: Review\\					
+Initial State:  The robot is fully assembled\\
+Input: n/a\\
+Output: n/a\\
+How test will be performed: A qualified individual shall inspect the robot to ensure it is in conformance with CSA 22.1:21 (Canadian Electrical Code) \cite{CSA1} and CSA Z434 (Industrial robots and robot systems) \cite{CSA2}\\
 
 \end{enumerate}
 
@@ -627,8 +707,6 @@ How test will be performed:
 
 \section{Appendix}
 
-This is where you can place additional information.
-
 \subsection{Symbolic Parameters}
 
 The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
@@ -637,12 +715,6 @@ Their values are defined in this section for easy maintenance.
 \subsection{Usability Survey Questions?}
 
 \wss{This is a section that would be appropriate for some projects.}
-
-\newpage{}
-\section*{Appendix --- Reflection}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  Please answer the following questions:
 
 \newpage{}
 \section*{Appendix --- Reflection}
