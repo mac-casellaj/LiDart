@@ -247,7 +247,22 @@ that document.}
 \wss{The details of this section will likely evolve as you get closer to the
   implementation.}
 
-\subsection{Software Validation Plan}
+\subsubsection{Rust}
+Software for the LiDart project will be written in Rust, which nativly includes testing facilities.
+The testing facilities built into Rust are explained in chapter 5 of the
+rustc book (https://doc.rust-lang.org/rustc/tests/index.html).
+
+\subsubsection{Rustfmt}
+The primary linter for Rust is Rustfmt. Rustfmt will be used to ensure a consistent
+programming style across all contributors.
+
+\subsubsection{Autodesk Inventor}
+LiDart's CAD suite of choice, Autodesk Inventor, will be used to ensure no mechanical conflicts
+exist in the design prior to manufacturing and assembly. This will be done by first modeling the LiDart
+robot in Autodesk Inventor then using tools within Inventor to detect any
+collisions or interpenetrating components.
+
+\subsection{System Validation Plan}
 
 \wss{If there is any external data that can be used for validation, you should
   point to it here.  If there are no plans for validation, you should state that
@@ -258,6 +273,63 @@ the requirements document captures the right requirements.  Maybe task based
 inspection?}
 
 \wss{This section might reference back to the SRS verification section.}
+
+% \subsubsection{Point Cloud Stitching}
+% Generate a set of simulated measurements along with the expected resulting
+% point cloud. These simulated measurements can then be provided to the
+% point cloud stitching subsystem and the result point cloud can be compared against
+% the expected value.  
+
+% \subsubsection{Landmark Extraction}
+% Assemble a set of validation images and associated landmark data,
+% these images can be used to ensure that the landmark extraction subsystem
+% is producing the correct results.
+
+% \subsubsection{State Estimation}
+% Generate a set of simulated landmark measurements along with the correct state
+% at that time. These simulated measurements can then be provided to the
+% state estimation subsystem and the estimated state can be compared against
+% the correct state at that time.  
+
+% \subsubsection{Movement Controller}
+% Write test scenarios that specify the expected output for a given input,
+% these scenarios should cover ???
+
+This section lays out a series of validation exercises that will be performed before the system is deemed
+suitable for general users. The following exercises are designed to test the 3 major goals set out
+in the problem statement.
+
+\subsubsection{Accurate 3D Scanning}
+
+To validate the accuracy of the 3D scans a test environment will be constructed and
+scanned. Said test environment will have objects with known shapes at predetermined positions.
+The resulting 3D scan will be compared against the expected values for the test environment.
+If the point cloud matches the expected result within some tolerance this validation exercise will
+be deemed complete. 
+
+\subsubsection{Low Cost Hardware}
+
+To validate that the goal of low cost, easily accessable hardware was met two exercises will be performed. 
+\ \\
+
+\noindent The first exercise will be to compare LiDart's price to other options in the market with equivalent features
+and comperable build quality. LiDart's price should fall below the median price of the existing solutions.
+\ \\
+
+\noindent The second exercise will be to evaluate the accessibility of the hardware used by LiDart. During
+this exercise a list of alternative hardware components will be created for all major components of the LiDart
+system (eg. motor controller, motors, cameras). This exercise will be deemed complete when all major components
+have at least one alternate part listed.
+
+\subsubsection{Ease of Use}
+
+To validate LiDart's ease of use a focus group will be used. The focus group will consist of
+subjects with no prior knowledge of the system. Each member of the focus group will be provided
+with the user manual then asked to scan an object. The time required to complete the scan and the 
+percentage of successful subjects will be used to determine the success of this exercise.
+\ \\
+
+\noindent \bf{TODO Usability survey questions}
 
 \section{System Test Description} \label{SysTests}
 	
