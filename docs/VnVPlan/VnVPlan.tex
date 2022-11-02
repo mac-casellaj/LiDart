@@ -352,84 +352,111 @@ percentage of successful subjects will be used to determine the success of this 
 \wss{Include a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.}
 
-\subsubsection{Area of Testing1}
+% \subsubsection{Area of Testing1}
 
 \wss{It would be nice to have a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.  If a section
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
 		
-\paragraph{Title for Test}
 
 \begin{enumerate}
 
 
 \item{R1T\\}
+
+Verification Method: Testing	\\	
 Initial State: Nothing has been sent to the robot to output \\
 Input: Arrow key movement (example: right arrow key) \\ 
 Output: Robot moves in the direction specified (example: to the right) \\ 
 How test will be performed: The robot will be given a series of inputs from the keyboard such as Right,Left and forward. The robot will then be observed and make sure that it follows the motions specified. This will verify that the robot is taking the input from the user as specified \\
 \item{R2T\\}
+
+Verification Method: Testing	\\	
 Initial State: Robot is operating normally \\ 
 Input: Emergency stop button is pressed \\ 
 Output: Robot should completely shut down \\
 How test will be performed: Inputs will be sent to the robot and the robot should not action any of them. So the inputs can be movement (left, right and forward) or it can be to scan the object.  \\
 \item{R3T\\}
+
+Verification Method: Testing	\\	
 Initial State: Robot is stationary \\
 Input: From the control, there will be input specified to move the robot forward, backwards, left and right \\
 Output: Robot should move in all specified directions \\
 How test will be performed: Inputs will be sent to the robot and the robot should operate accordingly. The robot should move forward, backward, and rotate left and right. \\
 \item{R4T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot is stationary \\
 Input: No inputs are given to the robot \\
 Output: Robot does not move or do any functions \\
 How test will be performed: Robot will be left without any inputs given to it and its behaviour will be monitored/observed \\
 \item{R5T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot is stationary \\
 Input: Through a remote device connected over the internet, there will be commands given to the robot (example: Move left and Scan) \\
 Output: Robot should move left and then start scanning  \\
 How test will be performed: Robot will be remotely connnected to a control source and the robot will then be given commands from the control source and the actions of the robot will be observed \\
 \item{R6T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot will be idle (TO BE REVIEWED) \\
 Input: Through the internet connection established, parameters will be sent to the robot (example: robot status) \\
 Output: Robot will respond over wifi connection with the robot status  \\
 How test will be performed: Over a wifi connection a control will send certain paramters to the robot and the expected output should be recieved from the robot \\
 \item{R7T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot is currently operating \\
 Input: Robot switch will be flicked to go from "On" to "Off"\\
 Output: Robot should power down and not have any power \\
 How test will be performed: Robot will be powered on working. After confirming that the robot is powered on and performing actions, the robot's switch will be flicked to off and the robot should turn off \\
 \item{R8T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot battery is low \\
 Input: Robot batter will be connected to a battery charger \\
 Output: Robot battery percentage should start increasing \\
 How test will be performed: Robot will have a low battery. The battery will then be connected to a charger and tester will observe as the battery percentage increases on the GUI.\\
 \item{R9T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot is operating without having scanned anything \\
 Input: Robot scan\\
 Output: Output from the robot to the remote connection will be the scans coming from the LiDAR senso\\
 How test will be performed: Robot will be placed close to an object and instructed to scan the object. The tester will then observer the output from the robot on the remote connection. \\
 \item{R10T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot uncalibrated \\
 Input: Landmarks in the surrounding and the instruction to clibrate the position of the robot \\
 Output: Coordinate of the robot in comparison to the landmarks\\
 How test will be performed: Landmarks will be placed a specific distance away from the robot at a specific orientation. The robot will be asked to calibrate. The tester will verify the measurements from the robot and verify that they are correct \\
 \item{R11T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot has scanned an object \\
 Input: User identifes that they are done scanning and what to see the results \\
 Output: Robot will send the output file to the remote connection  \\
 How test will be performed: (TO BE REVIEWED) Robot will have files preinstalled and then asked to communicate them in the same that they will communicate the results of the scan. Those files will the be verified to be correct and uncorrupted \\
 \item{R12T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot moving with the camera installed \\
 Input: User moving the robot around \\
 Output: Live feed from the camera onto the remote connection \\
 How test will be performed: Tester will place different objects infront of the robot and watch them change on the live feed on the GUI\\
 \item{R13T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot scanning the object\\
 Input: User continuing the scan of an object \\
 Output: Current information on the scan. The current 3D scan model of the scan\\
 How test will be performed: Tester will observe as the scan is happening and look at the output on the GUI from the robot. The tester will be able to confirm that the scan is coming as the robot is scanning\\
 \item{R14T\\}
+
+Verification Method: Testing	\\
 Initial state: Robot is ready to scan\\
 Input: User asking for the current state of the robot\\
 Output: Robot outputs that it is ready to scan\\
@@ -437,33 +464,7 @@ How test will be performed: Robot will be put in different states (Idle, ready t
 
 
 
-
-
-
-
-
-
-
-
-\item{test-id2\\}
-
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-
 \end{enumerate}
-
-\subsubsection{Area of Testing2}
-
-...
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -484,16 +485,80 @@ format for the tests given below.}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{NFR1\\}
 
+Verification Method: Testing	\\				
+Initial State: Robot is fully assembled	\\			
+Input: n/a\\
+Output: The 3D scan must be within SCAN\_TOL \\
+How test will be performed: The object that was scanned will be measured. The measurements from the object will be compared to that of the 3D scan provided by the robot S\\
+  
+\item{NFR2\\}
 
-					
+Verification Method: Testing	\\				
+Initial State: Robot is fully assembled and is operating	\\			
+Input: n/a\\
+Output: The robot is moving at a speed of ROBOT\_SPEED \\
+How test will be performed: The robot will have to cover a specified distance. The time it takes to cover that distance will be measured. The speed can thus be calculated to determine the speed of the robot \\
+  
+\item{NFR3\\}
+
+Verification Method: Testing	\\				
+Initial State: Robot is fully assembled and operating	\\			
+Input: n/a\\
+Output: Robot must run for RUN\_TIME \\
+How test will be performed: The robot will be fully charged, and then left to operate. The time from when it is turned on till the battery runs out will be measured \\
+			
+
+\item{NFR4\\}
+
+Verification Method: Testing	\\				
+Initial State: Robot is fully assembled	and operating\\			
+Input: n/a\\
+Output: The system must be able to produce a 3D scan within SCANNING\_TIME \\
+How test will be performed: Once the robot starts scanning, the timer will be started until the single planar scan is completed. When it is completed the timer will be stopped \\
+
+\item{NFR5\\}
+
+Verification Method: Testing	\\				
+Initial State: Robot is fully assembled and operating	\\			
+Input: n/a\\
+Output: The system must be able to output the final 3D scan withing MA\_PROCESS\_T time \\
+How test will be performed: Once the robot starts scanning the object, the timer will be started. Once the robot is fully done scanning and has produced the 3D scan file, the timer will be stopped \\
+
+\item{NFR6\\}
+
+(*TO BE CHECKED*)
+Verification Method: Testing	\\				
+Initial State: Robot is fully assembled	and operating\\			
+Input: n/a\\
+Output: The robot must respond within MAX\_RESP\_T amount of time \\
+How test will be performed: A command will be sent to the robot at a specified time, the robot will respond with the time time. The time difference will be the response time \\
+
+\item{NFR7\\}
+
+(*TO BE CHECKED*)
+Verification Method: Testing	\\				
+Initial State: Robot is fully assembled	\\			
+Input: n/a\\
+Output: The live feed of the video must have a minimum resolution of  MIN\_VIDEO\_RES \\
+How test will be performed: The live feed from the robot can be stored on a Windows platform. The video can then be checked from its properties to verify the resolution \\
+
+\item{NFR8\\}
+
+(*TO BE CHECKED*)
+Verification Method: Testing	\\				
+Initial State: Robot is fully assembled	and operating\\			
+Input: n/a\\
+Output: The live feed displayed on the GUI must have a maximum delay of MAX\_VIDEO\_DELAY \\
+How test will be performed: NO IDEA HOW THIS ONE IS TO BE DONE. CLOCK? MOVE SOMETHING AWAY FROM DISPLAY? IDK
+
 \item{NFR10\\}
 
 Verification Method: Testing	\\				
 Initial State: Robot is fully assembled	\\			
 Input: n/a\\
-Output: The robot must weight less than ROBOT\_MAX\_WEIGHT.\\
+Output: The robot must weight less than ROBOT\_MAX\_WEIGHT\\
 How test will be performed: The robot shall be weighed on a scale. The weight of the robot and the accuracy of the measuring device must be recorded.\\
 
 \item{NFR11\\}
@@ -501,7 +566,7 @@ How test will be performed: The robot shall be weighed on a scale. The weight of
 Verification Method: Testing\\					
 Initial State: Robot is fully assembled	\\			
 Input: n/a\\
-Output: The robot dimensions must be less than ROBOT\_MAX\_DIM.	\\
+Output: The robot dimensions must be less than ROBOT\_MAX\_DIM \\
 How test will be performed: The robot dimensions (length x width x height) shall be measured with a measuring tape. The robot dimensions and the accuracy of the measuring device must be recorded.\\
 
 \item{NFR12\\}
@@ -572,15 +637,12 @@ How test will be performed: A qualified individual shall inspect the robot to en
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
-
-...
 
 \subsection{Traceability Between Test Cases and Requirements}
 \begin{table}[H]
   \centering
   \caption{Requirements Dependency Matrix}
-  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline
     & RT1 & RT2 & RT3 & RT4 & RT5 & RT6 & RT7 & RT8 & RT9 & RT10 & RT11 & RT12 & RT 13 & RT14\\
   \hline
@@ -588,13 +650,13 @@ How test will be performed: A qualified individual shall inspect the robot to en
   \hline
   R2      & &X & & & & & & & & & & & & \\ 
   \hline
-  R3      & & &X & & & & & & & & & & & \\ 
+  R3      &X & &X & & & & & & & & & & & \\ 
   \hline
   R4      & & & &X & & & & & & & & & & \\ 
   \hline
-  R5      & & & & &X & & & & & & & & & \\ 
+  R5      &X & & & &X &X & & & & & & & & \\ 
   \hline
-  R6      & & & & & &X & & & & & & & & \\ 
+  R6      & & & & &X &X & & & & & & & & \\ 
   \hline
   R7      & & & & & & &X & & & & & & & \\ 
   \hline
