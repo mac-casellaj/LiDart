@@ -356,10 +356,9 @@ have at least one alternate part listed.
 To validate LiDart's ease of use a focus group will be used. The focus group will consist of
 subjects with no prior knowledge of the system. Each member of the focus group will be provided
 with the user manual then asked to scan an object. The time required to complete the scan and the 
-percentage of successful subjects will be used to determine the success of this exercise.
+percentage of successful subjects will be used to determine the success of this exercise. The focus group will be asked to answer questions about their experience in a usability survey after using the system. The usability survey is found in Appendix~\ref{Usability_Survey}.
 \ \\
 
-\noindent \textbf{Usability survey questions}
 
 \section{System Test Description} \label{SysTests}
 	
@@ -443,21 +442,21 @@ Output: Robot should move left and then start scanning  \\
 How test will be performed: Robot will be remotely connected to a control source and the robot will then be given commands from the control source and the actions of the robot will be observed \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-Verification Method: 
+Verification Method: Testing\\
 Initial state: Robot will be idle (TO BE REVIEWED) \\
 Input: Through the internet connection established, parameters will be sent to the robot (example: robot status) \\
 Output: Robot will respond over WiFi connection with the robot status  \\
 How test will be performed: Over a WiFi connection a control will send certain parameters to the robot and the expected output should be received from the robot \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-Verification Method: \\
+Verification Method: Testing\\
 Initial state: Robot is currently operating \\
 Input: Robot switch will be flicked to go from "On" to "Off"\\
 Output: Robot should power down and not have any power \\
 How test will be performed: Robot will be powered on working. After confirming that the robot is powered on and performing actions, the robot's switch will be flicked to off and the robot should turn off \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-Verification Method: 
+Verification Method: Testing\\
 Initial state: Robot battery is low \\
 Input: Robot batter will be connected to a battery charger \\
 Output: Robot battery percentage should start increasing \\
@@ -466,7 +465,7 @@ How test will be performed: Robot will have a low battery. The battery will then
 \subsubsection{State Estimation and Scanning}
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-Verification Method: \\
+Verification Method: Testing\\
 Initial state: Robot is operating without having scanned anything \\
 Input: Robot scan\\
 Output: Output from the robot to the remote connection will be the scans coming from the LiDAR sensor\\
@@ -474,42 +473,42 @@ How test will be performed: Robot will be placed close to an object and instruct
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
 
-Verification Method: Testing	\\
+Verification Method: Testing\\
 Initial state: Robot uncalibrated \\
 Input: Landmarks in the surrounding and the instruction to clibrate the position of the robot \\
 Output: Coordinate of the robot in comparison to the landmarks\\
 How test will be performed: Landmarks will be placed a specific distance away from the robot at a specific orientation. The robot will be asked to calibrate. The tester will verify the measurements from the robot and verify that they are correct \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-Verification Method:\\
+Verification Method: Testing\\
 Initial state: Robot is not calibrated \\
 Input: Landmarks in the surrounding and the instruction to calibrate the position of the robot \\
 Output: Coordinate of the robot in comparison to the landmarks\\
 How test will be performed: Landmarks will be placed a specific distance away from the robot at a specific orientation. The robot will be asked to calibrate. The tester will verify the measurements from the robot and verify that they are correct \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-Verification Method:\\
+Verification Method: Demonstration\\
 Initial state: Robot has scanned an object \\
 Input: User identifies that they are done scanning and what to see the results \\
 Output: Robot will send the output file to the remote connection  \\
 How test will be performed: (TO BE REVIEWED) Robot will have files pre-installed and then asked to communicate them in the same that they will communicate the results of the scan. Those files will the be verified to be correct and not corrupted \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-Verification Method: \\
+Verification Method: Demonstration\\
 Initial state: Robot moving with the camera installed \\
 Input: User moving the robot around \\
 Output: Live feed from the camera onto the remote connection \\
 How test will be performed: Tester will place different objects infront of the robot and watch them change on the live feed on the GUI\\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-Verification Method:\\
+Verification Method: Demonstration\\
 Initial state: Robot scanning the object\\
 Input: User continuing the scan of an object \\
 Output: Current information on the scan. The current 3D scan model of the scan\\
 How test will be performed: Tester will observe as the scan is happening and look at the output on the GUI from the robot. The tester will be able to confirm that the scan is coming as the robot is scanning\\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-Verification Method:\\
+Verification Method: Demonstration\\
 Initial state: Robot is ready to scan\\
 Input: User asking for the current state of the robot\\
 Output: Robot outputs that it is ready to scan\\
@@ -530,7 +529,7 @@ How test will be performed: Robot will be put in different states (Idle, ready t
 \wss{Static tests, review, inspections, and walkthroughs, will not follow the
 format for the tests given below.}
 
-The following test cases present verification methods for non-functional requirements of the LiDART system.
+The following test cases present verification methods for non-functional requirements of the LiDart system.
 
 \subsubsection{Accuracy Requirements}
 
@@ -569,7 +568,7 @@ How test will be performed: The robot will be fully charged, and then left to op
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR4\\}
 
 Verification Method: Testing	\\				
-Initial State: Robot is fully assembled	and operating\\			
+Initial State: Robot is fully assembled	and operating\\		
 Input: n/a\\
 Output: The system must be able to produce a 3D scan within SCANNING\_TIME \\
 How test will be performed: Once the robot starts scanning, the timer will be started until the single planar scan is completed. When it is completed the timer will be stopped \\
@@ -586,7 +585,7 @@ How test will be performed: Once the robot starts scanning the object, the timer
 
 (*TO BE CHECKED*)
 Verification Method: Testing	\\				
-Initial State: Robot is fully assembled	and operating\\			
+Initial State: Robot is fully assembled	and operating\\	
 Input: n/a\\
 Output: The robot must respond within MAX\_RESP\_T amount of time \\
 How test will be performed: A command will be sent to the robot at a specified time, the robot will respond with the time time. The time difference will be the response time \\
@@ -594,11 +593,11 @@ How test will be performed: A command will be sent to the robot at a specified t
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR7\\}
 
 (*TO BE CHECKED*)
-Verification Method: Testing	\\				
-Initial State: Robot is fully assembled	\\			
+Verification Method: Review	\\				
+Initial State: n/a	\\			
 Input: n/a\\
 Output: The live feed of the video must have a minimum resolution of  MIN\_VIDEO\_RES \\
-How test will be performed: The live feed from the robot can be stored on a Windows platform. The video can then be checked from its properties to verify the resolution \\
+How test will be performed: The camera specifications and the user application software shall be reviewed to ensure they support MIN\_VIDEO\_RES.\\ \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR8\\}
 
@@ -633,10 +632,10 @@ How test will be performed: The robot dimensions (length x width x height) shall
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR12\\}
 
-Verification Method: Review\\					
-Initial State: The GUI main page is open\\			
-Input: n/a\\
-Output: n/a\\
+Verification Method: Testing\\					
+Initial State: The GUI application is open on the main page\\			
+Input: User navigates through the menu\\
+Output: The application goes to the page requested by the user\\
 How test will be performed: Each page will be navigated to from the main screen. The number of navigation levels will be recorded for each page. It must take less than MAX\_NUM\_LEVELS to navigate to any page on the application.\\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR13\\}
@@ -651,17 +650,9 @@ How test will be performed: A qualified individual will review the application t
 
 Verification Method: Testing\\					
 Initial State: The robot is powered-on and connected to the GUI through WiFi\\			
-Input: The robot is powered on and the GUI is open\\
-Output: At least 9/10 users with no prior knowledge of the system are able to successfully drive the robot, perform a scan, and save the scan data\\
+Input: Users are instructed to test the system using instructions provided in the user manual\\
+Output: At least 9/10 users successfully use the system\\
 How test will be performed: A usability test shall be performed. Users will be given a user manual and instructed to drive the robot, perform a scan, and save the scanned data.\\ 
-
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR14, NFR12\\}
-
-Verification Method: Usability Survey\\					
-Initial State: 		\\
-Input: \\
-Output: \\
-How test will be performed:\\
 
 \end{itemize}
 
@@ -673,10 +664,18 @@ How test will be performed:\\
 
 Verification Method: Testing\\					
 Initial State: 	The robot is powered-on and connected to the GUI through WiFi	\\
-Input: User begins scanning and then attempts to move the robot\\
-Output: Error message stating the robot cannot move until scanning is complete\\
-How test will be performed:
+Input: \begin{enumerate}
+	\item Disconnect the cameras/sensors
+	\item Attempt to perform a scan when the robot is moving
+	\end{enumerate}
+Output: Error messages should be displayed for each of the failure modes.\\
+How test will be performed: The system will be provided with incorrect user input, which should result in the system displaying error messages.\\
 
+Verification Method: \\					
+Initial State: 	\\
+Input: 
+Output: \\
+How test will be performed: \\
 \end{itemize}
 
 \subsubsection{Maintainability Requirements}
@@ -689,7 +688,8 @@ Verification Method: Review\\
 Initial State: 	n/a \\
 Input: n/a\\
 Output: n/a\\
-How test will be performed: 
+How test will be performed: Mechanical assembly drawings shall be reviewed to ensure it takes maximum of REPLACE\_TIME to replace any part on the robot.
+
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR18\\}
 
@@ -701,12 +701,11 @@ How test will be performed: A qualified individual shall review drawings and the
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR19\\}
 
-Verification Method: Review\\					
+Verification Method: Analysis\\					
 Initial State: 	n/a \\
 Input: n/a\\
 Output: n/a\\
-How test will be performed: A list of alternative hardware components will be created for all major components of the LiDart
-system (e.g. motor controller, motors, cameras). All major components should have at least one alternate part.\\
+How test will be performed: A list of alternative hardware components will be created for all major components of the LiDart system (e.g. motor controller, motors, cameras). All major components should have at least one alternate part.\\
 
 \end{itemize}
 
@@ -755,8 +754,6 @@ How test will be performed: A qualified individual shall inspect the robot to en
 \subsection{Traceability Between Test Cases and Requirements}
 
 The following tables show the traceability between test cases and requirements from the SRS. Table~\ref{Table:A_trace} shows the functional requirements and Table~\ref{Table:B_trace} shows the non-functional requirements.
-
-NEED TO UPDATE TABLES
 
 \begin{table}[H]
   \centering
@@ -994,9 +991,8 @@ How test will be performed:
 
 \newpage
 
-\section{Appendix}
-
-\subsection{Symbolic Parameters}
+\appendix
+\section{Symbolic Parameters}
 
 The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.\\
@@ -1038,7 +1034,8 @@ Their values are defined in this section for easy maintenance.\\
   
 \end{tabular}
 
-\subsection{Usability Survey Questions}
+\section{Usability Survey Questions}
+\label{Usability_Survey}
 
 \wss{This is a section that would be appropriate for some projects.}
 
@@ -1057,13 +1054,7 @@ Their values are defined in this section for easy maintenance.\\
 \end{enumerate}
 
 \newpage{}
-\section*{Appendix --- Reflection}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  Please answer the following questions:
-
-\newpage{}
-\section*{Appendix --- Reflection}
+\section{Reflection}
 
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Lifelong Learning.  Please answer the following questions:
