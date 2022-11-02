@@ -5,7 +5,7 @@
 \usepackage{hyperref}
 \usepackage{enumitem}
 \usepackage{float}
-\usepackage[left=1.65cm, right=2cm, top=2cm, bottom=2cm]{geometry}
+\usepackage[left=1.5cm, right=2cm, top=2cm, bottom=2cm]{geometry}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -382,6 +382,13 @@ The following test cases present verification methods for functional requirement
   table in the SRS.}
 
 \noindent \begin{itemize}
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+
+Verification Method: Testing	\\	
+Initial State: Nothing has been inputted into the system\\
+Input: Arrow keys on the keyboard \\ 
+Output: GUI displays the direction selected by the user \\ 
+How test will be performed: The user will press one of the arrow keys, the GUI will then display the direction that the user has pressed\\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
 
@@ -470,14 +477,6 @@ Initial state: Robot is operating without having scanned anything \\
 Input: Robot scan\\
 Output: Output from the robot to the remote connection will be the scans coming from the LiDAR sensor\\
 How test will be performed: Robot will be placed close to an object and instructed to scan the object. The tester will then observer the output from the robot on the remote connection. \\
-
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
-
-Verification Method: Testing\\
-Initial state: Robot uncalibrated \\
-Input: Landmarks in the surrounding and the instruction to clibrate the position of the robot \\
-Output: Coordinate of the robot in comparison to the landmarks\\
-How test will be performed: Landmarks will be placed a specific distance away from the robot at a specific orientation. The robot will be asked to calibrate. The tester will verify the measurements from the robot and verify that they are correct \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]
 Verification Method: Testing\\
@@ -758,38 +757,39 @@ The following tables show the traceability between test cases and requirements f
 \begin{table}[H]
   \centering
   \caption{Functional Requirements Dependency Matrix}
-  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline
-    & T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9 & T10 & T11 & T12 & T13 & T14\\
+  & T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9 & T10 & T11 & T12 & T13 & T14 & T15 & T16 & T17 & T18\\
   \hline
-  R1      &X & & & & & & & & & & & & & \\ 
+  R1      &X & & & & & & & & & & & & & & & & &  \\ 
   \hline
-  R2      & &X & & & & & & & & & & & & \\ 
+  R2      & & & &X & & & & & & & & & & & & & &   \\ 
   \hline
-  R3      &X & &X & & & & & & & & & & & \\ 
+  R3      & &X &X & &X & &X & &X & & & & & & & & &  \\ 
   \hline
-  R4      & & & &X & & & & & & & & & & \\ 
+  R4      & & & & & &X & & & & & & & &  & & & &  \\ 
   \hline
-  R5      &X & & & &X &X & & & & & & & & \\ 
+  R5      & & & & & & & &X &X &X & & &X &  & &X &X &  \\ 
   \hline
-  R6      & & & & &X &X & & & & & & & & \\ 
+  R6      & & & & & & &X &X &X &X & & & & & & & &   \\ 
   \hline
-  R7      & & & & & & &X & & & & & & & \\ 
+  R7      & & & & & & & & & & &X & & &  & & & &  \\ 
   \hline
-  R8      & & & & & & & &X & & & & & & \\ 
+  R8      & & & & & & & & & & & &X & & & & & &   \\ 
   \hline
-  R9      & & & & & & & & &X & & & & & \\ 
+  R9      & & & & & & & & & & & & &X & & &X & &X  \\ 
   \hline
-  R10      & & & & & & & & & &X & & & & \\ 
+  R10      & & & & & & & & & & & & &X &X & & & &  \\ 
   \hline
-  R11      & & & & & & & & & & &X & & & \\ 
+  R11      & & & & & & & & & & & & & & &X & & &   \\ 
   \hline
-  R12      & & & & & & & & & & & &X & & \\ 
+  R12      & & & & & & & & & & & & & & & &X & &   \\ 
   \hline
-  R13      & & & & & & & & & & & & &X & \\ 
+  R13      & & & & & & & & & & & & & & & & &X &   \\ 
   \hline
-  R14      & & & & & & & & & & & & & &X \\ 
+  R14      & & & & & & & & & & & & & & & & & &X  \\ 
   \hline
+  
   \end{tabular}
   
   \label{Table:A_trace}
