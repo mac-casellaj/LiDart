@@ -382,7 +382,7 @@ The following test cases present verification methods for functional requirement
   table in the SRS.}
 
 \noindent \begin{itemize}
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R1\\}
 
 Verification Method: Testing	\\	
 Initial State: Nothing has been inputted into the system\\
@@ -390,7 +390,7 @@ Input: Arrow keys on the keyboard \\
 Output: GUI displays the direction selected by the user \\ 
 How test will be performed: The user will press one of the arrow keys, the GUI will then display the direction that the user has pressed\\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3\\}
 
 Verification Method: Testing	\\	
 Initial State: Nothing has been sent to the robot to output \\
@@ -398,28 +398,32 @@ Input: Arrow key movement (example: right arrow key) \\
 Output: Robot moves in the direction specified (example: to the right) \\ 
 How test will be performed: The robot will be given a series of inputs from the keyboard such as Right,Left and forward. The robot will then be observed and make sure that it follows the motions specified. This will verify that the robot is taking the input from the user as specified \\
 	
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3\\}
+ 
 Verification Method: Demonstration\\
 Initial State: Robot powered-on, connected, and stationary \\
 Input: Arrow key movement (example: right arrow key) \\ 
 Output: Robot moves in the direction specified (example: to the right) \\ 
 How test will be performed: The robot will be given a series of inputs from the keyboard such as Right,Left and forward. The robot will then be observed and make sure that it follows the motions specified. This will verify that the robot is taking the input from the user as specified \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R2\\}
+
 Verification Method: Demonstration\\
 Initial State: Robot is operating normally \\ 
 Input: Emergency stop button is pressed \\ 
 Output: Robot should completely shut down \\
 How test will be performed: Inputs will be sent to the robot and the robot should not action any of them. So the inputs can be movement (left, right and forward) or it can be to scan the object.  \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3\\}
+
 Verification Method: Demonstration\\
 Initial State: Robot is stationary \\
 Input: From the control, there will be input specified to move the robot forward, backwards, left and right \\
 Output: Robot should move in all specified directions \\
 How test will be performed: Inputs will be sent to the robot and the robot should operate accordingly. The robot should move forward, backward, and rotate left and right. \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R4\\}
+
 Verification Method: Demonstration\\
 Initial state: Robot is stationary \\
 Input: No inputs are given to the robot \\
@@ -427,42 +431,47 @@ Output: Robot does not move or do any functions \\
 How test will be performed: Robot will be left without any inputs given to it and its behaviour will be monitored/observed \\
 
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3, R6\\}
+ 
 Verification Method: Testing	\\
 Initial state: Robot is stationary \\
 Input: Through a remote device connected over the internet, there will be commands given to the robot (example: Move left and Scan) \\
 Output: Robot should move left and then start scanning  \\
 How test will be performed: Robot will be remotely connected to a control source and the robot will then be given commands from the control source and the actions of the robot will be observed \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R5, R6\\}
+
 Verification Method: Testing	\\
 Initial state: Robot will be idle (TO BE REVIEWED) \\
 Input: Through the internet connection established, parameters will be sent to the robot (example: robot status) \\
 Output: Robot will respond over wifi connection with the robot status  \\
 How test will be performed: Over a wifi connection a control will send certain paramters to the robot and the expected output should be received from the robot \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3, R5, R6\\}
+
 Verification Method: Demonstration\\
 Initial state: Robot is stationary \\
 Input: Through a remote device connected over the internet, there will be commands given to the robot (example: Move left and Scan) \\
 Output: Robot should move left and then start scanning  \\
 How test will be performed: Robot will be remotely connected to a control source and the robot will then be given commands from the control source and the actions of the robot will be observed \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R5, R6\\}
+
 Verification Method: Testing\\
 Initial state: Robot will be idle (TO BE REVIEWED) \\
 Input: Through the internet connection established, parameters will be sent to the robot (example: robot status) \\
 Output: Robot will respond over WiFi connection with the robot status  \\
 How test will be performed: Over a WiFi connection a control will send certain parameters to the robot and the expected output should be received from the robot \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R7\\}
+
 Verification Method: Testing\\
 Initial state: Robot is currently operating \\
 Input: Robot switch will be flicked to go from "On" to "Off"\\
 Output: Robot should power down and not have any power \\
 How test will be performed: Robot will be powered on working. After confirming that the robot is powered on and performing actions, the robot's switch will be flicked to off and the robot should turn off \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R8\\}
 Verification Method: Testing\\
 Initial state: Robot battery is low \\
 Input: Robot batter will be connected to a battery charger \\
@@ -471,42 +480,47 @@ How test will be performed: Robot will have a low battery. The battery will then
 
 \subsubsection{State Estimation and Scanning}
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R5, R9, R10\\}
+
 Verification Method: Testing\\
 Initial state: Robot is operating without having scanned anything \\
 Input: Robot scan\\
 Output: Output from the robot to the remote connection will be the scans coming from the LiDAR sensor\\
 How test will be performed: Robot will be placed close to an object and instructed to scan the object. The tester will then observer the output from the robot on the remote connection. \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R10\\}
+
 Verification Method: Testing\\
 Initial state: Robot is not calibrated \\
 Input: Landmarks in the surrounding and the instruction to calibrate the position of the robot \\
 Output: Coordinate of the robot in comparison to the landmarks\\
 How test will be performed: Landmarks will be placed a specific distance away from the robot at a specific orientation. The robot will be asked to calibrate. The tester will verify the measurements from the robot and verify that they are correct \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R11\\}
+
 Verification Method: Demonstration\\
 Initial state: Robot has scanned an object \\
 Input: User identifies that they are done scanning and what to see the results \\
 Output: Robot will send the output file to the remote connection  \\
 How test will be performed: (TO BE REVIEWED) Robot will have files pre-installed and then asked to communicate them in the same that they will communicate the results of the scan. Those files will the be verified to be correct and not corrupted \\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R5, R9, R12\\}
+
 Verification Method: Demonstration\\
 Initial state: Robot moving with the camera installed \\
 Input: User moving the robot around \\
 Output: Live feed from the camera onto the remote connection \\
 How test will be performed: Tester will place different objects infront of the robot and watch them change on the live feed on the GUI\\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R5, R13\\}
+
 Verification Method: Demonstration\\
 Initial state: Robot scanning the object\\
 Input: User continuing the scan of an object \\
 Output: Current information on the scan. The current 3D scan model of the scan\\
 How test will be performed: Tester will observe as the scan is happening and look at the output on the GUI from the robot. The tester will be able to confirm that the scan is coming as the robot is scanning\\
 
-\item[\textbf{T\refstepcounter{tnum}\thetnum:}]
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R9, R14\\}
 Verification Method: Demonstration\\
 Initial state: Robot is ready to scan\\
 Input: User asking for the current state of the robot\\
@@ -670,11 +684,13 @@ Input: \begin{enumerate}
 Output: Error messages should be displayed for each of the failure modes.\\
 How test will be performed: The system will be provided with incorrect user input, which should result in the system displaying error messages.\\
 
-Verification Method: \\					
-Initial State: 	\\
-Input: 
-Output: \\
-How test will be performed: \\
+\item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR16\\}
+
+Verification Method: Testing\\					
+Initial State: The robot is powered-on and connected to the GUI through WiFi	\\
+Input: An invalid input is given to the system\\
+Output: The system stores the error message into a .log file\\
+How test will be performed: An invalid input is given to the system (e.g scan when the robot is not localized). The system either creates a .log file if there initially wasn't one or appends the error into the already existing .log file\\
 \end{itemize}
 
 \subsubsection{Maintainability Requirements}
@@ -797,40 +813,40 @@ The following tables show the traceability between test cases and requirements f
   
   \begin{table}[H]
   \centering
-  \caption{Non-Functional Requirements Dependency Matrix}
-  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \caption{Non-Functional Requirements Dependency Matrix (1 of 2)}
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline
-    & T & T & T & T & T & T & T & T & T & T & T & T & T & T\\
+    & T19 & T20 & T21 & T22 & T23 & T24 & T25 & T26 & T27 & T28 & T29 & T30 & T31 & T32\\
   \hline
-  NFR1      & & & & & & & & & & & & & & \\ 
+  NFR1      &X & & & & & & & & & & & & & \\ 
   \hline
-  NFR2      & & & & & & & & & & & & & & \\ 
+  NFR2      & &X & & & & & & & & & & & & \\ 
   \hline
-  NFR3      & & & & & & & & & & & & & & \\ 
+  NFR3      & & &X & & & & & & & & & & & \\ 
   \hline
-  NFR4      & & & & & & & & & & & & & & \\ 
+  NFR4      & & & &X & & & & & & & & & & \\ 
   \hline
-  NFR5      & & & & & & & & & & & & & & \\ 
+  NFR5      & & & & &X & & & & & & & & & \\ 
   \hline
-  NFR6      & & & & & & & & & & & & & & \\ 
+  NFR6      & & & & & &X & & & & & & & & \\ 
   \hline
-  NFR7      & & & & & & & & & & & & & & \\ 
+  NFR7      & & & & & & &X & & & & & & & \\ 
   \hline
-  NFR8      & & & & & & & & & & & & & & \\ 
+  NFR8      & & & & & & & &X & & & & & & \\ 
   \hline
-  NFR9      & & & & & & & & & & & & & & \\ 
+  NFR9      & & & & & & & & & & & & &X & \\ 
   \hline
-  NFR10      & & & & & & & & & & & & & & \\ 
+  NFR10      & & & & & & & & &X & & & & & \\ 
   \hline
-  NFR11      & & & & & & & & & & & & & & \\ 
+  NFR11      & & & & & & & & & &X & & & & \\ 
   \hline
-  NFR12      & & & & & & & & & & & & & & \\ 
+  NFR12      & & & & & & & & & & &X & & & \\ 
   \hline
-  NFR13      & & & & & & & & & & & & & & \\ 
+  NFR13      & & & & & & & & & & & &X & & \\ 
   \hline
   NFR14      & & & & & & & & & & & & & & \\ 
   \hline
-  NFR15      & & & & & & & & & & & & & & \\ 
+  NFR15      & & & & & & & & & & & & & &X \\ 
   \hline
   NFR16      & & & & & & & & & & & & & & \\ 
   \hline
@@ -853,8 +869,70 @@ The following tables show the traceability between test cases and requirements f
   NFR25      & & & & & & & & & & & & & & \\ 
   \hline
   \end{tabular}
+  \label{Table:B_trace}
+
+\end{table}
   
-\label{Table:B_trace}
+\pagebreak
+\begin{table}[H]
+  \centering
+  \caption{Non-Functional Requirements Dependency Matrix (2 of 2)}
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+    & T33 & T34 & T35 & T36 & T37 & T38 & T39\\
+  \hline
+  NFR1      & & & & & & & \\ 
+  \hline
+  NFR2      & & & & & & &  \\ 
+  \hline
+  NFR3      & & & & & & &  \\ 
+  \hline
+  NFR4      & & & & & & &  \\ 
+  \hline
+  NFR5      & & & & & & & \\ 
+  \hline
+  NFR6      & & & & & & &  \\ 
+  \hline
+  NFR7      & & & & & & &  \\ 
+  \hline
+  NFR8      & & & & & & &  \\ 
+  \hline
+  NFR9      & & & & & & &  \\ 
+  \hline
+  NFR10     & & & & & & &  \\ 
+  \hline
+  NFR11     & & & & & & &  \\ 
+  \hline
+  NFR12     & & & & & & &  \\ 
+  \hline
+  NFR13     & & & & & & &  \\ 
+  \hline
+  NFR14     & & & & & & &  \\ 
+  \hline
+  NFR15     & & & & & & &  \\  
+  \hline
+  NFR16     &X & & & & & & \\ 
+  \hline
+  NFR17     & &X & & & & & \\ 
+  \hline
+  NFR18     & & &X & & & &  \\ 
+  \hline
+  NFR19     & & & &X & & &  \\ 
+  \hline
+  NFR20     & & & & &X & & \\ 
+  \hline
+  NFR21     & & & & &X & & \\ 
+  \hline
+  NFR22     & & & & & &X &  \\ 
+  \hline
+  NFR23     & & & & & & & \\ 
+  \hline
+  NFR24     & & & & & & &  \\ 
+  \hline
+  NFR25     & & & & & & &X  \\ 
+  \hline
+  \end{tabular}
+  
 \end{table}
 
 \wss{Provide a table that shows which test cases are supporting which
