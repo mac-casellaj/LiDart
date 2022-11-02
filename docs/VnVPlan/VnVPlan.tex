@@ -5,7 +5,7 @@
 \usepackage{hyperref}
 \usepackage{enumitem}
 \usepackage{float}
-\usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry}
+\usepackage[left=1.65cm, right=2cm, top=2cm, bottom=2cm]{geometry}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -363,74 +363,73 @@ percentage of successful subjects will be used to determine the success of this 
 
 \begin{enumerate}
 
-\item{test-id1\\}
 
-1.	R1 Test \\
+\item{R1T\\}
 Initial State: Nothing has been sent to the robot to output \\
 Input: Arrow key movement (example: right arrow key) \\ 
 Output: Robot moves in the direction specified (example: to the right) \\ 
 How test will be performed: The robot will be given a series of inputs from the keyboard such as Right,Left and forward. The robot will then be observed and make sure that it follows the motions specified. This will verify that the robot is taking the input from the user as specified \\
-2.	R2 Test \\
+\item{R2T\\}
 Initial State: Robot is operating normally \\ 
 Input: Emergency stop button is pressed \\ 
 Output: Robot should completely shut down \\
 How test will be performed: Inputs will be sent to the robot and the robot should not action any of them. So the inputs can be movement (left, right and forward) or it can be to scan the object.  \\
-3.	R3 Test \\
+\item{R3T\\}
 Initial State: Robot is stationary \\
 Input: From the control, there will be input specified to move the robot forward, backwards, left and right \\
 Output: Robot should move in all specified directions \\
 How test will be performed: Inputs will be sent to the robot and the robot should operate accordingly. The robot should move forward, backward, and rotate left and right. \\
-4.	R4 Test \\
+\item{R4T\\}
 Initial state: Robot is stationary \\
 Input: No inputs are given to the robot \\
 Output: Robot does not move or do any functions \\
 How test will be performed: Robot will be left without any inputs given to it and its behaviour will be monitored/observed \\
-5.	R5 Test \\
+\item{R5T\\}
 Initial state: Robot is stationary \\
 Input: Through a remote device connected over the internet, there will be commands given to the robot (example: Move left and Scan) \\
 Output: Robot should move left and then start scanning  \\
 How test will be performed: Robot will be remotely connnected to a control source and the robot will then be given commands from the control source and the actions of the robot will be observed \\
-6.	R6 Test \\
+\item{R6T\\}
 Initial state: Robot will be idle (TO BE REVIEWED) \\
 Input: Through the internet connection established, parameters will be sent to the robot (example: robot status) \\
 Output: Robot will respond over wifi connection with the robot status  \\
 How test will be performed: Over a wifi connection a control will send certain paramters to the robot and the expected output should be recieved from the robot \\
-7.	R7 Test \\
+\item{R7T\\}
 Initial state: Robot is currently operating \\
 Input: Robot switch will be flicked to go from "On" to "Off"\\
 Output: Robot should power down and not have any power \\
 How test will be performed: Robot will be powered on working. After confirming that the robot is powered on and performing actions, the robot's switch will be flicked to off and the robot should turn off \\
-8.	R8 Test \\
+\item{R8T\\}
 Initial state: Robot battery is low \\
 Input: Robot batter will be connected to a battery charger \\
 Output: Robot battery percentage should start increasing \\
 How test will be performed: Robot will have a low battery. The battery will then be connected to a charger and tester will observe as the battery percentage increases on the GUI.\\
-9.	R9 Test (TO BE REVIEWED)\\
+\item{R9T\\}
 Initial state: Robot is operating without having scanned anything \\
 Input: Robot scan\\
 Output: Output from the robot to the remote connection will be the scans coming from the LiDAR senso\\
 How test will be performed: Robot will be placed close to an object and instructed to scan the object. The tester will then observer the output from the robot on the remote connection. \\
-10.	R10 Test \\
+\item{R10T\\}
 Initial state: Robot uncalibrated \\
 Input: Landmarks in the surrounding and the instruction to clibrate the position of the robot \\
 Output: Coordinate of the robot in comparison to the landmarks\\
 How test will be performed: Landmarks will be placed a specific distance away from the robot at a specific orientation. The robot will be asked to calibrate. The tester will verify the measurements from the robot and verify that they are correct \\
-11.	R11 Test \\
+\item{R11T\\}
 Initial state: Robot has scanned an object \\
 Input: User identifes that they are done scanning and what to see the results \\
 Output: Robot will send the output file to the remote connection  \\
 How test will be performed: (TO BE REVIEWED) Robot will have files preinstalled and then asked to communicate them in the same that they will communicate the results of the scan. Those files will the be verified to be correct and uncorrupted \\
-12.	R12 Test \\
+\item{R12T\\}
 Initial state: Robot moving with the camera installed \\
 Input: User moving the robot around \\
 Output: Live feed from the camera onto the remote connection \\
 How test will be performed: Tester will place different objects infront of the robot and watch them change on the live feed on the GUI\\
-13.	R13 Test \\
+\item{R13T\\}
 Initial state: Robot scanning the object\\
 Input: User continuing the scan of an object \\
 Output: Current information on the scan. The current 3D scan model of the scan\\
 How test will be performed: Tester will observe as the scan is happening and look at the output on the GUI from the robot. The tester will be able to confirm that the scan is coming as the robot is scanning\\
-14.	R14 Test \\
+\item{R14T\\}
 Initial state: Robot is ready to scan\\
 Input: User asking for the current state of the robot\\
 Output: Robot outputs that it is ready to scan\\
@@ -578,6 +577,45 @@ How test will be performed: A qualified individual shall inspect the robot to en
 ...
 
 \subsection{Traceability Between Test Cases and Requirements}
+\begin{table}[H]
+  \centering
+  \caption{Requirements Dependency Matrix}
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+    & RT1 & RT2 & RT3 & RT4 & RT5 & RT6 & RT7 & RT8 & RT9 & RT10 & RT11 & RT12 & RT 13 & RT14\\
+  \hline
+  R1      &X & & & & & & & & & & & & & \\ 
+  \hline
+  R2      & &X & & & & & & & & & & & & \\ 
+  \hline
+  R3      & & &X & & & & & & & & & & & \\ 
+  \hline
+  R4      & & & &X & & & & & & & & & & \\ 
+  \hline
+  R5      & & & & &X & & & & & & & & & \\ 
+  \hline
+  R6      & & & & & &X & & & & & & & & \\ 
+  \hline
+  R7      & & & & & & &X & & & & & & & \\ 
+  \hline
+  R8      & & & & & & & &X & & & & & & \\ 
+  \hline
+  R9      & & & & & & & & &X & & & & & \\ 
+  \hline
+  R10      & & & & & & & & & &X & & & & \\ 
+  \hline
+  R11      & & & & & & & & & & &X & & & \\ 
+  \hline
+  R12      & & & & & & & & & & & &X & & \\ 
+  \hline
+  R13      & & & & & & & & & & & & &X & \\ 
+  \hline
+  R14      & & & & & & & & & & & & & &X \\ 
+  \hline
+  \end{tabular}
+  
+  \label{Table:A_trace}
+  \end{table}
 
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
