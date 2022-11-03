@@ -84,6 +84,7 @@
   MG & Module Guide\\
   MIS & Module Interface Specification\\
   PCB & Printed Circuit Board\\
+  R & Requirement \\
   SLAM & Simultaneous Localization and Mapping\\
   SRS & System Requirements Specification\\
   V\&V & Verification and Validation\\
@@ -392,7 +393,7 @@ Verification Method: Testing	\\
 Initial State: Nothing has been inputted into the system\\
 Input: Arrow keys on the keyboard \\ 
 Output: GUI displays the direction selected by the user \\ 
-How test will be performed: The user will press one of the arrow keys, the GUI will then display the direction that the user has pressed\\
+How test will be performed: The user will press one of the arrow keys, the GUI will then display the direction that the user has pressed.\\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3\\}
 
@@ -400,30 +401,30 @@ Verification Method: Testing	\\
 Initial State: Nothing has been sent to the robot to output \\
 Input: Arrow key movement (example: right arrow key) \\ 
 Output: Robot moves in the direction specified (example: to the right) \\ 
-How test will be performed: The robot will be given a series of inputs from the keyboard such as Right,Left and forward. The robot will then be observed and make sure that it follows the motions specified. This will verify that the robot is taking the input from the user as specified \\
+How test will be performed: The robot will be given a series of inputs from the keyboard such as right,eft and forward. The robot will then be observed and make sure that it follows the motions specified. This will verify that the robot is taking the input from the user as specified. \\
 	
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3\\}
  
 Verification Method: Demonstration\\
 Initial State: Robot powered-on, connected, and stationary \\
 Input: Arrow key movement (example: right arrow key) \\ 
-Output: Robot moves in the direction specified (example: to the right) \\ 
-How test will be performed: The robot will be given a series of inputs from the keyboard such as Right,Left and forward. The robot will then be observed and make sure that it follows the motions specified. This will verify that the robot is taking the input from the user as specified \\
+Output: Robot moves in the direction specified (example: robot rotates to the right) \\ 
+How test will be performed: The robot will be given a series of inputs from the keyboard such as Right,Left and forward. The robot will then be observed and make sure that it follows the motions specified. This will verify that the robot is taking the input from the user as specified. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R2\\}
 
 Verification Method: Demonstration\\
 Initial State: Robot is operating normally \\ 
 Input: Emergency stop button is pressed \\ 
-Output: Robot should completely shut down \\
+Output: Robot completely shuts down \\
 How test will be performed: Inputs will be sent to the robot and the robot should not action any of them. So the inputs can be movement (left, right and forward) or it can be to scan the object.  \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3\\}
 
 Verification Method: Demonstration\\
 Initial State: Robot is stationary \\
-Input: From the control, there will be input specified to move the robot forward, backwards, left and right \\
-Output: Robot should move in all specified directions \\
+Input: From the control, there will be input specified to move the robot forward, backward, left and right \\
+Output: Robot moves in all specified directions \\
 How test will be performed: Inputs will be sent to the robot and the robot should operate accordingly. The robot should move forward, backward, and rotate left and right. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R4\\}
@@ -432,7 +433,7 @@ Verification Method: Demonstration\\
 Initial state: Robot is stationary \\
 Input: No inputs are given to the robot \\
 Output: Robot does not move or do any functions \\
-How test will be performed: Robot will be left without any inputs given to it and its behaviour will be monitored/observed \\
+How test will be performed: Robot will be left without any inputs given to it and its behaviour will be monitored/observed. \\
 
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3, R6\\}
@@ -441,7 +442,7 @@ Verification Method: Testing	\\
 Initial state: Robot is stationary \\
 Input: Through a remote device connected over the internet, there will be commands given to the robot (example: Move left and Scan) \\
 Output: Robot should move left and then start scanning  \\
-How test will be performed: Robot will be remotely connected to a control source and the robot will then be given commands from the control source and the actions of the robot will be observed \\
+How test will be performed: Robot will be remotely connected to a control source and then given commands from the control source and the actions of the robot will be observed. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R5, R6\\}
 
@@ -449,7 +450,7 @@ Verification Method: Testing	\\
 Initial state: Robot will be idle (TO BE REVIEWED) \\
 Input: Through the internet connection established, parameters will be sent to the robot (example: robot status) \\
 Output: Robot will respond over wifi connection with the robot status  \\
-How test will be performed: Over a wifi connection a control will send certain paramters to the robot and the expected output should be received from the robot \\
+How test will be performed: Over a wifi connection a control will send certain paramters to the robot and the expected output should be received from the robot. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R3, R5, R6\\}
 
@@ -457,7 +458,7 @@ Verification Method: Demonstration\\
 Initial state: Robot is stationary \\
 Input: Through a remote device connected over the internet, there will be commands given to the robot (example: Move left and Scan) \\
 Output: Robot should move left and then start scanning  \\
-How test will be performed: Robot will be remotely connected to a control source and the robot will then be given commands from the control source and the actions of the robot will be observed \\
+How test will be performed: Robot will be remotely connected to a control source and the robot will then be given commands from the control source and the actions of the robot will be observed. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R5, R6\\}
 
@@ -465,7 +466,7 @@ Verification Method: Testing\\
 Initial state: Robot will be idle (TO BE REVIEWED) \\
 Input: Through the internet connection established, parameters will be sent to the robot (example: robot status) \\
 Output: Robot will respond over WiFi connection with the robot status  \\
-How test will be performed: Over a WiFi connection a control will send certain parameters to the robot and the expected output should be received from the robot \\
+How test will be performed: Over a WiFi connection a control will send certain parameters to the robot and the expected output should be received from the robot. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R7\\}
 
@@ -473,13 +474,13 @@ Verification Method: Testing\\
 Initial state: Robot is currently operating \\
 Input: Robot switch will be flicked to go from "On" to "Off"\\
 Output: Robot should power down and not have any power \\
-How test will be performed: Robot will be powered on working. After confirming that the robot is powered on and performing actions, the robot's switch will be flicked to off and the robot should turn off \\
+How test will be performed: Robot will be powered on working. After confirming that the robot is powered on and performing actions, the robot's switch will be flicked to off and the robot should turn off. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R8\\}
 Verification Method: Testing\\
 Initial state: Robot battery is low \\
 Input: Robot batter will be connected to a battery charger \\
-Output: Robot battery percentage should start increasing \\
+Output: Robot battery percentage must start increasing \\
 How test will be performed: Robot will have a low battery. The battery will then be connected to a charger and tester will observe as the battery percentage increases on the GUI.\\
 
 \subsubsection{State Estimation and Scanning}
@@ -498,7 +499,7 @@ Verification Method: Testing\\
 Initial state: Robot is not calibrated \\
 Input: Landmarks in the surrounding and the instruction to calibrate the position of the robot \\
 Output: Coordinate of the robot in comparison to the landmarks\\
-How test will be performed: Landmarks will be placed a specific distance away from the robot at a specific orientation. The robot will be asked to calibrate. The tester will verify the measurements from the robot and verify that they are correct \\
+How test will be performed: Landmarks will be placed a specific distance away from the robot at a specific orientation. The robot will be asked to calibrate. The tester will verify the measurements from the robot and verify that they are correct. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R11\\}
 
@@ -506,7 +507,7 @@ Verification Method: Demonstration\\
 Initial state: Robot has scanned an object \\
 Input: User identifies that they are done scanning and what to see the results \\
 Output: Robot will send the output file to the remote connection  \\
-How test will be performed: (TO BE REVIEWED) Robot will have files pre-installed and then asked to communicate them in the same that they will communicate the results of the scan. Those files will the be verified to be correct and not corrupted \\
+How test will be performed: (TO BE REVIEWED) Robot will have files pre-installed and then asked to communicate them in the same that they will communicate the results of the scan. Those files will the be verified to be correct and not corrupted. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R5, R9, R12\\}
 
@@ -514,7 +515,7 @@ Verification Method: Demonstration\\
 Initial state: Robot moving with the camera installed \\
 Input: User moving the robot around \\
 Output: Live feed from the camera onto the remote connection \\
-How test will be performed: Tester will place different objects infront of the robot and watch them change on the live feed on the GUI\\
+How test will be performed: Tester will place different objects infront of the robot and watch them change on the live feed on the GUI.\\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R5, R13\\}
 
@@ -522,14 +523,14 @@ Verification Method: Demonstration\\
 Initial state: Robot scanning the object\\
 Input: User continuing the scan of an object \\
 Output: Current information on the scan. The current 3D scan model of the scan\\
-How test will be performed: Tester will observe as the scan is happening and look at the output on the GUI from the robot. The tester will be able to confirm that the scan is coming as the robot is scanning\\
+How test will be performed: Tester will observe as the scan is happening and look at the output on the GUI from the robot. The tester will be able to confirm that the scan is coming as the robot is scanning.\\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{R9, R14\\}
 Verification Method: Demonstration\\
 Initial state: Robot is ready to scan\\
 Input: User asking for the current state of the robot\\
 Output: Robot outputs that it is ready to scan\\
-How test will be performed: Robot will be put in different states (Idle, ready to scan, etc..) and then asked to output the state to the GUI. The tester will be able to confirm that the output is matching what is expected \\
+How test will be performed: Robot will be put in different states (Idle, ready to scan, etc..) and then asked to output the state to the GUI. The tester will be able to confirm that the output is matching what is expected. \\
 
 \end{itemize}
 
@@ -558,7 +559,7 @@ Verification Method: Testing	\\
 Initial State: Robot is fully assembled	\\			
 Input: n/a\\
 Output: The 3D scan must be within SCAN\_TOL \\
-How test will be performed: The object that was scanned will be measured. The measurements from the object will be compared to that of the 3D scan provided by the robot S\\
+How test will be performed: The object that was scanned will be measured. The measurements from the object will be compared to that of the 3D scan provided by the robot.\\
 
 \end{itemize}
   
@@ -571,7 +572,7 @@ Verification Method: Testing	\\
 Initial State: Robot is fully assembled and is operating	\\			
 Input: n/a\\
 Output: The robot is moving at a speed of ROBOT\_SPEED \\
-How test will be performed: The robot will have to cover a specified distance. The time it takes to cover that distance will be measured. The speed can thus be calculated to determine the speed of the robot \\
+How test will be performed: The robot will have to cover a specified distance. The time it takes to cover that distance will be measured. The speed can thus be calculated to determine the speed of the robot. \\
   
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR3\\}
 
@@ -579,7 +580,7 @@ Verification Method: Testing	\\
 Initial State: Robot is fully assembled and operating	\\			
 Input: n/a\\
 Output: Robot must run for RUN\_TIME \\
-How test will be performed: The robot will be fully charged, and then left to operate. The time from when it is turned on till the battery runs out will be measured \\
+How test will be performed: The robot will be fully charged, and then left to operate. The time from when it is turned on till the battery runs out will be measured. \\
 			
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR4\\}
@@ -588,7 +589,7 @@ Verification Method: Testing	\\
 Initial State: Robot is fully assembled	and operating\\		
 Input: n/a\\
 Output: The system must be able to produce a 3D scan within SCANNING\_TIME \\
-How test will be performed: Once the robot starts scanning, the timer will be started until the single planar scan is completed. When it is completed the timer will be stopped \\
+How test will be performed: Once the robot starts scanning, the timer will be started until the single planar scan is completed. When it is completed the timer will be stopped. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR5\\}
 
@@ -596,7 +597,7 @@ Verification Method: Testing	\\
 Initial State: Robot is fully assembled and operating	\\			
 Input: n/a\\
 Output: The system must be able to output the final 3D scan withing MA\_PROCESS\_T time \\
-How test will be performed: Once the robot starts scanning the object, the timer will be started. Once the robot is fully done scanning and has produced the 3D scan file, the timer will be stopped \\
+How test will be performed: Once the robot starts scanning the object, the timer will be started. Once the robot is fully done scanning and has produced the 3D scan file, the timer will be stopped. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR6\\}
 
@@ -605,7 +606,7 @@ Verification Method: Testing	\\
 Initial State: Robot is fully assembled	and operating\\	
 Input: n/a\\
 Output: The robot must respond within MAX\_RESP\_T amount of time \\
-How test will be performed: A command will be sent to the robot at a specified time, the robot will respond with the time time. The time difference will be the response time \\
+How test will be performed: A command will be sent to the robot at a specified time, the robot will respond with the time time. The time difference will be the response time. \\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR7\\}
 
@@ -685,7 +686,7 @@ Input: \begin{enumerate}
 	\item Disconnect the cameras/sensors
 	\item Attempt to perform a scan when the robot is moving
 	\end{enumerate}
-Output: Error messages should be displayed for each of the failure modes.\\
+Output: Error messages must be displayed for each of the failure modes\\
 How test will be performed: The system will be provided with incorrect user input, which should result in the system displaying error messages.\\
 
 \item[\textbf{T\refstepcounter{tnum}\thetnum:}]{NFR16\\}
@@ -694,7 +695,7 @@ Verification Method: Testing\\
 Initial State: The robot is powered-on and connected to the GUI through WiFi	\\
 Input: An invalid input is given to the system\\
 Output: The system stores the error message into a .log file\\
-How test will be performed: An invalid input is given to the system (e.g scan when the robot is not localized). The system either creates a .log file if there initially wasn't one or appends the error into the already existing .log file\\
+How test will be performed: An invalid input is given to the system (e.g scan when the robot is not localized). The system either creates a .log file if there initially wasn't one or appends the error into the already existing .log file.\\
 \end{itemize}
 
 \subsubsection{Maintainability Requirements}
