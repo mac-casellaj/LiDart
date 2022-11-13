@@ -1,5 +1,6 @@
 
 /*==========================================================================
+//https://docs.m2stud.io/ee/arduino/4-Serial-Communication/
 //serial protocol: START (0x10, 0x02), LEN, DATA, CHECKSUM, END (0x10, 0x03)
 //DATA contains 2 bytes - byte1 (motA) and byte2 (motB)
 //input value 0 to 127: clockwise, 0 - 0% duty cycle, 127 - 100% duty cycle
@@ -22,15 +23,25 @@ struct Data
   uint8_t pwmValB;
 };
 
-struct Data rx_data; // store received data
+struct Packet
+{
+  uint16_t start_seq; // 0x0210, 0x10 will be sent first
+  uint8_t len;        // length of payload
+  struct Data tx_data;
+  uint8_t checksum;
+  uint16_t end_seq;   // 0x0310, 0x10 will be sent first
+};
 
-//Calculate checksum by XOR-ing all the bytes where the pointer "data" points to
+struct Data rx_data; // store received data
+struct Packet tx_packet; // store packet to be sent
+
+//Calculate checksum by XOR-ing all the bytes
 uint8_t calc_checksum(void *data, uint8_t len)
 {
   uint8_t checksum = 0;
   uint8_t *addr;
   for(addr = (uint8_t*)data; addr < ((uint8_t*)data + len); addr++){
-    checksum ^= *addr; // checksum = checksum xor value stored in addr
+    checksum ^= *addr;
   }
   return checksum;
 }
@@ -39,53 +50,54 @@ uint8_t calc_checksum(void *data, uint8_t len)
 bool readPacket()
 {
   uint8_t payload_length, checksum, rx;
-  while(Serial.available() < 15){
+
+  while(Serial.available() < 8){
     // not enough bytes to read
   }
-
-  if(Serial.read() != 0x10){
+  
+  if( Serial.read() != 0x10){
     // first byte not DLE, not a valid packet
     return false;
   }
-
-  // first byte is DLE, read next byte
+  
   if(Serial.read() != 0x02){
     // second byte not STX, not a valid packet
     return false;
   }
 
-  // seems to be a valid packet
   payload_length = Serial.read(); // get length of payload
-
-  // can compare payload length or extra packet type byte to decide where to write received data to
   if(payload_length == 2){
     if(Serial.readBytes((uint8_t*) &rx_data, payload_length) != payload_length){
-      // cannot receive required length within timeout
       return false;
     }
   }else{
-    // invalid data length
     return false;
   }
-
+  
   checksum = Serial.read();
-
   if(calc_checksum(&rx_data, payload_length) != checksum){
-    // checksum error
     return false;
   }
-
+  
   if(Serial.read() != 0x10){
-    // last 2nd byte not DLE, not a valid packet
+    //byte is not DLE, not a valid packet
     return false;
   }
 
-  // last 2nd byte is DLE, read next byte
   if(Serial.read() != 0x03){
     // last byte not ETX, not a valid packet
     return false;
   }
+  digitalWrite(LED_BUILTIN, HIGH);
   return true;
+}
+
+void send_packet(){
+  tx_packet.len = sizeof(struct Data);
+  tx_packet.tx_data.pwmValA = rx_data.pwmValA;
+  tx_packet.tx_data.pwmValB = rx_data.pwmValB;
+  tx_packet.checksum = calc_checksum(&tx_packet.tx_data, tx_packet.len);
+  Serial.write((char*)&tx_packet, sizeof(tx_packet)); // send the packet
 }
 
 void setup()
@@ -96,6 +108,11 @@ void setup()
   pinMode(IN4, OUTPUT);
   pinMode(ENA, OUTPUT);
   pinMode(ENB, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  // init tx packet
+  tx_packet.start_seq = 0x0210;
+  tx_packet.end_seq = 0x0310;
   
   Serial.begin(9600);
   while(!Serial){
@@ -105,7 +122,10 @@ void setup()
 
 void loop()
 { 
-  readPacket();
+  if(readPacket()){
+    // valid packet received, pack data in new packet and send it out
+    send_packet();
+  }
   
   if(rx_data.pwmValA <= 127) {
     digitalWrite(IN1, HIGH);
