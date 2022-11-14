@@ -6,25 +6,25 @@
             const angle_arm_r = 30;
             const annotation_color = "grey";
             
-            const landmark_color = "#00FF00";
+            const landmark_color = "#009900";
             const robot_color = "#0000FF";
 
             const observation_arc_r = 25;
             const observation_color = "purple";
 
             function drawXYTheta(ctx, X, color) {
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.ellipse(X.x, X.y, angle_arc_r, angle_arc_r, 0, 0, X.theta);
-                ctx.stroke();
+                // ctx.strokeStyle = color;
+                // ctx.lineWidth = 2;
+                // ctx.beginPath();
+                // ctx.ellipse(X.x, X.y, angle_arc_r, angle_arc_r, 0, 0, X.theta);
+                // ctx.stroke();
                 
-                ctx.strokeStyle = annotation_color;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(X.x, X.y);
-                ctx.lineTo(X.x + angle_arm_r, X.y);
-                ctx.stroke();
+                // ctx.strokeStyle = annotation_color;
+                // ctx.lineWidth = 2;
+                // ctx.beginPath();
+                // ctx.moveTo(X.x, X.y);
+                // ctx.lineTo(X.x + angle_arm_r, X.y);
+                // ctx.stroke();
 
                 ctx.strokeStyle = color;
                 ctx.lineWidth = 2;
@@ -36,6 +36,56 @@
                 ctx.fillStyle = color;
                 ctx.beginPath();
                 ctx.ellipse(X.x, X.y, dot_r, dot_r, 0, 0, 2*Math.PI);
+                ctx.fill();
+            }
+
+            function drawXYThetaWithVariance(ctx, E, Var, color) {
+                // Draw variance
+                ctx.strokeStyle = color + "60";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(E.x, E.y);
+                ctx.lineTo(E.x + angle_arm_r*Math.cos(E.theta), E.y + angle_arm_r*Math.sin(E.theta));
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(E.x, E.y);
+                ctx.lineTo(E.x + angle_arm_r*Math.cos(E.theta), E.y + angle_arm_r*Math.sin(E.theta));
+                ctx.stroke();
+
+                const lambda1 = (Var.xx + Var.yy) / 2 + Math.sqrt( (Var.xx - Var.yy)*(Var.xx - Var.yy) / 4 + Var.xy*Var.xy );
+                const lambda2 = (Var.xx + Var.yy) / 2 - Math.sqrt( (Var.xx - Var.yy)*(Var.xx - Var.yy) / 4 + Var.xy*Var.xy );
+
+                let var_rotation = 0;
+                if((Var.xy == 0) && (Var.xx >= Var.yy)) {
+                    var_rotation = 0; 
+                } else if((Var.xy == 0) && (Var.xx < Var.yy)) {
+                    var_rotation = Math.PI/2;
+                } else {
+                    var_rotation = Math.atan2(lambda1 - Var.xx, Var.yy);
+                }
+
+                const var_scale = 0.1;
+
+                const var_radiusX = var_scale*lambda1;
+                const var_radiusY = var_scale*lambda2;
+                
+                ctx.strokeStyle = color + "60";
+                ctx.beginPath();
+                ctx.ellipse(E.x, E.y, var_radiusX, var_radiusY, var_rotation, 0, 2*Math.PI);
+                ctx.stroke();
+
+                // Draw mean
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(E.x, E.y);
+                ctx.lineTo(E.x + angle_arm_r*Math.cos(E.theta), E.y + angle_arm_r*Math.sin(E.theta));
+                ctx.stroke();
+
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.ellipse(E.x, E.y, dot_r, dot_r, 0, 0, 2*Math.PI);
                 ctx.fill();
             }
 
@@ -132,34 +182,139 @@
             // Constant Variances
             const Var_Yi = { dd: 2, pp: 2, aa: 2 };
 
-            // Actual poses
-            let L1 = { x: 20,  y: 80,  theta: 3.14/3   };
-            let L2 = { x: 100, y: 300, theta: 3.14/2   };
-            let L3 = { x: 350, y: 100, theta: 3*3.14/4 };
-            let X =  { x: 200, y: 200, theta: 3.14/6   };
+            // Actual states
+            let X =  { x: 0, y: 0, theta: 3.14/6   };
+            let landmarks = {
+                1: { x: 20,  y: 80,  theta: 3.14/3   },
+                2: { x: -40, y: -30, theta: 3.14/2   },
+                3: { x: 30, y: -70, theta: 3*3.14/4 },
+            };
 
-            // Landmark pose estimates
-            let E_L1 = { x: 0, y: 0, theta: 0 };
-            let Var_L1 = {xx: 1000, xy: 0, xt: 0, yy: 1000, yt: 0, tt: 1000 };
+            // Landmark state estimates
+            let landmark_estimates = {};
+            
+            // Robot state estimate (not reused, just for display purposes)
+            let E_X = { x: 0, y: 0, theta: 0 };
+            let Var_X = { xx: 0, xy: 0, xt: 0, yy: 0, yt: 0, tt: 0 };
+            
+            function run_state_estimator() {
+                // Compute observations -- part of the sim
+                let observations = {};
+                Object.entries(landmarks).forEach(entry => {
+                    const landmark_id = entry[0];
+                    const landmark_state = entry[1];
 
-            let E_L2 = {};
-            let Var_L2 = {};
+                    observations[landmark_id] = gY(landmark_state, X);
+                });
+                
+                // Estimate X from observations of previously observed landmarks,
+                // if no observed landmarks have been previously observed then initialize them as if X was 0
 
-            let E_L3 = {};
-            let Var_L3 = {};
+                let X_estimates = [];
+                let w_denom = 0;
+                Object.entries(observations).forEach(entry => {
+                    const observed_id = entry[0];
+                    const Yi = entry[1];
+
+                    if(observed_id in landmark_estimates) {
+                        const E_Li = landmark_estimates[observed_id].E;
+                        const Var_Li = landmark_estimates[observed_id].Var;
+
+                        const Var_Xi = Var_gX(E_Li, Yi, Var_Li, Var_Yi);
+                        const wi = 1.0 / (Var_Xi.xx + Var_Xi.yy + Var_Xi.tt);
+                        w_denom += wi;
+
+                        // This landmark has been previously observed, it can be used to estimate X
+                        X_estimates.push([
+                            gX(E_Li, Yi),
+                            Var_Xi,
+                            wi,
+                        ]);
+                    }
+                });
+
+                console.log(X_estimates);
+
+                if(X_estimates.length == 0) {
+                    // TODO(Jon): do something here
+                }
+
+                E_X = { x: 0, y: 0, theta: 0 };
+                Var_X = { xx: 0, xy: 0, xt: 0, yy: 0, yt: 0, tt: 0 };
+                X_estimates.forEach(entry => {
+                    const E_Xi = entry[0];
+                    const Var_Xi = entry[1];
+                    const wi = entry[2] / w_denom;
+
+                    E_X.x += wi*E_Xi.x;
+                    E_X.y += wi*E_Xi.y;
+                    E_X.theta += wi*E_Xi.theta;
+
+                    Var_X.xx += wi*wi*Var_Xi.xx;
+                    Var_X.xy += wi*wi*Var_Xi.xy;
+                    Var_X.xt += wi*wi*Var_Xi.xt;
+                    Var_X.yy += wi*wi*Var_Xi.yy;
+                    Var_X.yt += wi*wi*Var_Xi.yt;
+                    Var_X.tt += wi*wi*Var_Xi.tt;
+                });
+
+                Object.entries(observations).forEach(entry => {
+                    const observed_id = entry[0];
+                    const Yi = entry[1];
+
+                    let E_Li = gL(Yi, E_X);
+                    let Var_Li = Var_gL(Yi, E_X, Var_Yi, Var_X);
+
+                    if(observed_id in landmark_estimates) {
+                        // This landmark has been previously observed, we can use the previous estimate to reduce variance
+
+                        const prev_E_Li = landmark_estimates[observed_id].E;
+                        const prev_Var_Li = landmark_estimates[observed_id].Var;
+                        
+                        const sigma1 = prev_Var_Li.xx + prev_Var_Li.yy + prev_Var_Li.tt;
+                        const sigma2 = Var_Li.xx + Var_Li.yy + Var_Li.tt;
+
+                        const w1 = sigma2 / (sigma1 + sigma2);
+                        const w2 = sigma1 / (sigma1 + sigma2);
+
+                        E_Li.x = w1*prev_E_Li.x + w2*E_Li.x;
+                        E_Li.y = w1*prev_E_Li.y + w2*E_Li.y;
+                        E_Li.theta = w1*prev_E_Li.theta + w2*E_Li.theta;
+
+                        Var_Li.xx = w1*w1*prev_Var_Li.xx + w2*w2*Var_Li.xx;
+                        Var_Li.xy = w1*w1*prev_Var_Li.xy + w2*w2*Var_Li.xy;
+                        Var_Li.xt = w1*w1*prev_Var_Li.xt + w2*w2*Var_Li.xt;
+                        Var_Li.yy = w1*w1*prev_Var_Li.yy + w2*w2*Var_Li.yy;
+                        Var_Li.yt = w1*w1*prev_Var_Li.yt + w2*w2*Var_Li.yt;
+                        Var_Li.tt = w1*w1*prev_Var_Li.tt + w2*w2*Var_Li.tt;
+                    }
+
+                    landmark_estimates[observed_id] = {
+                        E: E_Li,
+                        Var: Var_Li,
+                    };
+                });
+            }
 
             window.addEventListener("DOMContentLoaded", () => {
-                const canvas = document.getElementById("canvas");
-                const ctx = canvas.getContext("2d");
-                
-                // Init landmark estimates
-                // ???
+                const inputcanvas = document.getElementById("inputcanvas");
+                const inputctx = inputcanvas.getContext("2d");
+
+                const outputcanvas = document.getElementById("outputcanvas");
+                const outputctx = outputcanvas.getContext("2d");
 
                 function renderCallback() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.resetTransform();
-                    ctx.translate(0, canvas.height);
-                    ctx.scale(1, -1);
+                    inputctx.resetTransform();
+                    inputctx.clearRect(0, 0, inputcanvas.width, inputcanvas.height);
+                    inputctx.translate(0, inputcanvas.height);
+                    inputctx.scale(1, -1);
+                    inputctx.translate(inputcanvas.width/2, inputcanvas.height/2);
+
+                    outputctx.resetTransform();
+                    outputctx.clearRect(0, 0, outputcanvas.width, outputcanvas.height);
+                    outputctx.translate(0, outputcanvas.height);
+                    outputctx.scale(1, -1);
+                    outputctx.translate(outputcanvas.width/2, outputcanvas.height/2);
                     
                     const move_speed = 0.4;
                     const rotate_speed = 0.02;
@@ -172,62 +327,24 @@
                     if(KeySDown) { X.y -= move_speed; }
                     if(KeyDDown) { X.x += move_speed; }
 
-                    // Draw actual poses
-                    drawXYTheta(ctx, L1, landmark_color + "40");
-                    drawXYTheta(ctx, L2, landmark_color + "40");
-                    drawXYTheta(ctx, L3, landmark_color + "40");
-                    drawXYTheta(ctx, X,  robot_color + "40");
-
+                    // Draw actual states
+                    drawXYTheta(inputctx, X, robot_color);
+                    Object.values(landmarks).forEach(landmark => {
+                        drawXYTheta(inputctx, landmark, landmark_color);
+                    });
+                    
                     // Compute & draw observations
-                    let Y1 = gY(L1, X);
-                    drawObservation(ctx, X, Y1);
-    
-                    let Y2 = gY(L2, X);
-                    drawObservation(ctx, X, Y2);
-    
-                    let Y3 = gY(L3, X);
-                    drawObservation(ctx, X, Y3);
-
-                    // Compute & draw X estimate
-                    let E_X1 = gX(E_L1, Y1);
-                    let Var_X1 = Var_gX(E_L1, Y1, Var_L1, Var_Yi);
-                    /*
-                    let w1 = 1.0 / (Var_X1.xx + Var_X1.yy + Var_X1.tt);
-
-                    let E_X2 = gX(E_L2, Y2);
-                    let Var_X2 = Var_gX(E_L2, Y2, Var_L2, Var_Yi);
-                    let w2 = 1.0 / (Var_X2.xx + Var_X2.yy + Var_X2.tt);
-
-                    let E_X3 = gX(E_L3, Y3);
-                    let Var_X3 = Var_gX(E_L3, Y3, Var_L3, Var_Yi);
-                    let w3 = 1.0 / (Var_X3.xx + Var_X3.yy + Var_X3.tt);
+                    // ???????????
                     
-                    let w_denom = w1 + w2 + w3;
-                    
-                    let E_X = {
-                        x: (w1/w_denom)*E_X1.x + (w2/w_denom)*E_X2.x + (w3/w_denom)*E_X3.x,
-                        y: (w1/w_denom)*E_X1.y + (w2/w_denom)*E_X2.y + (w3/w_denom)*E_X3.y,
-                        theta: (w1/w_denom)*E_X1.theta + (w2/w_denom)*E_X2.theta + (w3/w_denom)*E_X3.theta,
-                    };
+                    // --- sim ends, state estimator begins ---
+                    drawXYThetaWithVariance(outputctx, E_X, Var_X, robot_color);
+                    Object.entries(landmark_estimates).forEach(entry => {
+                        const landmark_id = entry[0];
+                        const landmark_estimate = entry[1];
 
-                    let Var_X = {
-                        xx: 0,
-                        xy: 0,
-                        xt: 0,
-                        yy: 0,
-                        yt: 0,
-                        tt: 0,
-                    };
-                    */
-                    let E_X = E_X1;
-
-                    drawXYTheta(ctx, E_X, robot_color);
-
-                    // Compute & draw landmark estimates
-                    // drawXYTheta(ctx, E_L1, landmark_color + "80");
-                    // drawXYTheta(ctx, E_L2, landmark_color + "80");
-                    // drawXYTheta(ctx, E_L3, landmark_color + "80");
-                    
+                        drawXYThetaWithVariance(outputctx, landmark_estimate.E, landmark_estimate.Var, landmark_color);
+                        // drawXYTheta(outputctx, landmark_estimate.E, landmark_color);
+                    });
 
                     requestAnimationFrame(renderCallback);
                 }
@@ -251,13 +368,15 @@
                 else if(event.code == "KeyA") { KeyADown = false; }
                 else if(event.code == "KeyS") { KeySDown = false; }
                 else if(event.code == "KeyD") { KeyDDown = false; }
+                else if(event.code == "Space") { run_state_estimator(); }
             });
         </script>
     </head>
     <body style="margin: 0;">
         <div style="display: flex; flex-direction: column; align-items: center;">
             <div style="height: 20px;"></div>
-            <canvas style="outline: solid 1px black; width: 400px; height: 400px;" width="400" height="400" id="canvas"></canvas>
+            <canvas style="outline: solid 1px black; width: 400px; height: 400px;" width="400" height="400" id="inputcanvas"></canvas>
+            <canvas style="outline: solid 1px black; width: 400px; height: 400px;" width="400" height="400" id="outputcanvas"></canvas>
         </div>
     </body>
 </html>
