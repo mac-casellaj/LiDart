@@ -1,13 +1,18 @@
 use std::time::Instant;
 use serde::Serialize;
-use warp::{reply::json, Reply, Filter, ws::{WebSocket, Message}};
+use warp::{reply::json, Reply, Filter, ws::WebSocket};
 use futures::StreamExt;
+use std::time::Duration;
 
 #[tokio::main]
 async fn main() {
     let start_time = Instant::now();
-    
     let health_route = warp::path("health").and_then(move || health_handler(start_time));
+
+    // Open the serial port
+    // let port = serialport::new("/dev/ttyUSB0", 115_200)
+    // .timeout(Duration::from_millis(10))
+    // .open().expect("Failed to open port");
 
     let ws_route = warp::path("ws")
         .and(warp::ws())
@@ -30,7 +35,7 @@ pub async fn ws_handler(ws: warp::ws::Ws) -> Result<impl Reply, warp::Rejection>
 }
 
 pub async fn websocket_connection(ws: WebSocket) {
-    let (mut client_ws_sender, mut client_ws_rcv) = ws.split();
+    let (mut _client_ws_sender, mut client_ws_rcv) = ws.split();
 
     while let Some(result) = client_ws_rcv.next().await {
         let msg_raw = match result {
@@ -50,20 +55,8 @@ pub async fn websocket_connection(ws: WebSocket) {
         };
 
         println!("Got {}", msg_text);
-
-        // let msg: BasePacket = conerr!(serde_json::from_str(&msg_text), e, {
-        //     eprintln!("error parsing base packet: {}", e);
-        // });
-    
-        // let mut state_guard = state_mutex.lock().await;
-        // let state = state_guard.deref_mut();
-        // handle_packet(&mut session_handle_o, msg, &mut send_channel, state)
     }
 }
-
-// pub async fn ws_handler(ws: warp::ws::Ws, state_mutex: Arc<Mutex<VTTState>>) -> Result<impl Reply, warp::Rejection> {
-//     Ok(ws.on_upgrade(move |socket| ws::client_connection(socket, state_mutex)))
-// }
 
 #[derive(Serialize)]
 pub struct HealthResponse {
