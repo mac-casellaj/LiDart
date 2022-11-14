@@ -1,0 +1,263 @@
+<html>
+    <head>
+        <script>
+            const dot_r = 10;
+            const angle_arc_r = 20;
+            const angle_arm_r = 30;
+            const annotation_color = "grey";
+            
+            const landmark_color = "#00FF00";
+            const robot_color = "#0000FF";
+
+            const observation_arc_r = 25;
+            const observation_color = "purple";
+
+            function drawXYTheta(ctx, X, color) {
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(X.x, X.y, angle_arc_r, angle_arc_r, 0, 0, X.theta);
+                ctx.stroke();
+                
+                ctx.strokeStyle = annotation_color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(X.x, X.y);
+                ctx.lineTo(X.x + angle_arm_r, X.y);
+                ctx.stroke();
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(X.x, X.y);
+                ctx.lineTo(X.x + angle_arm_r*Math.cos(X.theta), X.y + angle_arm_r*Math.sin(X.theta));
+                ctx.stroke();
+
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.ellipse(X.x, X.y, dot_r, dot_r, 0, 0, 2*Math.PI);
+                ctx.fill();
+            }
+
+            function drawObservation(ctx, X, Yi) {
+                const Lix = X.x + Yi.d*Math.cos(X.theta + Yi.phi);
+                const Liy = X.y + Yi.d*Math.sin(X.theta + Yi.phi);
+                
+                ctx.strokeStyle = observation_color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(X.x, X.y);
+                ctx.lineTo(Lix, Liy);
+                ctx.stroke();
+
+                ctx.strokeStyle = observation_color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(X.x, X.y, observation_arc_r, observation_arc_r, 0, X.theta, X.theta + Yi.phi);
+                ctx.stroke();
+
+                ctx.strokeStyle = observation_color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(Lix, Liy, observation_arc_r, observation_arc_r, 0, X.theta + Yi.phi + Math.PI, X.theta + Yi.phi + Math.PI - Yi.alpha);
+                ctx.stroke();
+            }
+
+            // Produces an observation Yi of landmark Li from robot state X 
+            function gY(Li, X) {
+                const dx = Li.x - X.x;
+                const dy = Li.y - X.y;
+
+                return {
+                    d: Math.sqrt(dy*dy + dx*dx),
+                    phi: Math.atan2(dy, dx) - X.theta,
+                    alpha: Math.atan2(dy, dx) + Math.PI - Li.theta,
+                };
+            }
+
+            // Computes the robot state X given an observation Yi of landmark Li
+            function gX(Li, Yi) {
+                return {
+                    x: Li.x + Yi.d*Math.cos(Li.theta + Yi.alpha),
+                    y: Li.y + Yi.d*Math.sin(Li.theta + Yi.alpha),
+                    theta: Li.theta + Yi.alpha - Yi.phi - Math.PI,
+                };
+            }
+
+            function Var_gX(Li, Yi, Var_Li, Var_Yi) {
+                return {
+                    xx: Var_Li.tt*Yi.d*Yi.d*Math.sin(Li.theta + Yi.alpha)*Math.sin(Li.theta + Yi.alpha) - 2*Var_Li.xt*Yi.d*Math.sin(Li.theta + Yi.alpha) + Var_Li.xx + Var_Yi.aa*Yi.d*Yi.d*Math.sin(Li.theta + Yi.alpha)*Math.sin(Li.theta + Yi.alpha) + Var_Yi.dd*Math.cos(Li.theta + Yi.alpha)*Math.cos(Li.theta + Yi.alpha),
+                    xy: Var_Li.xy - Var_Li.yt*Yi.d*Math.sin(Li.theta + Yi.alpha) - Var_Yi.aa*Yi.d*Yi.d*Math.sin(2*Li.theta + 2*Yi.alpha)/2 + Var_Yi.dd*Math.sin(2*Li.theta + 2*Yi.alpha)/2 - Yi.d*(Var_Li.tt*Yi.d*Math.sin(Li.theta + Yi.alpha) - Var_Li.xt)*Math.cos(Li.theta + Yi.alpha),
+                    xt: -Var_Li.tt*Yi.d*Math.sin(Li.theta + Yi.alpha) + Var_Li.xt - Var_Yi.aa*Yi.d*Math.sin(Li.theta + Yi.alpha),
+                    yy: Var_Li.tt*Yi.d*Yi.d*Math.cos(Li.theta + Yi.alpha)*Math.cos(Li.theta + Yi.alpha) + 2*Var_Li.yt*Yi.d*Math.cos(Li.theta + Yi.alpha) + Var_Li.yy + Var_Yi.aa*Yi.d*Yi.d*Math.cos(Li.theta + Yi.alpha)*Math.cos(Li.theta + Yi.alpha) + Var_Yi.dd*Math.sin(Li.theta + Yi.alpha)*Math.sin(Li.theta + Yi.alpha),
+                    yt: Var_Li.tt*Yi.d*Math.cos(Li.theta + Yi.alpha) + Var_Li.yt + Var_Yi.aa*Yi.d*Math.cos(Li.theta + Yi.alpha),
+                    tt: Var_Li.tt + Var_Yi.aa + Var_Yi.pp,
+                };
+            }
+
+            // Computes the state of landmark Li given an observation Yi and the robot state X
+            function gL(Yi, X) {
+                return {
+                    x: X.x + Yi.d*Math.cos(X.theta + Yi.phi),
+                    y: X.y + Yi.d*Math.sin(X.theta + Yi.phi),
+                    theta: X.theta + Yi.phi + Math.PI - Yi.alpha,
+                };
+            }
+
+            function Var_gL(Yi, X, Var_Yi, Var_X) {
+                return {
+                    xx: Var_X.tt*Yi.d*Yi.d*Math.sin(X.theta + Yi.phi)*Math.sin(X.theta + Yi.phi) - 2*Var_X.xt*Yi.d*Math.sin(X.theta + Yi.phi) + Var_X.xx + Var_Yi.dd*Math.cos(X.theta + Yi.phi)*Math.cos(X.theta + Yi.phi) + Var_Yi.pp*Yi.d*Yi.d*Math.sin(X.theta + Yi.phi)*Math.sin(X.theta + Yi.phi),
+                    xy: Var_X.xy - Var_X.yt*Yi.d*Math.sin(X.theta + Yi.phi) + Var_Yi.dd*Math.sin(2*X.theta + 2*Yi.phi)/2 - Var_Yi.pp*Yi.d*Yi.d*Math.sin(2*X.theta + 2*Yi.phi)/2 - Yi.d*(Var_X.tt*Yi.d*Math.sin(X.theta + Yi.phi) - Var_X.xt)*Math.cos(X.theta + Yi.phi),
+                    xt: -Var_X.tt*Yi.d*Math.sin(X.theta + Yi.phi) + Var_X.xt - Var_Yi.pp*Yi.d*Math.sin(X.theta + Yi.phi),
+                    yy: Var_X.tt*Yi.d*Yi.d*Math.cos(X.theta + Yi.phi)*Math.cos(X.theta + Yi.phi) + 2*Var_X.yt*Yi.d*Math.cos(X.theta + Yi.phi) + Var_X.yy + Var_Yi.dd*Math.sin(X.theta + Yi.phi)*Math.sin(X.theta + Yi.phi) + Var_Yi.pp*Yi.d*Yi.d*Math.cos(X.theta + Yi.phi)*Math.cos(X.theta + Yi.phi),
+                    yt: Var_X.tt*Yi.d*Math.cos(X.theta + Yi.phi) + Var_X.yt + Var_Yi.pp*Yi.d*Math.cos(X.theta + Yi.phi),
+                    tt: Var_X.tt + Var_Yi.aa + Var_Yi.pp,
+                };
+            }
+
+            function gaussian(mean, variance) {
+                let u = 1 - Math.random(); //Converting [0,1) to (0,1)
+                let v = Math.random();
+                let result = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+                return Math.sqrt(variance) * result + mean;
+            }
+
+            let KeyQDown = false;
+            let KeyWDown = false;
+            let KeyEDown = false;
+            let KeyADown = false;
+            let KeySDown = false;
+            let KeyDDown = false;
+
+            // Constant Variances
+            const Var_Yi = { dd: 2, pp: 2, aa: 2 };
+
+            // Actual poses
+            let L1 = { x: 20,  y: 80,  theta: 3.14/3   };
+            let L2 = { x: 100, y: 300, theta: 3.14/2   };
+            let L3 = { x: 350, y: 100, theta: 3*3.14/4 };
+            let X =  { x: 200, y: 200, theta: 3.14/6   };
+
+            // Landmark pose estimates
+            let E_L1 = { x: 0, y: 0, theta: 0 };
+            let Var_L1 = {xx: 1000, xy: 0, xt: 0, yy: 1000, yt: 0, tt: 1000 };
+
+            let E_L2 = {};
+            let Var_L2 = {};
+
+            let E_L3 = {};
+            let Var_L3 = {};
+
+            window.addEventListener("DOMContentLoaded", () => {
+                const canvas = document.getElementById("canvas");
+                const ctx = canvas.getContext("2d");
+                
+                // Init landmark estimates
+                // ???
+
+                function renderCallback() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.resetTransform();
+                    ctx.translate(0, canvas.height);
+                    ctx.scale(1, -1);
+                    
+                    const move_speed = 0.4;
+                    const rotate_speed = 0.02;
+
+                    // Move robot according to keyboard input
+                    if(KeyQDown) { X.theta += rotate_speed; }
+                    if(KeyWDown) { X.y += move_speed; }
+                    if(KeyEDown) { X.theta -= rotate_speed; }
+                    if(KeyADown) { X.x -= move_speed; }
+                    if(KeySDown) { X.y -= move_speed; }
+                    if(KeyDDown) { X.x += move_speed; }
+
+                    // Draw actual poses
+                    drawXYTheta(ctx, L1, landmark_color + "40");
+                    drawXYTheta(ctx, L2, landmark_color + "40");
+                    drawXYTheta(ctx, L3, landmark_color + "40");
+                    drawXYTheta(ctx, X,  robot_color + "40");
+
+                    // Compute & draw observations
+                    let Y1 = gY(L1, X);
+                    drawObservation(ctx, X, Y1);
+    
+                    let Y2 = gY(L2, X);
+                    drawObservation(ctx, X, Y2);
+    
+                    let Y3 = gY(L3, X);
+                    drawObservation(ctx, X, Y3);
+
+                    // Compute & draw X estimate
+                    let E_X1 = gX(E_L1, Y1);
+                    let Var_X1 = Var_gX(E_L1, Y1, Var_L1, Var_Yi);
+                    /*
+                    let w1 = 1.0 / (Var_X1.xx + Var_X1.yy + Var_X1.tt);
+
+                    let E_X2 = gX(E_L2, Y2);
+                    let Var_X2 = Var_gX(E_L2, Y2, Var_L2, Var_Yi);
+                    let w2 = 1.0 / (Var_X2.xx + Var_X2.yy + Var_X2.tt);
+
+                    let E_X3 = gX(E_L3, Y3);
+                    let Var_X3 = Var_gX(E_L3, Y3, Var_L3, Var_Yi);
+                    let w3 = 1.0 / (Var_X3.xx + Var_X3.yy + Var_X3.tt);
+                    
+                    let w_denom = w1 + w2 + w3;
+                    
+                    let E_X = {
+                        x: (w1/w_denom)*E_X1.x + (w2/w_denom)*E_X2.x + (w3/w_denom)*E_X3.x,
+                        y: (w1/w_denom)*E_X1.y + (w2/w_denom)*E_X2.y + (w3/w_denom)*E_X3.y,
+                        theta: (w1/w_denom)*E_X1.theta + (w2/w_denom)*E_X2.theta + (w3/w_denom)*E_X3.theta,
+                    };
+
+                    let Var_X = {
+                        xx: 0,
+                        xy: 0,
+                        xt: 0,
+                        yy: 0,
+                        yt: 0,
+                        tt: 0,
+                    };
+                    */
+                    let E_X = E_X1;
+
+                    drawXYTheta(ctx, E_X, robot_color);
+
+                    // Compute & draw landmark estimates
+                    // drawXYTheta(ctx, E_L1, landmark_color + "80");
+                    // drawXYTheta(ctx, E_L2, landmark_color + "80");
+                    // drawXYTheta(ctx, E_L3, landmark_color + "80");
+                    
+
+                    requestAnimationFrame(renderCallback);
+                }
+
+                requestAnimationFrame(renderCallback);
+            });
+
+            window.addEventListener("keydown", event => {
+                if(event.code == "KeyQ") { KeyQDown = true; }
+                else if(event.code == "KeyW") { KeyWDown = true; }
+                else if(event.code == "KeyE") { KeyEDown = true; }
+                else if(event.code == "KeyA") { KeyADown = true; }
+                else if(event.code == "KeyS") { KeySDown = true; }
+                else if(event.code == "KeyD") { KeyDDown = true; }
+            });
+
+            window.addEventListener("keyup", event => {
+                if(event.code == "KeyQ") { KeyQDown = false; }
+                else if(event.code == "KeyW") { KeyWDown = false; }
+                else if(event.code == "KeyE") { KeyEDown = false; }
+                else if(event.code == "KeyA") { KeyADown = false; }
+                else if(event.code == "KeyS") { KeySDown = false; }
+                else if(event.code == "KeyD") { KeyDDown = false; }
+            });
+        </script>
+    </head>
+    <body style="margin: 0;">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="height: 20px;"></div>
+            <canvas style="outline: solid 1px black; width: 400px; height: 400px;" width="400" height="400" id="canvas"></canvas>
+        </div>
+    </body>
+</html>
