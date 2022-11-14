@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    
+
+<!-- title -->
+<h1>LiDart</h1> 
+
+<!--Creating the buttons for scanning and calibrating-->
+<button onclick="scanFunction()">Scan</button>
+<button onclick="calibrateFunction()">Calibrate</button>
+<p></p>
+
+<!--Arrow Keys as input on the webpage-->
+<button ontouchstart="moveUp()" , onclick="moveUp()">Up</button>
+<button ontouchstart="moveDown()" , onclick="moveDown()">Down</button>
+<button ontouchstart="moveRight()" , onclick="moveRight()">Right</button>
+<button ontouchstart="moveLeft()" , onclick="moveLeft()">Left</button>
+
+
+
+<!-- Scripts for the buttons -->
+<script>
+    function scanFunction() {
+      console.log("Scan Button pressed");
+    }
+</script>
+
+<script>
+    function calibrateFunction() {
+        console.log("Calibrate button pressed");
+    }
+</script>
+
+<!--Functions for the keys-->
+<script>
+    function moveUp() {
+        console.log("Going up");
+    }
+</script>
+
+<script>
+    function moveDown() {
+        console.log("Going Down");
+    }
+</script>
+
+<script>
+    function moveRight() {
+        console.log("To the right");
+    }
+</script>
+
+<script>
+    function moveLeft() {
+        console.log("To the left");
+    }
+</script>
+
+<!--Keyboard input-->
+<script>
+window.addEventListener("keydown", function(event) {
+    if (event.defaultPrevented) {
+      return;
+    }
+    if (event.code === "ArrowDown"){
+        // Handle "down"
+        moveDown()
+    } else if (event.code === "ArrowUp"){
+        // Handle "up"
+        moveUp();
+    } else if (event.code === "ArrowLeft"){
+        // Handle "left"
+        moveLeft();
+    } else if (event.code === "ArrowRight"){
+        // Handle "right"
+        moveRight();
+    }
+    event.preventDefault();
+  }, true);
+
+</script>
+
+</body>
+</html>
