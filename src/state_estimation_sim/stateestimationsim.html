@@ -65,7 +65,7 @@
                     var_rotation = Math.atan2(lambda1 - Var.xx, Var.yy);
                 }
 
-                const var_scale = 0.1;
+                const var_scale = 1;
 
                 const var_radiusX = var_scale*lambda1;
                 const var_radiusY = var_scale*lambda2;
@@ -180,14 +180,14 @@
             let KeyDDown = false;
 
             // Constant Variances
-            const Var_Yi = { dd: 2, pp: 2, aa: 2 };
+            const Var_Yi = { dd: 0.05, pp: 0.005, aa: 0.005 };
 
             // Actual states
-            let X =  { x: 0, y: 0, theta: 3.14/6   };
+            let X =  { x: 0, y: 0, theta: 0 };
             let landmarks = {
                 1: { x: 20,  y: 80,  theta: 3.14/3   },
                 2: { x: -40, y: -30, theta: 3.14/2   },
-                3: { x: 30, y: -70, theta: 3*3.14/4 },
+                3: { x: 30,  y: -70, theta: 3*3.14/4 },
             };
 
             // Landmark state estimates
@@ -205,6 +205,9 @@
                     const landmark_state = entry[1];
 
                     observations[landmark_id] = gY(landmark_state, X);
+                    observations[landmark_id].d += gaussian(0, Var_Yi.dd/2);
+                    observations[landmark_id].phi += gaussian(0, Var_Yi.pp/2);
+                    observations[landmark_id].alpha += gaussian(0, Var_Yi.aa/2);
                 });
                 
                 // Estimate X from observations of previously observed landmarks,
