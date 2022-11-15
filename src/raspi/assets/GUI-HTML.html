@@ -2,8 +2,6 @@
 <html>
 <body>
 
-    
-
 <!-- title -->
 <h1>LiDart</h1> 
 
@@ -18,108 +16,75 @@
 <button ontouchstart="moveRight()" , onclick="moveRight()">Right</button>
 <button ontouchstart="moveLeft()" , onclick="moveLeft()">Left</button>
 
-
-
-<!-- Scripts for the buttons -->
+<!--Keyboard input-->
 <script>
+    // communication with the websocket
+    let socket = new WebSocket(`${(location.protocol == "https:") ? "wss" : "ws"}://${location.host}/ws`);
+    socket.onopen = function(e) {
+        console.log("Connection established");
+        console.log("Sending to server");
+    };
+  
+    socket.onclose = function(event) {
+        if (event.wasClean) {
+            console.log(`Connection closed, code=${event.code} reason=${event.reason}`);
+        } else {
+            console.log('Connection died');
+        }
+    };
+  
+    socket.onerror = function(error) {
+        console.log(error)
+    };
+  
+    // Scripts for the buttons
     function scanFunction() {
-      console.log("Scan Button pressed");
-      socket.send("Scan Button pressed");
+        console.log("Scan Button pressed");
+        socket.send("Scan Button pressed");
     }
-</script>
 
-<script>
     function calibrateFunction() {
         console.log("Calibrate button pressed");
         socket.send("Calibrate button pressed");
     }
-</script>
+    
+    let down_down = false;
+    let up_down = false;
+    let left_down = false;
+    let right_down = false;
 
-<!--Functions for the keys-->
-<script>
-    function moveUp() {
-        console.log("Going up");
-        socket.send("Going up");
+    function sendToMotor() {
+        if(down_down) {
+            socket.send("BACK");
+        } else if(up_down) {
+            socket.send("FORWARD");
+        } else if(left_down) {
+            socket.send("LEFT");
+        } else if(right_down) {
+            socket.send("RIGHT");
+        } else {
+            socket.send("STOP");
+        }
     }
+
+    window.addEventListener("keydown", function(event) {
+        if (event.code === "ArrowDown") down_down = true;
+        if (event.code === "ArrowUp") up_down = true;
+        if (event.code === "ArrowLeft") left_down = true;
+        if (event.code === "ArrowRight") right_down = true;
+
+        sendToMotor();
+    });
+
+    window.addEventListener("keyup", function(event) {
+        if (event.code === "ArrowDown") down_down = false;
+        if (event.code === "ArrowUp") up_down = false;
+        if (event.code === "ArrowLeft") left_down = false;
+        if (event.code === "ArrowRight") right_down = false;
+
+        sendToMotor();
+    });
 </script>
-
-<script>
-    function moveDown() {
-        console.log("Going Down");
-        socket.send("Going Down");
-    }
-</script>
-
-<script>
-    function moveRight() {
-        console.log("To the right");
-        socket.send("To the right");
-    }
-</script>
-
-<script>
-    function moveLeft() {
-        console.log("To the left");
-        socket.send("To the left");
-    }
-</script>
-
-<!--Keyboard input-->
-<script>
-window.addEventListener("keydown", function(event) {
-  //Disabled handling invalid input for testing reasons
-    // if (event.defaultPrevented) {
-    //   return;
-    // }
-    if (event.code === "ArrowDown"){
-        // Handle "down"
-        moveDown()
-    } else if (event.code === "ArrowUp"){
-        // Handle "up"
-        moveUp();
-    } else if (event.code === "ArrowLeft"){
-        // Handle "left"
-        moveLeft();
-    } else if (event.code === "ArrowRight"){
-        // Handle "right"
-        moveRight();
-    }
-    event.preventDefault();
-  }, true);
-
-</script>
-
-<script>
-    //communication with the websocket
-    let socket = new WebSocket("ws://localhost:6060/ws");
-  
-    socket.onopen = function(e) {
-      console.log("Connection established");
-      console.log("Sending to server");
-      socket.send("start_connection");
-    };
-  
-    //avoiding bidirectional communication for testing reasons
-    // socket.onmessage = function(event) {
-    //   console.log(`Data received from server: ${event.data}`);
-    //   if (event.data == "file_changed") {
-    //     window.location.reload();
-    //   }
-    // };
-  
-    socket.onclose = function(event) {
-      if (event.wasClean) {
-        console.log(`Connection closed, code=${event.code} reason=${event.reason}`);
-      } else {
-        console.log('Connection died');
-      }
-    };
-  
-    socket.onerror = function(error) {
-      console.log(error)
-    };
-  
-  </script>
 
 </body>
 </html>
