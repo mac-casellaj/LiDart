@@ -54,7 +54,7 @@ pub async fn websocket_connection(ws: WebSocket) {
             },
         };
 
-        println!("Got {}", msg_text);
+        println!("Got {}", msg_text); //From the client
     }
 }
 

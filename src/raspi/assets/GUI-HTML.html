@@ -24,12 +24,14 @@
 <script>
     function scanFunction() {
       console.log("Scan Button pressed");
+      socket.send("Scan Button pressed");
     }
 </script>
 
 <script>
     function calibrateFunction() {
         console.log("Calibrate button pressed");
+        socket.send("Calibrate button pressed");
     }
 </script>
 
@@ -37,33 +39,38 @@
 <script>
     function moveUp() {
         console.log("Going up");
+        socket.send("Going up");
     }
 </script>
 
 <script>
     function moveDown() {
         console.log("Going Down");
+        socket.send("Going Down");
     }
 </script>
 
 <script>
     function moveRight() {
         console.log("To the right");
+        socket.send("To the right");
     }
 </script>
 
 <script>
     function moveLeft() {
         console.log("To the left");
+        socket.send("To the left");
     }
 </script>
 
 <!--Keyboard input-->
 <script>
 window.addEventListener("keydown", function(event) {
-    if (event.defaultPrevented) {
-      return;
-    }
+  //Disabled handling invalid input for testing reasons
+    // if (event.defaultPrevented) {
+    //   return;
+    // }
     if (event.code === "ArrowDown"){
         // Handle "down"
         moveDown()
@@ -81,6 +88,38 @@ window.addEventListener("keydown", function(event) {
   }, true);
 
 </script>
+
+<script>
+    //communication with the websocket
+    let socket = new WebSocket("ws://localhost:6060/ws");
+  
+    socket.onopen = function(e) {
+      console.log("Connection established");
+      console.log("Sending to server");
+      socket.send("start_connection");
+    };
+  
+    //avoiding bidirectional communication for testing reasons
+    // socket.onmessage = function(event) {
+    //   console.log(`Data received from server: ${event.data}`);
+    //   if (event.data == "file_changed") {
+    //     window.location.reload();
+    //   }
+    // };
+  
+    socket.onclose = function(event) {
+      if (event.wasClean) {
+        console.log(`Connection closed, code=${event.code} reason=${event.reason}`);
+      } else {
+        console.log('Connection died');
+      }
+    };
+  
+    socket.onerror = function(error) {
+      console.log(error)
+    };
+  
+  </script>
 
 </body>
 </html>
