@@ -13,11 +13,13 @@ async fn main() {
     let health_route = warp::path("health").and_then(move || health_handler(start_time));
 
     // Open the serial port
+    //Defininf the serial port for communication
      let port = serialport::new("/dev/ttyUSB0", 115_200)
      .timeout(Duration::from_millis(10))
      .open().expect("Failed to open port");
      //println!("Port name{}", port);
 
+     //Remove this in order to test the functionality of the sending function
      match available_ports() {
         Ok(ports) => {
             match ports.len() {
@@ -57,7 +59,7 @@ async fn main() {
     //Sending data to serialport
     //This is to be modified with the top available lists function 
 
-    // let matches = Command::new("Serialport Example - Heartbeat")
+    // let matches = Command::new("Serialport example communnication")
     //     .about("Write bytes to a serial port at 1Hz")
     //     .disable_version_flag(true)
     //     .arg(
