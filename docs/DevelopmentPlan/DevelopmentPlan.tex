@@ -28,6 +28,7 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 26/Sep/2022 & Michaela Schnull & Initial Release\\
+14/Nov/2022 & Michaela Schnull & Updated team communication plan and team member roles and responsibilities \newline Revised the scope of the POC Plan\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -54,17 +55,19 @@ UX & \textbf{U}ser \textbf{E}xperience\\
 
 \section{Introduction}
 
-3D scanning is a versatile technology that is used across many industries, but its uses are often limited by high cost and complexity. LiDart aims to build a low cost, simple to use 3D scanning robot. A software suite will process data obtained from the robot and provide a user interface. LiDart's end product will be a wheel based mobile robot with all required sensors on-board that can be connected to over WiFi.
+3D scanning is a versatile technology that is used across many industries, but its uses are often limited by high cost and complexity. LiDart aims to build a low-cost, simple to use 3D scanning robot. A software suite will process data obtained from the robot and provide a user interface. LiDart's end product will be a wheel-based mobile robot with all required sensors on-board that can be connected to over WiFi.
 
 \section{Team Meeting Plan}
 
-Weekly meetings will take place in H.G. Thode Library of Science and Engineering. During in-person meetings, our group will review issues tracked on the GitHub project board and identify actions to be taken. The frequency of meetings is subject to change depending the needs of the project. 
+Weekly meetings will take place in H.G. Thode Library of Science and Engineering. The frequency of meetings is subject to change depending the needs of the project. Meetings will be used to review the project schedule, discuss design decisions, identify and create GitHub issues, and assign actions to be taken. This includes creating plans for upcoming deliverables, reviewing/creating issues tracked on GitHub, and holding code walk-throughs/design reviews. 
 
 \section{Team Communication Plan}
 
 The team will use instant messaging for items that require and urgent response. Communication will also occur through GitHub using issues. Users will be tagged in issues that require their attention. All team members members may schedule  meetings to address specific issues. 
 
 \section{Team Member Roles and Responsibilities}
+
+The following roles and responsibilities  have been assigned to team members. Team members may take on additional responsibilities, for example by reviewing other team members' work. 
 
 \subsection{Jonathan Casella}
 \begin{itemize}
@@ -139,13 +142,9 @@ A GitHub project board will be used to track and organize issues. Issues will be
 \subsection{Inaccurate Localization}
 Indoor robot localization is a complex and challenging problem. The robot must be able to determine its position using image-based camera localization. Challenges associated with this include probabilistic sensor data, sensor aliasing, noise in images, and unfavorable geometric characteristics of the surrounding environment. To mitigate this risk, a localization algorithm will be developed and tested using images taken from a phone camera. If adequate results are not obtained during POC testing, sensor fusion will be used in the final design to reduce uncertainty.
 
-\subsection{Low Accuracy of LiDAR Scans}
-
-The LiDAR sensor that will be used on the robot will be procured and tested by scanning a known object. The data obtained will be run through a program that displays the scanning results. This data will be compared to the known object to determine the accuracy of the sensor. If the data obtained from the LiDAR sensor is not accurate enough, filtering algorithms will be developed to improve the quality of the scanning results.
-
 \subsection{Robot Mechanical and Electrical Design}
 
-The robot must be able to move and position itself. A prototype of the robot will be created to prove the electrical and mechanical design concepts. It should be able to execute simple movement commands during POC testing.
+The robot must be able to move and position itself. A prototype of the robot will be created to test the electrical and mechanical design concepts. It should be able to execute simple movement commands during POC testing.
 
 \section{Technology}
 
