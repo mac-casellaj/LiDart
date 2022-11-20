@@ -1,90 +1,128 @@
 <!DOCTYPE html>
 <html>
-<body>
-
-<!-- title -->
-<h1>LiDart</h1> 
-
-<!--Creating the buttons for scanning and calibrating-->
-<button onclick="scanFunction()">Scan</button>
-<button onclick="calibrateFunction()">Calibrate</button>
-<p></p>
-
-<!--Arrow Keys as input on the webpage-->
-<button ontouchstart="moveUp()" , onclick="moveUp()">Up</button>
-<button ontouchstart="moveDown()" , onclick="moveDown()">Down</button>
-<button ontouchstart="moveRight()" , onclick="moveRight()">Right</button>
-<button ontouchstart="moveLeft()" , onclick="moveLeft()">Left</button>
-
-<!--Keyboard input-->
-<script>
-    // communication with the websocket
-    let socket = new WebSocket(`${(location.protocol == "https:") ? "wss" : "ws"}://${location.host}/ws`);
-    socket.onopen = function(e) {
-        console.log("Connection established");
-        console.log("Sending to server");
-    };
-  
-    socket.onclose = function(event) {
-        if (event.wasClean) {
-            console.log(`Connection closed, code=${event.code} reason=${event.reason}`);
-        } else {
-            console.log('Connection died');
-        }
-    };
-  
-    socket.onerror = function(error) {
-        console.log(error)
-    };
-  
-    // Scripts for the buttons
-    function scanFunction() {
-        console.log("Scan Button pressed");
-        socket.send("Scan Button pressed");
-    }
-
-    function calibrateFunction() {
-        console.log("Calibrate button pressed");
-        socket.send("Calibrate button pressed");
-    }
+    <head>
+        <script>
+            // communication with the websocket
+            let socket = new WebSocket(`${(location.protocol == "https:") ? "wss" : "ws"}://${location.host}/ws`);
+            socket.onopen = function(e) {
+                console.log("Connection established");
+                console.log("Sending to server");
+            };
+        
+            socket.onclose = function(event) {
+                if (event.wasClean) {
+                    console.log(`Connection closed, code=${event.code} reason=${event.reason}`);
+                } else {
+                    console.log('Connection died');
+                }
+            };
+        
+            socket.onerror = function(error) {
+                console.log(error)
+            };
+        
+            let down_down = false;
+            let up_down = false;
+            let left_down = false;
+            let right_down = false;
     
-    let down_down = false;
-    let up_down = false;
-    let left_down = false;
-    let right_down = false;
+            function sendToMotor() {
+                if(down_down) {
+                    socket.send("BACK");
+                } else if(up_down) {
+                    socket.send("FORWARD");
+                } else if(left_down) {
+                    socket.send("LEFT");
+                } else if(right_down) {
+                    socket.send("RIGHT");
+                } else {
+                    socket.send("STOP");
+                }
+            }
+    
+            window.addEventListener("keydown", function(event) {
+                if (event.code === "ArrowDown") down_down = true;
+                if (event.code === "ArrowUp") up_down = true;
+                if (event.code === "ArrowLeft") left_down = true;
+                if (event.code === "ArrowRight") right_down = true;
+    
+                sendToMotor();
+            });
+    
+            window.addEventListener("keyup", function(event) {
+                if (event.code === "ArrowDown") down_down = false;
+                if (event.code === "ArrowUp") up_down = false;
+                if (event.code === "ArrowLeft") left_down = false;
+                if (event.code === "ArrowRight") right_down = false;
+    
+                sendToMotor();
+            });
 
-    function sendToMotor() {
-        if(down_down) {
-            socket.send("BACK");
-        } else if(up_down) {
-            socket.send("FORWARD");
-        } else if(left_down) {
-            socket.send("LEFT");
-        } else if(right_down) {
-            socket.send("RIGHT");
-        } else {
-            socket.send("STOP");
-        }
-    }
+            function onDpad(event, val) {
+                console.log(event, val);
+                event.preventDefault();
+                socket.send(val);
+            }
+        </script>
+        <style>
+            :root {
+                --dpad-size: min(100vw, 100vh - 20px);
+                --dpad-left: calc((100vw - var(--dpad-size)) / 2);
 
-    window.addEventListener("keydown", function(event) {
-        if (event.code === "ArrowDown") down_down = true;
-        if (event.code === "ArrowUp") up_down = true;
-        if (event.code === "ArrowLeft") left_down = true;
-        if (event.code === "ArrowRight") right_down = true;
+                --dpad-btn-size: calc(var(--dpad-size) / 3);
+            }
 
-        sendToMotor();
-    });
+            .dpadButton {
+                position: fixed;
+                height: var(--dpad-btn-size);
+                width: var(--dpad-btn-size);
+                
+                background-color: #AAAAAA;
+                
+                font-family: sans-serif;
+                text-align: center;
+                vertical-align: middle;
+                line-height: var(--dpad-btn-size);
+            }
+        </style>
+    </head>
+    <body style="margin: 0;">
+        <p style="font-family: sans-serif; text-align: center; margin: 0; height: 20px">LiDart</p> 
 
-    window.addEventListener("keyup", function(event) {
-        if (event.code === "ArrowDown") down_down = false;
-        if (event.code === "ArrowUp") up_down = false;
-        if (event.code === "ArrowLeft") left_down = false;
-        if (event.code === "ArrowRight") right_down = false;
+        <div
+            class="dpadButton"
+            style="top: 20px; left: calc(var(--dpad-left) + var(--dpad-btn-size));"
+            onmousedown="onDpad(event, 'FORWARD')"
+            ontouchstart="onDpad(event, 'FORWARD')"
+            onmouseup="onDpad(event, 'STOP')"
+            ontouchend="onDpad(event, 'STOP')"
+        >Up</div>
+        
+        <div
+            class="dpadButton"
+            style="top: calc(20px + var(--dpad-btn-size)); left: var(--dpad-left);"
+            onmousedown="onDpad(event, 'LEFT')"
+            ontouchstart="onDpad(event, 'LEFT')"
+            onmouseup="onDpad(event, 'STOP')"
+            ontouchend="onDpad(event, 'STOP')"
+        >Left</div>
 
-        sendToMotor();
-    });
-</script>
-
-</body>
+        <div
+            class="dpadButton"
+            style="top: calc(20px + var(--dpad-btn-size)); left: calc(var(--dpad-left) + 2*var(--dpad-btn-size));"
+            onmousedown="onDpad(event, 'RIGHT')"
+            ontouchstart="onDpad(event, 'RIGHT')"
+            onmouseup="onDpad(event, 'STOP')"
+            ontouchend="onDpad(event, 'STOP')"
+        >Right</div>
+        
+        <div
+            class="dpadButton"
+            style="top: calc(20px + 2*var(--dpad-btn-size)); left: calc(var(--dpad-left) + var(--dpad-btn-size));"
+            onmousedown="onDpad(event, 'BACK')"
+            ontouchstart="onDpad(event, 'BACK')"
+            onmouseup="onDpad(event, 'STOP')"
+            ontouchend="onDpad(event, 'STOP')"
+        >Down</div>
+    </body>
 </html>
