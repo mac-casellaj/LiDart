@@ -1,7 +1,7 @@
 use futures::StreamExt;
 use serde::Serialize;
 use serialport::SerialPort;
-use tokio::sync::Mutex;
+use tokio::{sync::Mutex, task, time::sleep};
 use std::sync::Arc;
 use std::time::Duration;
 use std::time::Instant;
@@ -63,15 +63,16 @@ impl State {
 
 #[tokio::main]
 async fn main() {
-    let state = Arc::new(Mutex::new(State{
+    let shared_state = Arc::new(Mutex::new(State{
         start_time: Instant::now(),
         port: None,
     }));
 
-    let health_route_state = state.clone();
+    let health_route_state = shared_state.clone();
     let health_route = warp::path("health").and_then(move || health_handler(health_route_state.clone()));
 
-    let ws_route = warp::path("ws").and(warp::ws()).and_then(move |ws| ws_handler(ws, state.clone()));
+    let ws_route_state = shared_state.clone();
+    let ws_route = warp::path("ws").and(warp::ws()).and_then(move |ws| ws_handler(ws, ws_route_state.clone()));
 
     let frontend = warp::path::end().and(warp::fs::file("assets/GUI-HTML.html"));
     let assets = warp::path("assets").and(warp::fs::dir("assets"));
@@ -81,6 +82,52 @@ async fn main() {
         .or(assets)
         .or(frontend)
         .with(warp::cors().allow_any_origin());
+
+    // background task to read from port
+    task::spawn(async move {
+        let mut read_buf_used: usize = 128;
+        let mut read_buf: [u8; 512] = [0; 512];
+        loop {
+            {
+                let mut state = shared_state.lock().await;
+
+                if let Some(port) = &mut state.port {
+                    match port.read(&mut read_buf[read_buf_used..]) {
+                        Ok(n) => {
+                            println!("Got {} bytes", n);
+
+                            let old_used = read_buf_used;
+                            read_buf_used += n;
+                            let mut chars_consumed = 0;
+
+                            // print complete lines from read buf
+                            for i in old_used..read_buf_used {
+                                if (read_buf[i] as char) == '\n' {
+                                    for j in chars_consumed..(i+1) {
+                                        print!("{}", read_buf[j] as char);        
+                                    }
+                                    chars_consumed = i + 1;
+                                }
+                            }
+
+                            // shift read_buf back
+                            for i in 0..(read_buf_used - chars_consumed) {
+                                read_buf[i] = read_buf[i + chars_consumed];
+                            }
+
+                            read_buf_used -= chars_consumed;
+                        },
+                        Err(e) => {
+                            // println!("Error reading from port, dropping connection: {}", e);
+                            // state.port = None;
+                        }
+                    }
+                }
+            }
+
+            sleep(Duration::from_millis(100)).await;    
+        }
+    });
 
     warp::serve(routes).run(([0, 0, 0, 0], 6060)).await;
 }
