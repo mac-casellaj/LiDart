@@ -21,7 +21,8 @@ impl State {
                 match serialport::available_ports() {
                     Ok(available_ports) => {
                         for available_port in available_ports {
-                            print!("Attempting to connect to {} ... ", available_port.port_name);
+                            if !matches!(available_port.port_type, serialport::SerialPortType::UsbPort(_)) { continue; }
+                            print!("Attempting to connect to {} {:?} ... ", available_port.port_name, available_port.port_type);
 
                             let attemped_port = serialport::new(available_port.port_name, 9600)
                                 .timeout(Duration::from_millis(10))
