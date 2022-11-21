@@ -2,4 +2,5 @@
 
 members = [
     "src/raspi",
+    "src/april_tags",
 ]

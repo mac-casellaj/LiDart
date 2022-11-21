@@ -1,0 +1,516 @@
+<html>
+    <head>
+        <script>
+            const dot_r = 10;
+            const angle_arc_r = 20;
+            const angle_arm_r = 30;
+            const annotation_color = "grey";
+            
+            const landmark_color = "#009900";
+            const robot_color = "#0000FF";
+
+            const observation_arc_r = 25;
+            const observation_color = "purple";
+
+            function drawXYTheta(ctx, X, color) {
+                // ctx.strokeStyle = color;
+                // ctx.lineWidth = 2;
+                // ctx.beginPath();
+                // ctx.ellipse(X.x, X.y, angle_arc_r, angle_arc_r, 0, 0, X.theta);
+                // ctx.stroke();
+                
+                // ctx.strokeStyle = annotation_color;
+                // ctx.lineWidth = 2;
+                // ctx.beginPath();
+                // ctx.moveTo(X.x, X.y);
+                // ctx.lineTo(X.x + angle_arm_r, X.y);
+                // ctx.stroke();
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(X.x, X.y);
+                ctx.lineTo(X.x + angle_arm_r*Math.cos(X.theta), X.y + angle_arm_r*Math.sin(X.theta));
+                ctx.stroke();
+
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.ellipse(X.x, X.y, dot_r, dot_r, 0, 0, 2*Math.PI);
+                ctx.fill();
+            }
+
+            function drawXYThetaWithVariance(ctx, E, Var, color) {
+                // Draw variance
+                ctx.strokeStyle = color + "60";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(E.x, E.y);
+                ctx.lineTo(E.x + angle_arm_r*Math.cos(E.theta), E.y + angle_arm_r*Math.sin(E.theta));
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(E.x, E.y);
+                ctx.lineTo(E.x + angle_arm_r*Math.cos(E.theta), E.y + angle_arm_r*Math.sin(E.theta));
+                ctx.stroke();
+
+                const lambda1 = (Var.xx + Var.yy) / 2 + Math.sqrt( (Var.xx - Var.yy)*(Var.xx - Var.yy) / 4 + Var.xy*Var.xy );
+                const lambda2 = (Var.xx + Var.yy) / 2 - Math.sqrt( (Var.xx - Var.yy)*(Var.xx - Var.yy) / 4 + Var.xy*Var.xy );
+
+                let var_rotation = 0;
+                if((Var.xy == 0) && (Var.xx >= Var.yy)) {
+                    var_rotation = 0; 
+                } else if((Var.xy == 0) && (Var.xx < Var.yy)) {
+                    var_rotation = Math.PI/2;
+                } else {
+                    var_rotation = Math.atan2(lambda1 - Var.xx, Var.yy);
+                }
+
+                const var_scale = 1;
+
+                const var_radiusX = var_scale*lambda1;
+                const var_radiusY = var_scale*lambda2;
+                
+                ctx.strokeStyle = color + "60";
+                ctx.beginPath();
+                ctx.ellipse(E.x, E.y, var_radiusX, var_radiusY, var_rotation, 0, 2*Math.PI);
+                ctx.stroke();
+
+                // Draw mean
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(E.x, E.y);
+                ctx.lineTo(E.x + angle_arm_r*Math.cos(E.theta), E.y + angle_arm_r*Math.sin(E.theta));
+                ctx.stroke();
+
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.ellipse(E.x, E.y, dot_r, dot_r, 0, 0, 2*Math.PI);
+                ctx.fill();
+            }
+
+            function drawObservation(ctx, X, Yi) {
+                const Lix = X.x + Yi.d*Math.cos(X.theta + Yi.phi);
+                const Liy = X.y + Yi.d*Math.sin(X.theta + Yi.phi);
+                
+                ctx.strokeStyle = observation_color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(X.x, X.y);
+                ctx.lineTo(Lix, Liy);
+                ctx.stroke();
+
+                ctx.strokeStyle = observation_color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(X.x, X.y, observation_arc_r, observation_arc_r, 0, X.theta, X.theta + Yi.phi);
+                ctx.stroke();
+
+                ctx.strokeStyle = observation_color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(Lix, Liy, observation_arc_r, observation_arc_r, 0, X.theta + Yi.phi + Math.PI, X.theta + Yi.phi + Math.PI - Yi.alpha);
+                ctx.stroke();
+            }
+
+            // Produces an observation Yi of landmark Li from robot state X 
+            function gY(Li, X) {
+                const dx = Li.x - X.x;
+                const dy = Li.y - X.y;
+
+                return {
+                    d: Math.sqrt(dy*dy + dx*dx),
+                    phi: Math.atan2(dy, dx) - X.theta,
+                    alpha: Math.atan2(dy, dx) + Math.PI - Li.theta,
+                };
+            }
+
+            // Computes the robot state X given an observation Yi of landmark Li
+            function gX(Li, Yi) {
+                return {
+                    x: Li.x + Yi.d*Math.cos(Li.theta + Yi.alpha),
+                    y: Li.y + Yi.d*Math.sin(Li.theta + Yi.alpha),
+                    theta: Li.theta + Yi.alpha - Yi.phi - Math.PI,
+                };
+            }
+
+            function Var_gX(Li, Yi, Var_Li, Var_Yi) {
+                return {
+                    xx: Var_Li.tt*Yi.d*Yi.d*Math.sin(Li.theta + Yi.alpha)*Math.sin(Li.theta + Yi.alpha) - 2*Var_Li.xt*Yi.d*Math.sin(Li.theta + Yi.alpha) + Var_Li.xx + Var_Yi.aa*Yi.d*Yi.d*Math.sin(Li.theta + Yi.alpha)*Math.sin(Li.theta + Yi.alpha) + Var_Yi.dd*Math.cos(Li.theta + Yi.alpha)*Math.cos(Li.theta + Yi.alpha),
+                    xy: Var_Li.xy - Var_Li.yt*Yi.d*Math.sin(Li.theta + Yi.alpha) - Var_Yi.aa*Yi.d*Yi.d*Math.sin(2*Li.theta + 2*Yi.alpha)/2 + Var_Yi.dd*Math.sin(2*Li.theta + 2*Yi.alpha)/2 - Yi.d*(Var_Li.tt*Yi.d*Math.sin(Li.theta + Yi.alpha) - Var_Li.xt)*Math.cos(Li.theta + Yi.alpha),
+                    xt: -Var_Li.tt*Yi.d*Math.sin(Li.theta + Yi.alpha) + Var_Li.xt - Var_Yi.aa*Yi.d*Math.sin(Li.theta + Yi.alpha),
+                    yy: Var_Li.tt*Yi.d*Yi.d*Math.cos(Li.theta + Yi.alpha)*Math.cos(Li.theta + Yi.alpha) + 2*Var_Li.yt*Yi.d*Math.cos(Li.theta + Yi.alpha) + Var_Li.yy + Var_Yi.aa*Yi.d*Yi.d*Math.cos(Li.theta + Yi.alpha)*Math.cos(Li.theta + Yi.alpha) + Var_Yi.dd*Math.sin(Li.theta + Yi.alpha)*Math.sin(Li.theta + Yi.alpha),
+                    yt: Var_Li.tt*Yi.d*Math.cos(Li.theta + Yi.alpha) + Var_Li.yt + Var_Yi.aa*Yi.d*Math.cos(Li.theta + Yi.alpha),
+                    tt: Var_Li.tt + Var_Yi.aa + Var_Yi.pp,
+                };
+            }
+
+            // Computes the state of landmark Li given an observation Yi and the robot state X
+            function gL(Yi, X) {
+                return {
+                    x: X.x + Yi.d*Math.cos(X.theta + Yi.phi),
+                    y: X.y + Yi.d*Math.sin(X.theta + Yi.phi),
+                    theta: X.theta + Yi.phi + Math.PI - Yi.alpha,
+                };
+            }
+
+            function Var_gL(Yi, X, Var_Yi, Var_X) {
+                return {
+                    xx: Var_X.tt*Yi.d*Yi.d*Math.sin(X.theta + Yi.phi)*Math.sin(X.theta + Yi.phi) - 2*Var_X.xt*Yi.d*Math.sin(X.theta + Yi.phi) + Var_X.xx + Var_Yi.dd*Math.cos(X.theta + Yi.phi)*Math.cos(X.theta + Yi.phi) + Var_Yi.pp*Yi.d*Yi.d*Math.sin(X.theta + Yi.phi)*Math.sin(X.theta + Yi.phi),
+                    xy: Var_X.xy - Var_X.yt*Yi.d*Math.sin(X.theta + Yi.phi) + Var_Yi.dd*Math.sin(2*X.theta + 2*Yi.phi)/2 - Var_Yi.pp*Yi.d*Yi.d*Math.sin(2*X.theta + 2*Yi.phi)/2 - Yi.d*(Var_X.tt*Yi.d*Math.sin(X.theta + Yi.phi) - Var_X.xt)*Math.cos(X.theta + Yi.phi),
+                    xt: -Var_X.tt*Yi.d*Math.sin(X.theta + Yi.phi) + Var_X.xt - Var_Yi.pp*Yi.d*Math.sin(X.theta + Yi.phi),
+                    yy: Var_X.tt*Yi.d*Yi.d*Math.cos(X.theta + Yi.phi)*Math.cos(X.theta + Yi.phi) + 2*Var_X.yt*Yi.d*Math.cos(X.theta + Yi.phi) + Var_X.yy + Var_Yi.dd*Math.sin(X.theta + Yi.phi)*Math.sin(X.theta + Yi.phi) + Var_Yi.pp*Yi.d*Yi.d*Math.cos(X.theta + Yi.phi)*Math.cos(X.theta + Yi.phi),
+                    yt: Var_X.tt*Yi.d*Math.cos(X.theta + Yi.phi) + Var_X.yt + Var_Yi.pp*Yi.d*Math.cos(X.theta + Yi.phi),
+                    tt: Var_X.tt + Var_Yi.aa + Var_Yi.pp,
+                };
+            }
+
+            function gaussian(mean, variance) {
+                let u = 1 - Math.random(); //Converting [0,1) to (0,1)
+                let v = Math.random();
+                let result = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+                return Math.sqrt(variance) * result + mean;
+            }
+
+            let KeyQDown = false;
+            let KeyWDown = false;
+            let KeyEDown = false;
+            let KeyADown = false;
+            let KeySDown = false;
+            let KeyDDown = false;
+            let KeyRDown = false;
+
+            // Constant Variances
+            const Var_Yi = { dd: 0.05, pp: 0.005, aa: 0.005 };
+
+            // Actual states
+            let next_landmark_id = 0;
+            let X =  { x: 0, y: 40, theta: 0 };
+            let landmarks = {};
+            let wall_start_point = null;
+            let walls = [];
+
+            // Landmark state estimates
+            let landmark_estimates = {};
+            
+            // Robot state estimate (not reused, just for display purposes)
+            let E_X = { x: 0, y: 0, theta: 0 };
+            let Var_X = { xx: 0, xy: 0, xt: 0, yy: 0, yt: 0, tt: 0 };
+            let next_landmark_group = 0;
+            let curr_landmark_group = null;
+
+            function intersects_walls(sx, sy, ex, ey) {
+                const Ax = sx;
+                const Ay = sy;
+                const Bx = ex - sx;
+                const By = ey - sy;
+                
+                for(let i = 0; i < walls.length; i++) {
+                    const wall = walls[i];
+                    
+                    const Cx = wall.sx;
+                    const Cy = wall.sy;
+                    const Dx = wall.ex - wall.sx;
+                    const Dy = wall.ey - wall.sy;
+
+                    const u = ( Dy*(Ax - Cx) - Dx*(Ay - Cy) ) / (By*Dx - Bx*Dy);
+                    const v = ( By*(Cx - Ax) - Bx*(Cy - Ay) ) / (Dy*Bx - Dx*By);
+
+                    if((0 <= u) && (u <= 1) && (0 <= v) && (v <= 1)) return true;
+                }
+
+                return false;
+            }
+
+            function run_state_estimator() {
+                // Compute observations -- part of the sim
+                let observations = {};
+                Object.entries(landmarks).forEach(entry => {
+                    const landmark_id = entry[0];
+                    const landmark_state = entry[1];
+
+                    if(intersects_walls(X.x, X.y, landmark_state.x, landmark_state.y)) return;
+
+                    observations[landmark_id] = gY(landmark_state, X);
+                    observations[landmark_id].d += gaussian(0, Var_Yi.dd/2);
+                    observations[landmark_id].phi += gaussian(0, Var_Yi.pp/2);
+                    observations[landmark_id].alpha += gaussian(0, Var_Yi.aa/2);
+                });
+                
+                // Estimate X from observations of previously observed landmarks,
+                // if no observed landmarks have been previously observed then initialize them as if X was 0
+
+                let grouped_observations = {};
+                Object.entries(observations).forEach(entry => {
+                    const observed_id = entry[0];
+                    const Yi = entry[1];
+
+                    if(observed_id in landmark_estimates) {
+                        const E_Li = landmark_estimates[observed_id].E;
+                        const Var_Li = landmark_estimates[observed_id].Var;
+
+                        // create entry for this landmark group if not yet created
+                        const group = landmark_estimates[observed_id].group;
+                        if(!(group in grouped_observations)) {
+                            grouped_observations[group] = {
+                                w_denom: 0,
+                                X_estimates: [],
+                            };
+                        }
+
+                        const Var_Xi = Var_gX(E_Li, Yi, Var_Li, Var_Yi);
+                        const wi = 1.0 / (Var_Xi.xx + Var_Xi.yy + Var_Xi.tt);
+                        grouped_observations[group].w_denom += wi;
+
+                        // This landmark has been previously observed, it can be used to estimate X
+                        grouped_observations[group].X_estimates.push([
+                            gX(E_Li, Yi),
+                            Var_Xi,
+                            wi,
+                        ]);
+                    }
+                });
+
+                console.log(grouped_observations);
+
+                let group_X_estimates = {};
+                Object.entries(grouped_observations).forEach(entry => {
+                    const group = entry[0];
+                    const group_data = entry[1];
+                    
+                    let group_E_X = { x: 0, y: 0, theta: 0 };
+                    let group_Var_X = { xx: 0, xy: 0, xt: 0, yy: 0, yt: 0, tt: 0 };
+                    group_data.X_estimates.forEach(estimate => {
+                        const E_Xi = estimate[0];
+                        const Var_Xi = estimate[1];
+                        const wi = estimate[2] / group_data.w_denom;
+
+                        group_E_X.x += wi*E_Xi.x;
+                        group_E_X.y += wi*E_Xi.y;
+                        group_E_X.theta += wi*E_Xi.theta;
+
+                        group_Var_X.xx += wi*wi*Var_Xi.xx;
+                        group_Var_X.xy += wi*wi*Var_Xi.xy;
+                        group_Var_X.xt += wi*wi*Var_Xi.xt;
+                        group_Var_X.yy += wi*wi*Var_Xi.yy;
+                        group_Var_X.yt += wi*wi*Var_Xi.yt;
+                        group_Var_X.tt += wi*wi*Var_Xi.tt;
+                    });
+
+                    group_X_estimates[group] = {
+                        E_X: group_E_X,
+                        Var_X: group_Var_X,
+                    };
+                });
+
+                curr_landmark_group = null;
+                E_X = { x: 0, y: 0, theta: 0 };
+                Var_X = { xx: 0, xy: 0, xt: 0, yy: 0, yt: 0, tt: 0 };
+
+                let lowest_variance = Infinity;
+                Object.entries(group_X_estimates).forEach(entry => {
+                    const group = entry[0];
+                    const group_E_X = entry[1].E_X;
+                    const group_Var_X = entry[1].Var_X;
+
+                    const variance = group_Var_X.xx + group_Var_X.yy + group_Var_X.tt;
+
+                    if(variance < lowest_variance) {
+                        lowest_variance = variance;
+                        curr_landmark_group = group;
+                        E_X = group_E_X;
+                        Var_X = group_Var_X;
+                    }
+                });
+
+                if(curr_landmark_group == null) {
+                    curr_landmark_group = (next_landmark_group++).toString();
+                }
+
+                Object.entries(group_X_estimates).forEach(entry => {
+                    const group = entry[0];
+                    const group_E_X = entry[1].E_X;
+                    
+                    if(group == curr_landmark_group) return;
+
+                    const dx = E_X.x - group_E_X.x;
+                    const dy = E_X.y - group_E_X.y;
+                    const dtheta = E_X.theta - group_E_X.theta;
+
+                    Object.entries(landmark_estimates).forEach(landmark_estimates_entry => {
+                        const landmark_id = landmark_estimates_entry[0];
+                        const landmark_estimate = landmark_estimates_entry[1];
+
+                        if(landmark_estimate.group != group) return;
+
+                        // TODO(Jon): apply the correct rotation between the landmark groups
+                        
+                        landmark_estimate.E.x += dx;
+                        landmark_estimate.E.y += dy;
+                        landmark_estimate.E.theta += dtheta;
+                        landmark_estimate.group = curr_landmark_group;
+                    });
+                });
+
+                Object.entries(observations).forEach(entry => {
+                    const observed_id = entry[0];
+                    const Yi = entry[1];
+
+                    let E_Li = gL(Yi, E_X);
+                    let Var_Li = Var_gL(Yi, E_X, Var_Yi, Var_X);
+
+                    if(observed_id in landmark_estimates) {
+                        // This landmark has been previously observed, we can use the previous estimate to reduce variance
+
+                        const prev_E_Li = landmark_estimates[observed_id].E;
+                        const prev_Var_Li = landmark_estimates[observed_id].Var;
+                        
+                        const sigma1 = prev_Var_Li.xx + prev_Var_Li.yy + prev_Var_Li.tt;
+                        const sigma2 = Var_Li.xx + Var_Li.yy + Var_Li.tt;
+
+                        const w1 = sigma2 / (sigma1 + sigma2);
+                        const w2 = sigma1 / (sigma1 + sigma2);
+
+                        E_Li.x = w1*prev_E_Li.x + w2*E_Li.x;
+                        E_Li.y = w1*prev_E_Li.y + w2*E_Li.y;
+                        E_Li.theta = w1*prev_E_Li.theta + w2*E_Li.theta;
+
+                        Var_Li.xx = w1*w1*prev_Var_Li.xx + w2*w2*Var_Li.xx;
+                        Var_Li.xy = w1*w1*prev_Var_Li.xy + w2*w2*Var_Li.xy;
+                        Var_Li.xt = w1*w1*prev_Var_Li.xt + w2*w2*Var_Li.xt;
+                        Var_Li.yy = w1*w1*prev_Var_Li.yy + w2*w2*Var_Li.yy;
+                        Var_Li.yt = w1*w1*prev_Var_Li.yt + w2*w2*Var_Li.yt;
+                        Var_Li.tt = w1*w1*prev_Var_Li.tt + w2*w2*Var_Li.tt;
+                    }
+
+                    landmark_estimates[observed_id] = {
+                        E: E_Li,
+                        Var: Var_Li,
+                        group: curr_landmark_group,
+                    };
+                });
+            }
+
+            window.addEventListener("DOMContentLoaded", () => {
+                const inputcanvas = document.getElementById("inputcanvas");
+                const inputctx = inputcanvas.getContext("2d");
+
+                inputcanvas.addEventListener("click", event => {
+                    const clickX = event.offsetX - inputcanvas.width/2;
+                    const clickY = inputcanvas.height/2 - event.offsetY;
+                    
+                    if(wall_start_point != null) {
+                        walls.push({
+                            sx: wall_start_point.x,
+                            sy: wall_start_point.y,
+                            ex: clickX,
+                            ey: clickY,
+                        });
+                        wall_start_point = null;
+                    } else if(KeyRDown) {
+                        wall_start_point = { x: clickX, y: clickY };
+                    } else {
+                        landmarks[next_landmark_id++] = {
+                            x: clickX,
+                            y: clickY,
+                            theta: Math.random() * 2*3.14,
+                        };
+                    }
+                });
+
+                const outputcanvas = document.getElementById("outputcanvas");
+                const outputctx = outputcanvas.getContext("2d");
+
+                function renderCallback() {
+                    inputctx.resetTransform();
+                    inputctx.clearRect(0, 0, inputcanvas.width, inputcanvas.height);
+                    inputctx.translate(0, inputcanvas.height);
+                    inputctx.scale(1, -1);
+                    inputctx.translate(inputcanvas.width/2, inputcanvas.height/2);
+
+                    outputctx.resetTransform();
+                    outputctx.clearRect(0, 0, outputcanvas.width, outputcanvas.height);
+                    outputctx.translate(0, outputcanvas.height);
+                    outputctx.scale(1, -1);
+                    outputctx.translate(outputcanvas.width/2, outputcanvas.height/2);
+                    
+                    const move_speed = 0.4;
+                    const rotate_speed = 0.02;
+
+                    // Move robot according to keyboard input
+                    if(KeyQDown) { X.theta += rotate_speed; }
+                    if(KeyWDown) { X.y += move_speed; }
+                    if(KeyEDown) { X.theta -= rotate_speed; }
+                    if(KeyADown) { X.x -= move_speed; }
+                    if(KeySDown) { X.y -= move_speed; }
+                    if(KeyDDown) { X.x += move_speed; }
+
+                    // Draw actual states
+                    drawXYTheta(inputctx, X, robot_color);
+                    Object.values(landmarks).forEach(landmark => {
+                        const behind_wall = intersects_walls(X.x, X.y, landmark.x, landmark.y);
+
+                        drawXYTheta(inputctx, landmark, landmark_color + (behind_wall ? "55" : "FF"));
+                    });
+                    walls.forEach(wall => {        
+                        inputctx.strokeStyle = "#555555";
+                        inputctx.lineWidth = 2;
+                        
+                        inputctx.beginPath();
+                        inputctx.moveTo(wall.sx, wall.sy);
+                        inputctx.lineTo(wall.ex, wall.ey);
+                        inputctx.stroke();
+                    });
+
+                    // Compute & draw observations
+                    // ???????????
+                    
+                    // --- sim ends, state estimator begins ---
+                    if(curr_landmark_group != null) {
+                        drawXYThetaWithVariance(outputctx, E_X, Var_X, robot_color);
+                        Object.entries(landmark_estimates).forEach(entry => {
+                            const landmark_id = entry[0];
+                            const landmark_estimate = entry[1];
+
+                            if(landmark_estimate.group == curr_landmark_group) {
+                                drawXYThetaWithVariance(outputctx, landmark_estimate.E, landmark_estimate.Var, landmark_color);
+                            }
+                        });
+                    }
+
+                    requestAnimationFrame(renderCallback);
+                }
+
+                requestAnimationFrame(renderCallback);
+            });
+
+            window.addEventListener("keydown", event => {
+                if(event.code == "KeyQ") { KeyQDown = true; }
+                else if(event.code == "KeyW") { KeyWDown = true; }
+                else if(event.code == "KeyE") { KeyEDown = true; }
+                else if(event.code == "KeyA") { KeyADown = true; }
+                else if(event.code == "KeyS") { KeySDown = true; }
+                else if(event.code == "KeyD") { KeyDDown = true; }
+                else if(event.code == "KeyR") { KeyRDown = true; }
+            });
+
+            window.addEventListener("keyup", event => {
+                if(event.code == "KeyQ") { KeyQDown = false; }
+                else if(event.code == "KeyW") { KeyWDown = false; }
+                else if(event.code == "KeyE") { KeyEDown = false; }
+                else if(event.code == "KeyA") { KeyADown = false; }
+                else if(event.code == "KeyS") { KeySDown = false; }
+                else if(event.code == "KeyD") { KeyDDown = false; }
+                else if(event.code == "KeyR") { KeyRDown = false; }
+                else if(event.code == "Space") { run_state_estimator(); }
+            });
+        </script>
+    </head>
+    <body style="margin: 0;">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="height: 20px;"></div>
+            <canvas style="outline: solid 1px black; width: 400px; height: 400px;" width="400" height="400" id="inputcanvas"></canvas>
+            <canvas style="outline: solid 1px black; width: 400px; height: 400px;" width="400" height="400" id="outputcanvas"></canvas>
+        </div>
+    </body>
+</html>
