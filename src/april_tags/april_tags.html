@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <script>
+            window.addEventListener("DOMContentLoaded", async () => {
+                const wasm_fetch = await fetch("/target/wasm32-unknown-unknown/release/april_tags.wasm");
+                const wasm_bytes = await wasm_fetch.arrayBuffer();
+                const wasm = await WebAssembly.instantiate(wasm_bytes, {
+                    env: {
+                        console_log: (ptr, len) => console.log(get_wasm_str(ptr, len)),
+                    },
+                });
+
+                function get_wasm_str(ptr, len) {
+                    const utf8_bytes = new Uint8Array(wasm.instance.exports.memory.buffer, ptr, len);
+                    return (new TextDecoder()).decode(utf8_bytes);
+                }
+
+                wasm.instance.exports.process_greyscale_pixels(0, 0, 0);
+            });
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
