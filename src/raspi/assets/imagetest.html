@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                const btnHeight = 80;
+                document.body.style.setProperty('--btn-height', btnHeight + 'px');
+
+                let camera_button = document.getElementById('start-camera');
+                let video = document.getElementById('video');
+                let click_button = document.getElementById('click-photo');
+                let canvas = document.getElementById('canvas');
+                let ctx = canvas.getContext('2d');
+                
+                const markerSize = 10;
+                let markers = [];
+
+                let lastSendTime = 0;
+
+                function render() {
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    const detectPeriod = 0.1; // 0.1s
+
+                    let now = Date.now();
+                    if((now - lastSendTime) >= detectPeriod*1000) {
+                        let image_data_url = canvas.toBlob(async blob => {
+                            let apriltagsResponse = await (await fetch("/apriltags", {
+                                method: "POST",
+                                body: blob,
+                            })).json();
+
+                            console.log(apriltagsResponse);
+
+                            markers = [];
+                            apriltagsResponse.forEach(det => {
+                                markers.push(...det.corners);
+                            });
+                        }, 'image/jpeg');
+
+                        lastSendTime = now;
+                    }
+
+                    markers.forEach(marker => {
+                        ctx.fillStyle = "red";
+                        ctx.fillRect(marker[0] - 0.5*markerSize, marker[1] - 0.5*markerSize, markerSize, markerSize);
+                    });
+
+                    window.requestAnimationFrame(render);
+                }
+                window.requestAnimationFrame(render);
+
+                let videoWidth = 1;
+                let videoHeight = 1;
+
+                function resizeCanvas() {
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight - btnHeight - 2;
+
+                    if((videoHeight/videoWidth)*viewportWidth > viewportHeight) {
+                        canvas.style.width = Math.round((videoWidth/videoHeight)*viewportHeight) + 'px';
+                        canvas.style.height = Math.round(viewportHeight) + 'px';
+                        canvas.style.left = Math.round((viewportWidth - Math.round((videoWidth/videoHeight)*viewportHeight)) / 2) + 'px';
+                        canvas.style.top = 0;
+                    } else {
+                        canvas.style.width = Math.round(viewportWidth) + 'px';
+                        canvas.style.height = Math.round((videoHeight/videoWidth)*viewportWidth) + 'px';
+                        canvas.style.left = 0;
+                        canvas.style.top = Math.round((viewportHeight - Math.round((videoHeight/videoWidth)*viewportWidth)) / 2) + 'px';
+                    }
+                }
+
+                camera_button.addEventListener('click', async () => {
+                    try {
+                        let stream = await navigator.mediaDevices.getUserMedia({
+                            video: {
+                                facingMode: 'environment'
+                            },
+                            audio: false
+                        });
+                        
+                        const videoSettings = stream.getVideoTracks()[0].getSettings();
+                        alert(JSON.stringify(videoSettings));
+
+                        video.srcObject = stream;
+                        
+                        canvas.width = videoSettings.width;
+                        canvas.height = videoSettings.height;
+                        videoWidth = videoSettings.width;
+                        videoHeight = videoSettings.height;
+                        resizeCanvas();
+                    } catch(e) {
+                        alert(e);
+                    }
+                });
+
+                window.addEventListener('resize', () => resizeCanvas());
+            });
+        </script>
+        <style>
+            div {
+                font-family: sans-serif;
+            }
+
+            #video, #canvas {
+                position: fixed;
+            }
+
+            #start-camera {
+                position: fixed;
+                width: calc(100vw - 2px);
+                bottom: 0;
+                height: var(--btn-height);
+                border: 1px solid white;
+                line-height: var(--btn-height);
+                text-align: center;
+                vertical-align: middle;
+                color: white;
+            }
+        </style>
+    </head>
+    <body style="margin: 0; background-color: black;">
+        <video style="display: none;" id="video" autoplay></video>
+        <canvas id="canvas"></canvas>
+
+        <div id="start-camera" style="left: 0;">Start Camera</div>
+    </body>
+</html>

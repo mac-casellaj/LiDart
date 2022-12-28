@@ -1,0 +1,5 @@
+* text eol=crlf
+
+*.lock binary
+*.ipt binary
+*.iam binary

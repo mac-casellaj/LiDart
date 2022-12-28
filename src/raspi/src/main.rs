@@ -2,6 +2,7 @@ use futures::StreamExt;
 use serde::Serialize;
 use serialport::SerialPort;
 use tokio::{sync::Mutex, task, time::sleep};
+use warp::hyper::StatusCode;
 use std::sync::Arc;
 use std::time::Duration;
 use std::time::Instant;
@@ -61,6 +62,71 @@ impl State {
     } 
 }
 
+#[derive(Serialize)]
+pub struct ApriltagsDetection {
+    corners: [[f64; 2]; 4],
+}
+
+fn handle_apriltags(bytes: bytes::Bytes) -> Box<dyn Reply> {
+    let family = apriltag::families::Family::tag_36h11();
+    let tag_params = apriltag::pose::TagParams{
+        tagsize: 0.0,
+        fx: 0.0,
+        fy: 0.0,
+        cx: 0.0,
+        cy: 0.0,
+    };
+
+    let mut detector = apriltag::detector::DetectorBuilder::new()
+        .add_family_bits(family, 1)
+        .build()
+        .unwrap();
+
+    let src_image = match image::load_from_memory(&bytes) {
+        Ok(v) => v.to_luma8(),
+        Err(e) => {
+            eprintln!("handle_apriltags: {}", e);
+            return Box::new(StatusCode::BAD_REQUEST);
+        },
+    };
+
+    const DEFAULT_ALIGNMENT_U8: usize = 96;
+    use image::Pixel;
+
+    let width = src_image.width() as usize;
+    let height = src_image.height() as usize;
+    let mut image = apriltag::Image::zeros_alignment(width, height, DEFAULT_ALIGNMENT_U8).unwrap();
+
+    src_image.enumerate_pixels().for_each(|(x, y, pixel)| {
+        let component = pixel.channels()[0];
+        image[(x as usize, y as usize)] = component;
+    });
+
+    let detections = detector.detect(image);
+
+    // TODO(Jon): trait implementation to convert from image's luma8 to apriltag's image
+    //            seems broken
+    // let detections = detector.detect(src_image);
+
+    // println!("= image {}", path.display());
+
+    let response: Vec<ApriltagsDetection> = detections.into_iter().enumerate().map(|(index, det)| {
+        // println!("  - detection {}: {:#?}", index, det);
+        // if let Some(tag_params) = &tag_params {
+        //     let pose = det.estimate_tag_pose(tag_params);
+        //     println!("  - pose {}: {:#?}", index, pose);
+
+        //     let isometry = pose.map(|pose| pose.to_isometry());
+        //     println!("  - isometry {}: {:#?}", index, isometry);
+        // }
+        ApriltagsDetection {
+            corners: det.corners(),
+        }
+    }).collect();
+    
+    Box::new(json(&response))
+}
+
 #[tokio::main]
 async fn main() {
     let shared_state = Arc::new(Mutex::new(State{
@@ -74,11 +140,17 @@ async fn main() {
     let ws_route_state = shared_state.clone();
     let ws_route = warp::path("ws").and(warp::ws()).and_then(move |ws| ws_handler(ws, ws_route_state.clone()));
 
+    let apriltags_route = warp::path("apriltags")
+        .and(warp::body::content_length_limit(1024 * 128))
+        .and(warp::body::bytes())
+        .map(handle_apriltags);
+
     let frontend = warp::path::end().and(warp::fs::file("assets/GUI-HTML.html"));
     let assets = warp::path("assets").and(warp::fs::dir("assets"));
 
     let routes = health_route
         .or(ws_route)
+        .or(apriltags_route)
         .or(assets)
         .or(frontend)
         .with(warp::cors().allow_any_origin());
@@ -117,9 +189,9 @@ async fn main() {
 
                             read_buf_used -= chars_consumed;
                         },
-                        Err(e) => {
+                        Err(_e) => {
                             // println!("Error reading from port, dropping connection: {}", e);
-                            // state.port = None;
+                            state.port = None;
                         }
                     }
                 }
@@ -137,7 +209,7 @@ pub async fn ws_handler(ws: warp::ws::Ws, shared_state: Arc<Mutex<State>>) -> Re
 }
 
 pub fn make_serial_packet(left_speed: u8, right_speed: u8) -> [u8; 8] {
-    return [0x10, 0x02, 0x02, left_speed, right_speed, left_speed ^ right_speed, 0x10, 0x03];
+    [0x10, 0x02, 0x02, left_speed, right_speed, left_speed ^ right_speed, 0x10, 0x03]
 }
 
 pub async fn websocket_connection(ws: WebSocket, shared_state: Arc<Mutex<State>>) {
