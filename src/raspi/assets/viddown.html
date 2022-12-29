@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                const btnHeight = 80;
+                document.body.style.setProperty('--btn-height', btnHeight + 'px');
+
+                const image = document.getElementById('image');
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const viddown_socket = new WebSocket(`${(location.protocol == 'https:') ? 'wss' : 'ws'}://${location.host}/viddown`);
+                const vidstate_socket = new WebSocket(`${(location.protocol == 'https:') ? 'wss' : 'ws'}://${location.host}/vidstate`);
+                
+                let videoWidth = 1;
+                let videoHeight = 1;
+
+                function resizeCanvas() {
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight - btnHeight - 2;
+
+                    if((videoHeight/videoWidth)*viewportWidth > viewportHeight) {
+                        canvas.style.width = Math.round((videoWidth/videoHeight)*viewportHeight) + 'px';
+                        canvas.style.height = Math.round(viewportHeight) + 'px';
+                        canvas.style.left = Math.round((viewportWidth - Math.round((videoWidth/videoHeight)*viewportHeight)) / 2) + 'px';
+                        canvas.style.top = 0;
+                    } else {
+                        canvas.style.width = Math.round(viewportWidth) + 'px';
+                        canvas.style.height = Math.round((videoHeight/videoWidth)*viewportWidth) + 'px';
+                        canvas.style.left = 0;
+                        canvas.style.top = Math.round((viewportHeight - Math.round((videoHeight/videoWidth)*viewportWidth)) / 2) + 'px';
+                    }
+                }
+
+                const markerSize = 10;
+                let detections = [];
+
+                function renderCanvas() {
+                    ctx.drawImage(image, 0, 0, videoWidth, videoHeight);
+
+                    ctx.fillStyle = 'red';
+                    ctx.font = '30px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+
+                    detections.forEach(detection => {
+                        ctx.fillText(detection.id.toString(), detection.center[0], detection.center[1]);
+                        
+                        detection.corners.forEach(corner => {
+                            ctx.fillRect(corner[0] - 0.5*markerSize, corner[1] - 0.5*markerSize, markerSize, markerSize);
+                        });
+                    });
+                }
+
+                image.addEventListener('load', () => {
+                    videoWidth = image.naturalWidth;
+                    videoHeight = image.naturalHeight;
+                    
+                    canvas.width = videoWidth;
+                    canvas.height = videoHeight;
+                    
+                    renderCanvas();
+                    resizeCanvas();
+                });
+
+                viddown_socket.addEventListener('message', msg => {
+                    if(image.src != "") {
+                        URL.revokeObjectURL(image.src);
+                    }
+
+                    const objectURL = URL.createObjectURL(msg.data);
+                    image.src = objectURL;
+                });
+
+                vidstate_socket.addEventListener('message', msg => {
+                    detections = JSON.parse(msg.data);
+                    console.log(detections);
+                    renderCanvas();
+                });
+
+                document.getElementById('detectButton').addEventListener('click', () => {
+                    vidstate_socket.send('DETECT');
+                });
+                
+                document.getElementById('downloadButton').addEventListener('click', () => {
+                    const downloader = document.getElementById('downloader');
+                    downloader.href = image.src;
+                    downloader.click();
+                });
+
+                window.addEventListener('resize', () => resizeCanvas());
+            });
+        </script>
+        <style>
+            #detectButton, #downloadButton {
+                font-family: sans-serif;
+                position: fixed;
+                width: calc(50vw - 2px);
+                bottom: 0;
+                height: var(--btn-height);
+                border: 1px solid white;
+                line-height: var(--btn-height);
+                text-align: center;
+                vertical-align: middle;
+                color: white;
+            }
+        </style>
+    </head>
+    <body style="margin: 0; background-color: black;">
+        <canvas style="position: fixed;" id="canvas"></canvas>
+        <img style="display: none;" id="image"/>
+        <a style="display: none;" id="downloader" download="test.jpeg"></a>
+
+        <div id="detectButton" style="left: 0;">Detect</div>
+        <div id="downloadButton" style="right: 0;">Download</div>
+    </body>
+</html>

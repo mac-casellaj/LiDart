@@ -4,6 +4,8 @@
         <script>
             window.addEventListener('DOMContentLoaded', (event) => {
                 const btnHeight = 80;
+                const sendPeriod = 0.1; // 0.1s
+
                 document.body.style.setProperty('--btn-height', btnHeight + 'px');
 
                 let camera_button = document.getElementById('start-camera');
@@ -12,43 +14,20 @@
                 let canvas = document.getElementById('canvas');
                 let ctx = canvas.getContext('2d');
                 
-                const markerSize = 10;
-                let markers = [];
-
+                let socket = new WebSocket(`${(location.protocol == "https:") ? "wss" : "ws"}://${location.host}/vidup`);
                 let lastSendTime = 0;
 
                 function render() {
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                    const detectPeriod = 0.1; // 0.1s
-
+                    
                     let now = Date.now();
-                    if((now - lastSendTime) >= detectPeriod*1000) {
-                        let image_data_url = canvas.toBlob(async blob => {
-                            let apriltagsResponse = await (await fetch("/apriltags", {
-                                method: "POST",
-                                body: blob,
-                            })).json();
-
-                            console.log(apriltagsResponse);
-
-                            markers = [];
-                            apriltagsResponse.forEach(det => {
-                                markers.push(...det.corners);
-                            });
-                        }, 'image/jpeg');
-
+                    if((now - lastSendTime) >= sendPeriod*1000) {
+                        canvas.toBlob(async blob => socket.send(blob), 'image/jpeg');
                         lastSendTime = now;
                     }
 
-                    markers.forEach(marker => {
-                        ctx.fillStyle = "red";
-                        ctx.fillRect(marker[0] - 0.5*markerSize, marker[1] - 0.5*markerSize, markerSize, markerSize);
-                    });
-
                     window.requestAnimationFrame(render);
                 }
-                window.requestAnimationFrame(render);
 
                 let videoWidth = 1;
                 let videoHeight = 1;
@@ -88,7 +67,9 @@
                         canvas.height = videoSettings.height;
                         videoWidth = videoSettings.width;
                         videoHeight = videoSettings.height;
+                        
                         resizeCanvas();
+                        window.requestAnimationFrame(render);
                     } catch(e) {
                         alert(e);
                     }
