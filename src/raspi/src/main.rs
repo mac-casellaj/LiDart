@@ -8,6 +8,7 @@ use crate::defs::State;
 
 mod defs;
 mod drive;
+mod math;
 mod video;
 
 #[tokio::main]
@@ -23,6 +24,8 @@ async fn main() {
         vidstate_conns: HashMap::new(),
 
         curr_frame: Vec::new(),
+
+        detected_landmarks: HashMap::new(),
     }));
 
     let health_route_state = shared_state.clone();

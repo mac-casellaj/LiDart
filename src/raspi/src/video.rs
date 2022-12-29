@@ -4,13 +4,28 @@ use serde::Serialize;
 use tokio::sync::{mpsc, Mutex};
 use std::{sync::Arc, time::Instant};
 use warp::ws::{WebSocket, Message};
-use crate::defs::{State, TAG_PARAMS};
+use crate::{defs::{State, TAG_PARAMS, Pose}, math::{Mat3, Vec3}};
+
+#[derive(Serialize)]
+pub struct DetectionResult {
+    detections: Vec<ApriltagDetection>,
+    landmarks: Vec<Landmark>,
+}
+
+#[derive(Serialize)]
+pub struct Landmark {
+    id: usize,
+    rotation: [f64; 9],
+    translation: [f64; 3],
+}
 
 #[derive(Serialize)]
 pub struct ApriltagDetection {
     id: usize,
     center: [f64; 2],
     corners: [[f64; 2]; 4],
+    rotation: Vec<f64>,
+    translation: Vec<f64>,
 }
 
 pub fn detect_apriltags(family: fn() -> Family, data: &[u8]) -> Vec<ApriltagDetection> {
@@ -55,25 +70,35 @@ pub fn detect_apriltags(family: fn() -> Family, data: &[u8]) -> Vec<ApriltagDete
 
     // println!("= image {}", path.display());
 
-    detections.into_iter().map(|det| {
+    let mut result = Vec::new();
+    for det in detections {
         println!("Detection: {:#?}", det);
         
         let before = Instant::now();
-        if let Some(pose) = det.estimate_tag_pose(&TAG_PARAMS) {
-            println!("Pose: {:#?}", pose);
-        } else {
-            println!("Pose estimation failed");
-        }
+        let pose_o = det.estimate_tag_pose(&TAG_PARAMS);
         println!("Pose estimation took {:#?}", before.elapsed());
         
+        let pose = match pose_o {
+            Some(v) => v,
+            None => {
+                println!("Pose estimation failed");
+                continue;
+            },
+        };
+        
+        println!("Pose: {:#?}", pose);
         println!();
         
-        ApriltagDetection {
+        result.push(ApriltagDetection {
             id: det.id(),
             center: det.center(),
             corners: det.corners(),
-        }
-    }).collect()
+            rotation: pose.rotation().data().to_vec(),
+            translation: pose.translation().data().to_vec(),
+        });
+    }
+
+    result
 }
 
 pub async fn vidup_connection(ws: WebSocket, shared_state: Arc<Mutex<State>>) {
@@ -195,12 +220,55 @@ pub async fn vidstate_connection(ws: WebSocket, shared_state: Arc<Mutex<State>>)
         // };
 
         if msg_text == "DETECT" {
-            let state = shared_state.lock().await;
+            let mut state = shared_state.lock().await;
 
             let before = Instant::now();
             let detections = detect_apriltags(Family::tag_36h11, &state.curr_frame);
             
-            let detections_json = match serde_json::to_string(&detections) {
+            // Default robot pose
+            let mut robot = Pose {
+                rotation: Mat3::identity(),
+                translation: Vec3::zero(),
+            };
+
+            // Estimate robot pose using a landmark
+            for detection in &detections {
+                if let Some(landmark) = state.detected_landmarks.get(&detection.id) {
+                    let rotation = Mat3::from_slice(&detection.rotation);
+                    let translation = Vec3::from_slice(&detection.translation);
+                    
+                    robot.rotation = rotation.transpose()*landmark.rotation;
+                    robot.translation = landmark.translation - robot.rotation*translation;
+                    break;
+                }
+            }
+
+            // Initialize landmarks from observations
+            for detection in &detections {
+                if state.detected_landmarks.contains_key(&detection.id) { continue; }
+                
+                let rotation = Mat3::from_slice(&detection.rotation);
+                let translation = Vec3::from_slice(&detection.translation);
+
+                state.detected_landmarks.insert(detection.id, Pose {
+                    rotation: rotation*robot.rotation,
+                    translation: robot.translation + robot.rotation*translation,
+                });
+            }
+
+            let detections_json = match serde_json::to_string(&DetectionResult{
+                detections,
+                landmarks: state.detected_landmarks.iter().map(|(id, landmark)| {
+                    let rotation = landmark.rotation*robot.rotation.transpose(); 
+                    let translation = robot.rotation.transpose()*(landmark.translation - robot.translation);
+
+                    Landmark {
+                        id: *id,
+                        rotation: rotation.0,
+                        translation: translation.0,
+                    }
+                }).collect(),
+            }) {
                 Ok(v) => v,
                 Err(e) => {
                     println!("[vidup conn] Error encoding apriltag detections to json: {}", e); 

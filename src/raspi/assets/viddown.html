@@ -33,23 +33,118 @@
                     }
                 }
 
-                const markerSize = 10;
+                const markerSize = 4;
+                const axisScale = 0.1;
                 let detections = [];
+                let landmarks = [];
+
+                const tagsize = 0.089; // ~89mm
+                const fx = 253.68282598;
+                const fy = 253.5225799;
+                const cx = 240.19900698;
+                const cy = 319.43963706;
+
+                function worldToScreen(worldPos) {
+                    return [
+                        fx*(worldPos[0]/worldPos[2]) + cx,
+                        fy*(worldPos[1]/worldPos[2]) + cy,
+                    ];
+                }
 
                 function renderCanvas() {
                     ctx.drawImage(image, 0, 0, videoWidth, videoHeight);
 
-                    ctx.fillStyle = 'red';
                     ctx.font = '30px sans-serif';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
 
                     detections.forEach(detection => {
+                        const center = worldToScreen(detection.translation);
+                        const xaxis = worldToScreen([
+                            detection.translation[0] + axisScale*detection.rotation[0],
+                            detection.translation[1] + axisScale*detection.rotation[3],
+                            detection.translation[2] + axisScale*detection.rotation[6],
+                        ]);
+                        const yaxis = worldToScreen([
+                            detection.translation[0] + axisScale*detection.rotation[1],
+                            detection.translation[1] + axisScale*detection.rotation[4],
+                            detection.translation[2] + axisScale*detection.rotation[7],
+                        ]);
+                        const zaxis = worldToScreen([
+                            detection.translation[0] + axisScale*detection.rotation[2],
+                            detection.translation[1] + axisScale*detection.rotation[5],
+                            detection.translation[2] + axisScale*detection.rotation[8],
+                        ]);
+
+                        ctx.fillStyle = 'blue';
+                        // ctx.fillRect(center[0] - 0.5*markerSize, center[1] - 0.5*markerSize, markerSize, markerSize);
+                        
+                        // ctx.lineWidth = ;
+
+                        ctx.strokeStyle = 'red';
+                        ctx.beginPath();
+                        ctx.moveTo(center[0], center[1]);
+                        ctx.lineTo(xaxis[0], xaxis[1]);
+                        ctx.stroke();
+                        
+                        ctx.strokeStyle = 'green';
+                        ctx.beginPath();
+                        ctx.moveTo(center[0], center[1]);
+                        ctx.lineTo(yaxis[0], yaxis[1]);
+                        ctx.stroke();
+
+                        ctx.strokeStyle = 'blue';                            
+                        ctx.beginPath();
+                        ctx.moveTo(center[0], center[1]);
+                        ctx.lineTo(zaxis[0], zaxis[1]);
+                        ctx.stroke();
+
+                        ctx.fillStyle = 'red';
                         ctx.fillText(detection.id.toString(), detection.center[0], detection.center[1]);
                         
                         detection.corners.forEach(corner => {
                             ctx.fillRect(corner[0] - 0.5*markerSize, corner[1] - 0.5*markerSize, markerSize, markerSize);
                         });
+                    });
+
+                    landmarks.forEach(landmark => {
+                        const center = worldToScreen(landmark.translation);
+
+                        const ppcorner = worldToScreen([
+                            landmark.translation[0] + 0.5*tagsize*landmark.rotation[0] + 0.5*tagsize*landmark.rotation[1],
+                            landmark.translation[1] + 0.5*tagsize*landmark.rotation[3] + 0.5*tagsize*landmark.rotation[4],
+                            landmark.translation[2] + 0.5*tagsize*landmark.rotation[6] + 0.5*tagsize*landmark.rotation[7],
+                        ]);
+
+                        const pncorner = worldToScreen([
+                            landmark.translation[0] + 0.5*tagsize*landmark.rotation[0] - 0.5*tagsize*landmark.rotation[1],
+                            landmark.translation[1] + 0.5*tagsize*landmark.rotation[3] - 0.5*tagsize*landmark.rotation[4],
+                            landmark.translation[2] + 0.5*tagsize*landmark.rotation[6] - 0.5*tagsize*landmark.rotation[7],
+                        ]);
+
+                        const nncorner = worldToScreen([
+                            landmark.translation[0] - 0.5*tagsize*landmark.rotation[0] - 0.5*tagsize*landmark.rotation[1],
+                            landmark.translation[1] - 0.5*tagsize*landmark.rotation[3] - 0.5*tagsize*landmark.rotation[4],
+                            landmark.translation[2] - 0.5*tagsize*landmark.rotation[6] - 0.5*tagsize*landmark.rotation[7],
+                        ]);
+
+                        const npcorner = worldToScreen([
+                            landmark.translation[0] - 0.5*tagsize*landmark.rotation[0] + 0.5*tagsize*landmark.rotation[1],
+                            landmark.translation[1] - 0.5*tagsize*landmark.rotation[3] + 0.5*tagsize*landmark.rotation[4],
+                            landmark.translation[2] - 0.5*tagsize*landmark.rotation[6] + 0.5*tagsize*landmark.rotation[7],
+                        ]);
+
+                        ctx.strokeStyle = 'orange';
+                        ctx.beginPath();
+                        ctx.moveTo(ppcorner[0], ppcorner[1]);
+                        ctx.lineTo(pncorner[0], pncorner[1]);
+                        ctx.lineTo(nncorner[0], nncorner[1]);
+                        ctx.lineTo(npcorner[0], npcorner[1]);
+                        ctx.lineTo(ppcorner[0], ppcorner[1]);
+                        ctx.stroke();
+
+                        ctx.fillStyle = 'orange';
+                        ctx.fillText(landmark.id.toString(), center[0], center[1]);
                     });
                 }
 
@@ -74,8 +169,39 @@
                 });
 
                 vidstate_socket.addEventListener('message', msg => {
-                    detections = JSON.parse(msg.data);
-                    console.log(detections);
+                    const detectionResult = JSON.parse(msg.data);
+                    detections = detectionResult.detections;
+                    landmarks = detectionResult.landmarks;
+                    console.log(detectionResult);
+
+                    for(let i = 0; i < detections.length; i++) {
+                        const detA = detections[i];
+
+                        const Ax = detA.translation[0] + 0.5*tagsize*detA.rotation[0] + 0.5*tagsize*detA.rotation[1];
+                        const Ay = detA.translation[1] + 0.5*tagsize*detA.rotation[3] + 0.5*tagsize*detA.rotation[4];
+                        const Az = detA.translation[2] + 0.5*tagsize*detA.rotation[6] + 0.5*tagsize*detA.rotation[7];
+
+                        for(let j = i + 1; j < detections.length; j++) {
+                            const detB = detections[j];
+                            
+                            const Bx = detB.translation[0] + 0.5*tagsize*detB.rotation[0] + 0.5*tagsize*detB.rotation[1];
+                            const By = detB.translation[1] + 0.5*tagsize*detB.rotation[3] + 0.5*tagsize*detB.rotation[4];
+                            const Bz = detB.translation[2] + 0.5*tagsize*detB.rotation[6] + 0.5*tagsize*detB.rotation[7];
+
+                            const dist = 100*Math.sqrt((Ax - Bx)*(Ax - Bx) + (Ay - By)*(Ay - By) + (Az - Bz)*(Az - Bz));
+
+                            console.log(`Dist from ${detA.id} to ${detB.id} is ${dist}cm`);
+                        }
+
+                        const Sb = Math.sqrt(detA.rotation[0] * detA.rotation[0] +  detA.rotation[3] * detA.rotation[3]);
+                    
+                        const a = Math.atan2(detA.rotation[3], detA.rotation[0]);
+                        const b = Math.atan2(-detA.rotation[6], Sb);
+                        const y = Math.atan2(detA.rotation[7], detA.rotation[8]);
+                        
+                        console.log((180/Math.PI)*a, (180/Math.PI)*b, (180/Math.PI)*y);
+                    }
+
                     renderCanvas();
                 });
 

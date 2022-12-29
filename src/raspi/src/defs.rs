@@ -3,6 +3,12 @@ use serialport::SerialPort;
 use std::time::Instant;
 use std::collections::HashMap;
 use tokio::sync::mpsc;
+use crate::math::{Mat3, Vec3};
+
+pub struct Pose {
+    pub rotation: Mat3,
+    pub translation: Vec3,
+}
 
 pub struct State {
     pub start_time: Instant,
@@ -15,6 +21,8 @@ pub struct State {
     pub vidstate_conns: HashMap<u32, mpsc::UnboundedSender<String>>,
 
     pub curr_frame: Vec<u8>,
+
+    pub detected_landmarks: HashMap<usize, Pose>,
 }
 
 pub const TAG_PARAMS: TagParams = TagParams{
