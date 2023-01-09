@@ -280,3 +280,5 @@ TSWLatexianTemp*
 
 src/models/OldVersions/
 target/
+
+src/camera_calibration/*.jpeg

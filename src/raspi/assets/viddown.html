@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                const btnHeight = 80;
+                document.body.style.setProperty('--btn-height', btnHeight + 'px');
+
+                const image = document.getElementById('image');
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const viddown_socket = new WebSocket(`${(location.protocol == 'https:') ? 'wss' : 'ws'}://${location.host}/viddown`);
+                const vidstate_socket = new WebSocket(`${(location.protocol == 'https:') ? 'wss' : 'ws'}://${location.host}/vidstate`);
+                
+                let videoWidth = 1;
+                let videoHeight = 1;
+
+                function resizeCanvas() {
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight - btnHeight - 2;
+
+                    if((videoHeight/videoWidth)*viewportWidth > viewportHeight) {
+                        canvas.style.width = Math.round((videoWidth/videoHeight)*viewportHeight) + 'px';
+                        canvas.style.height = Math.round(viewportHeight) + 'px';
+                        canvas.style.left = Math.round((viewportWidth - Math.round((videoWidth/videoHeight)*viewportHeight)) / 2) + 'px';
+                        canvas.style.top = 0;
+                    } else {
+                        canvas.style.width = Math.round(viewportWidth) + 'px';
+                        canvas.style.height = Math.round((videoHeight/videoWidth)*viewportWidth) + 'px';
+                        canvas.style.left = 0;
+                        canvas.style.top = Math.round((viewportHeight - Math.round((videoHeight/videoWidth)*viewportWidth)) / 2) + 'px';
+                    }
+                }
+
+                const markerSize = 4;
+                const axisScale = 0.1;
+                let detections = [];
+                let landmarks = [];
+
+                const tagsize = 0.089; // ~89mm
+                const fx = 253.68282598;
+                const fy = 253.5225799;
+                const cx = 240.19900698;
+                const cy = 319.43963706;
+
+                function worldToScreen(worldPos) {
+                    return [
+                        fx*(worldPos[0]/worldPos[2]) + cx,
+                        fy*(worldPos[1]/worldPos[2]) + cy,
+                    ];
+                }
+
+                function renderCanvas() {
+                    ctx.drawImage(image, 0, 0, videoWidth, videoHeight);
+
+                    ctx.font = '30px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+
+                    detections.forEach(detection => {
+                        const center = worldToScreen(detection.translation);
+                        const xaxis = worldToScreen([
+                            detection.translation[0] + axisScale*detection.rotation[0],
+                            detection.translation[1] + axisScale*detection.rotation[3],
+                            detection.translation[2] + axisScale*detection.rotation[6],
+                        ]);
+                        const yaxis = worldToScreen([
+                            detection.translation[0] + axisScale*detection.rotation[1],
+                            detection.translation[1] + axisScale*detection.rotation[4],
+                            detection.translation[2] + axisScale*detection.rotation[7],
+                        ]);
+                        const zaxis = worldToScreen([
+                            detection.translation[0] + axisScale*detection.rotation[2],
+                            detection.translation[1] + axisScale*detection.rotation[5],
+                            detection.translation[2] + axisScale*detection.rotation[8],
+                        ]);
+
+                        ctx.fillStyle = 'blue';
+                        // ctx.fillRect(center[0] - 0.5*markerSize, center[1] - 0.5*markerSize, markerSize, markerSize);
+                        
+                        // ctx.lineWidth = ;
+
+                        ctx.strokeStyle = 'red';
+                        ctx.beginPath();
+                        ctx.moveTo(center[0], center[1]);
+                        ctx.lineTo(xaxis[0], xaxis[1]);
+                        ctx.stroke();
+                        
+                        ctx.strokeStyle = 'green';
+                        ctx.beginPath();
+                        ctx.moveTo(center[0], center[1]);
+                        ctx.lineTo(yaxis[0], yaxis[1]);
+                        ctx.stroke();
+
+                        ctx.strokeStyle = 'blue';                            
+                        ctx.beginPath();
+                        ctx.moveTo(center[0], center[1]);
+                        ctx.lineTo(zaxis[0], zaxis[1]);
+                        ctx.stroke();
+
+                        ctx.fillStyle = 'red';
+                        ctx.fillText(detection.id.toString(), detection.center[0], detection.center[1]);
+                        
+                        detection.corners.forEach(corner => {
+                            ctx.fillRect(corner[0] - 0.5*markerSize, corner[1] - 0.5*markerSize, markerSize, markerSize);
+                        });
+                    });
+
+                    landmarks.forEach(landmark => {
+                        const center = worldToScreen(landmark.translation);
+
+                        const ppcorner = worldToScreen([
+                            landmark.translation[0] + 0.5*tagsize*landmark.rotation[0] + 0.5*tagsize*landmark.rotation[1],
+                            landmark.translation[1] + 0.5*tagsize*landmark.rotation[3] + 0.5*tagsize*landmark.rotation[4],
+                            landmark.translation[2] + 0.5*tagsize*landmark.rotation[6] + 0.5*tagsize*landmark.rotation[7],
+                        ]);
+
+                        const pncorner = worldToScreen([
+                            landmark.translation[0] + 0.5*tagsize*landmark.rotation[0] - 0.5*tagsize*landmark.rotation[1],
+                            landmark.translation[1] + 0.5*tagsize*landmark.rotation[3] - 0.5*tagsize*landmark.rotation[4],
+                            landmark.translation[2] + 0.5*tagsize*landmark.rotation[6] - 0.5*tagsize*landmark.rotation[7],
+                        ]);
+
+                        const nncorner = worldToScreen([
+                            landmark.translation[0] - 0.5*tagsize*landmark.rotation[0] - 0.5*tagsize*landmark.rotation[1],
+                            landmark.translation[1] - 0.5*tagsize*landmark.rotation[3] - 0.5*tagsize*landmark.rotation[4],
+                            landmark.translation[2] - 0.5*tagsize*landmark.rotation[6] - 0.5*tagsize*landmark.rotation[7],
+                        ]);
+
+                        const npcorner = worldToScreen([
+                            landmark.translation[0] - 0.5*tagsize*landmark.rotation[0] + 0.5*tagsize*landmark.rotation[1],
+                            landmark.translation[1] - 0.5*tagsize*landmark.rotation[3] + 0.5*tagsize*landmark.rotation[4],
+                            landmark.translation[2] - 0.5*tagsize*landmark.rotation[6] + 0.5*tagsize*landmark.rotation[7],
+                        ]);
+
+                        ctx.strokeStyle = 'orange';
+                        ctx.beginPath();
+                        ctx.moveTo(ppcorner[0], ppcorner[1]);
+                        ctx.lineTo(pncorner[0], pncorner[1]);
+                        ctx.lineTo(nncorner[0], nncorner[1]);
+                        ctx.lineTo(npcorner[0], npcorner[1]);
+                        ctx.lineTo(ppcorner[0], ppcorner[1]);
+                        ctx.stroke();
+
+                        ctx.fillStyle = 'orange';
+                        ctx.fillText(landmark.id.toString(), center[0], center[1]);
+                    });
+                }
+
+                image.addEventListener('load', () => {
+                    videoWidth = image.naturalWidth;
+                    videoHeight = image.naturalHeight;
+                    
+                    canvas.width = videoWidth;
+                    canvas.height = videoHeight;
+                    
+                    renderCanvas();
+                    resizeCanvas();
+                });
+
+                viddown_socket.addEventListener('message', msg => {
+                    if(image.src != "") {
+                        URL.revokeObjectURL(image.src);
+                    }
+
+                    const objectURL = URL.createObjectURL(msg.data);
+                    image.src = objectURL;
+                });
+
+                vidstate_socket.addEventListener('message', msg => {
+                    const detectionResult = JSON.parse(msg.data);
+                    detections = detectionResult.detections;
+                    landmarks = detectionResult.landmarks;
+                    console.log(detectionResult);
+
+                    for(let i = 0; i < detections.length; i++) {
+                        const detA = detections[i];
+
+                        const Ax = detA.translation[0] + 0.5*tagsize*detA.rotation[0] + 0.5*tagsize*detA.rotation[1];
+                        const Ay = detA.translation[1] + 0.5*tagsize*detA.rotation[3] + 0.5*tagsize*detA.rotation[4];
+                        const Az = detA.translation[2] + 0.5*tagsize*detA.rotation[6] + 0.5*tagsize*detA.rotation[7];
+
+                        for(let j = i + 1; j < detections.length; j++) {
+                            const detB = detections[j];
+                            
+                            const Bx = detB.translation[0] + 0.5*tagsize*detB.rotation[0] + 0.5*tagsize*detB.rotation[1];
+                            const By = detB.translation[1] + 0.5*tagsize*detB.rotation[3] + 0.5*tagsize*detB.rotation[4];
+                            const Bz = detB.translation[2] + 0.5*tagsize*detB.rotation[6] + 0.5*tagsize*detB.rotation[7];
+
+                            const dist = 100*Math.sqrt((Ax - Bx)*(Ax - Bx) + (Ay - By)*(Ay - By) + (Az - Bz)*(Az - Bz));
+
+                            console.log(`Dist from ${detA.id} to ${detB.id} is ${dist}cm`);
+                        }
+
+                        const Sb = Math.sqrt(detA.rotation[0] * detA.rotation[0] +  detA.rotation[3] * detA.rotation[3]);
+                    
+                        const a = Math.atan2(detA.rotation[3], detA.rotation[0]);
+                        const b = Math.atan2(-detA.rotation[6], Sb);
+                        const y = Math.atan2(detA.rotation[7], detA.rotation[8]);
+                        
+                        console.log((180/Math.PI)*a, (180/Math.PI)*b, (180/Math.PI)*y);
+                    }
+
+                    renderCanvas();
+                });
+
+                document.getElementById('detectButton').addEventListener('click', () => {
+                    vidstate_socket.send('DETECT');
+                });
+                
+                document.getElementById('downloadButton').addEventListener('click', () => {
+                    const downloader = document.getElementById('downloader');
+                    downloader.href = image.src;
+                    downloader.click();
+                });
+
+                window.addEventListener('resize', () => resizeCanvas());
+            });
+        </script>
+        <style>
+            #detectButton, #downloadButton {
+                font-family: sans-serif;
+                position: fixed;
+                width: calc(50vw - 2px);
+                bottom: 0;
+                height: var(--btn-height);
+                border: 1px solid white;
+                line-height: var(--btn-height);
+                text-align: center;
+                vertical-align: middle;
+                color: white;
+            }
+        </style>
+    </head>
+    <body style="margin: 0; background-color: black;">
+        <canvas style="position: fixed;" id="canvas"></canvas>
+        <img style="display: none;" id="image"/>
+        <a style="display: none;" id="downloader" download="test.jpeg"></a>
+
+        <div id="detectButton" style="left: 0;">Detect</div>
+        <div id="downloadButton" style="right: 0;">Download</div>
+    </body>
+</html>
