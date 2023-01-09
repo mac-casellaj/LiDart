@@ -278,7 +278,7 @@ TSWLatexianTemp*
 # DS_Store file from Mac computers
 .DS_Store
 
-src/models/OldVersions/
+OldVersions/
 target/
 
 src/camera_calibration/*.jpeg
